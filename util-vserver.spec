@@ -1,14 +1,16 @@
 Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.24
+Version:	0.27.199
 Release:	1
 Epoch:		0
 License:	GPL
 Group:		Base
-Source0:	http://savannah.nongnu.org/download/util-vserver/stable.pkg/%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	625d6c9bc5a4d2e44eafdf0f619c2153
+Source0:	http://www.13thfloor.at/vserver/d_release/v1.3.6/%{name}-%{version}.tar.bz2
+# Source0-md5:	d5d4330dc95dbf70bac9b24d53d1e779
+Patch0:		%{name}-maxpath.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
+BuildRequires:	e2fsprogs-devel
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -33,12 +35,39 @@ w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
 Wymaga to specjalnego j±dra obs³uguj±cego nowe wywo³ania systemowe
 new_s_context i set_ipv4root.
 
+%package devel
+Summary:        Libraries for the linux vserver programs
+Summary(pl):    Biblioteki u¿ywane do sterowania linuksowym vserwerem
+Group:          Development/Libraries
+
+%description devel
+This package contains the header and object files necessary for
+developing programs which use vserver library.
+
+%description devel -l pl
+Ten pakiet zawiera pliki nag³ówkowe i bibliotekê konieczn± do rozwoju
+programów u¿ywaj±cych biblioteki vserver.
+
+%package static
+Summary:        Static Libraries for the linux vserver programs
+Summary(pl):    Biblioteki statyczne u¿ywane do sterowania linuksowym vserwerem
+Group:          Development/Libraries
+
+%description static
+This package contains the header and object files necessary for
+developing programs which use vserver library.
+
+%description static -l pl
+Ten pakiet zawiera pliki nag³ówkowe i bibliotekê konieczn± do rozwoju
+programów u¿ywaj±cych biblioteki vserver.
+
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %configure \
-	--with-kerneldir=%{_kernelsrcdir}
+#	--with-kerneldir=%{_kernelsrcdir}
 %{__make}
 
 
@@ -48,40 +77,28 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+rm -f $RPM_BUILD_ROOT%{_sbindir}/util-vserver-vars
+
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
+
 %clean
 rm -rf $RPM_BUILD_ROOT
-
-%define v_services	httpd named portmap sendmail smb sshd xinetd
-%post
-/sbin/chkconfig --add vservers
-/sbin/chkconfig --add rebootmgr
-
-for i in %{v_services}; do
-	/sbin/chkconfig --add v_$i
-done
-
-%preun
-test "$1" != 0 || for i in %{v_services}; do
-	/sbin/chkconfig --del v_$i
-done
-
-test "$1" != 0 || %{_initrddir}/rebootmgr stop >&2 || :
-test "$1" != 0 || /sbin/chkconfig --del rebootmgr
-test "$1" != 0 || /sbin/chkconfig --del vservers
-
-%postun
-test "$1" = 0  || %{_initrddir}/rebootmgr condrestart >&2 || :
 
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS THANKS doc/intro.txt
 %attr(755,root,root) %{_sbindir}/*
-%{_libdir}/%{name}
-%{_includedir}/vserver.h
-%{_libdir}/libvserver.a
 %{_mandir}/man8/*
-%attr(754,root,root) /etc/rc.d/init.d/*
-%config(noreplace) %{_sysconfdir}/vservers.conf
 %attr(0,root,root) %dir /vservers
-%exclude %{_sbindir}/newvserver
-%exclude %{_mandir}/man8/newvserver*
+%attr(-,root,root) %{_libdir}/%{name}
+
+%files devel
+%defattr(644,root,root,755)
+%{_includedir}/vserver.h
+%attr(755,root,root) %{_libdir}/lib*.so.*
+%{_pkgconfigdir}/*.pc
+
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/libvserver.a
