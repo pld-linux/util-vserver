@@ -41,7 +41,7 @@ new_s_context i set_ipv4root.
 %package devel
 Summary:	Development files for Linux vserver libraries
 Summary(pl):	Pliki programistyczne dla bibliotek linuksowego vserwera
-Group:          Development/Libraries
+Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description devel
@@ -53,9 +53,9 @@ Ten pakiet zawiera pliki programistyczne konieczne do rozwijania
 programów u¿ywaj±cych biblioteki vserver.
 
 %package static
-Summary:        Static vserver library
-Summary(pl):    Biblioteka statyczna vservera
-Group:          Development/Libraries
+Summary:	Static vserver library
+Summary(pl):	Biblioteka statyczna vservera
+Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
