@@ -74,8 +74,7 @@ test "$1" = 0  || %{_initrddir}/rebootmgr condrestart >&2 || :
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS COPYING ChangeLog NEWS README THANKS
-%doc doc/FAQ.txt
+%doc AUTHORS ChangeLog NEWS THANKS doc/intro.txt
 %attr(755,root,root) %{_sbindir}/*
 %{_libdir}/%{name}
 %{_includedir}/vserver.h
