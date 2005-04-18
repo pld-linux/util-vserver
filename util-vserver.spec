@@ -6,7 +6,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30
-Release:	1
+Release:	0.2
 Epoch:		0
 License:	GPL
 Group:		Base
@@ -92,56 +92,44 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS THANKS doc/intro.txt
 %attr(755,root,root) %{_sbindir}/*
-%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
 %dir %{_libdir}/%{name}
-%{_libdir}/%{name}/defaults
-%dir %{_libdir}/%{name}/distributions
-%{_libdir}/%{name}/distributions/defaults
-%{_libdir}/%{name}/distributions/fc1
-%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat
-%{_libdir}/%{name}/distributions/rh9
+%attr(755,root,root) %{_libdir}/%{name}/distrib-info
 %attr(755,root,root) %{_libdir}/%{name}/legacy
 %attr(755,root,root) %{_libdir}/%{name}/capchroot
-%attr(755,root,root) %{_libdir}/%{name}/chroot-*
-%attr(755,root,root) %{_libdir}/%{name}/exec-ulimit
 %attr(755,root,root) %{_libdir}/%{name}/fakerunlevel
 %attr(755,root,root) %{_libdir}/%{name}/filetime
-%attr(755,root,root) %{_libdir}/%{name}/filetime
-%{_libdir}/%{name}/functions
 %attr(755,root,root) %{_libdir}/%{name}/ifspec
 %attr(755,root,root) %{_libdir}/%{name}/listdevip
-%attr(755,root,root) %{_libdir}/%{name}/mask2prefix
 %attr(755,root,root) %{_libdir}/%{name}/parserpmdump
-%attr(755,root,root) %{_libdir}/%{name}/pipe-sync
 %attr(755,root,root) %{_libdir}/%{name}/readlink
 %attr(755,root,root) %{_libdir}/%{name}/rootshell
-%attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
-%attr(755,root,root) %{_libdir}/%{name}/save_ctxinfo
-%attr(755,root,root) %{_libdir}/%{name}/secure-mount
+%{_libdir}/%{name}/sample.conf
+%attr(755,root,root) %{_libdir}/%{name}/sample.sh
+%attr(755,root,root) %{_libdir}/%{name}/save_s_context
+%attr(755,root,root) %{_libdir}/%{name}/setattr
+%attr(755,root,root) %{_libdir}/%{name}/showattr
 %attr(755,root,root) %{_libdir}/%{name}/showperm
 %{_libdir}/%{name}/util-vserver-vars
-%attr(755,root,root) %{_libdir}/%{name}/vapt-get-worker
 %attr(755,root,root) %{_libdir}/%{name}/vbuild
 %attr(755,root,root) %{_libdir}/%{name}/vcheck
-%attr(755,root,root) %{_libdir}/%{name}/vpkg
+%attr(755,root,root) %{_libdir}/%{name}/vprofile
 %attr(755,root,root) %{_libdir}/%{name}/vreboot
-%attr(755,root,root) %{_libdir}/%{name}/vrpm-*
-%attr(755,root,root) %{_libdir}/%{name}/vserver-build
-%{_libdir}/%{name}/vserver-build.*
-%{_libdir}/%{name}/vserver-setup.functions
-%{_libdir}/%{name}/vserver.*
+%attr(755,root,root) %{_libdir}/%{name}/vserverkillall
 %attr(755,root,root) %{_libdir}/%{name}/vservers.grabinfo.sh
+%attr(755,root,root) %{_libdir}/%{name}/vsysvwrapper
 %attr(755,root,root) %{_libdir}/%{name}/vunify
+%{_libdir}/%{name}/*-minimum
+%attr(755,root,root) %{_libdir}/%{name}/install-*
 %{_mandir}/man8/*
 %attr(0,root,root) %dir /vservers
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so
-%{_libdir}/lib*.la
+%{_libdir}/lib*.a
 %{_includedir}/vserver.h
-%{_pkgconfigdir}/*.pc
 
+%if 0
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libvserver.a
+%endif
