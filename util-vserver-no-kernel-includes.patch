@@ -1,0 +1,19 @@
+--- util-vserver-0.30.207/kernel/dlimit.h~	2005-04-28 12:58:02.000000000 +0200
++++ util-vserver-0.30.207/kernel/dlimit.h	2005-05-06 15:21:32.686838000 +0200
+@@ -2,7 +2,6 @@
+ #define _VX_DLIMIT_H
+ 
+ #include "switch.h"
+-#include <linux/spinlock.h>
+ 
+ #define CDLIM_UNSET		(0ULL)
+ #define CDLIM_INFINITY		(~0ULL)
+@@ -11,6 +10,8 @@
+ 
+ #ifdef	__KERNEL__
+ 
++#include <linux/spinlock.h>
++
+ struct super_block;
+ 
+ struct dl_info {
