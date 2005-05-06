@@ -1,0 +1,58 @@
+#!/bin/sh
+#
+# vprocunhide  sets vserver related attributes for /proc
+#
+# chkconfig: 2345 26 74
+# description: Makes some /proc entries visibly for vservers
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+[ -n "$UTIL_VSERVER_VARS" ] || $UTIL_VSERVER_VARS=/usr/lib/util-vserver/util-vserver-vars
+if [ ! -e "$UTIL_VSERVER_VARS" ] ; then
+    echo "Can not find util-vserver installation (the file '$UTIL_VSERVER_VARS' would be expected); aborting..." >&2
+    exit 1
+fi
+. "$UTIL_VSERVER_VARS"
+
+case "$1" in
+    start)
+    	show "Fixing vservers /proc entries visibility"
+	busy
+	$_VPROCUNHIDE
+	RETVAL=$?
+	deltext
+	case "$RETVAL" in
+	    0)	ok;;
+	    2)	ok; RETVAL=0;;
+	    *)	fail;;
+	esac
+	[ "$RETVAL" -eq 0 ] && touch /var/lock/subsys/vprocunhide
+	;;
+    stop)
+    	show "Stopping vservers /proc entries visibility"
+	busy
+	rm -f /var/lock/subsys/vprocunhide
+	ok
+	;;
+    restart|reload)
+    	$0 stop
+	$0 start
+	;;
+    status)
+    	if [ -f /var/lock/subsys/vprocunhide ] ; then
+	    echo "vservers /proc entries were fixed"
+	else
+	    echo "vservers /proc entries are not fixed"
+	fi
+	;;
+    *)
+        echo "Usage: $0 {start|stop|reload|restart|status}"
+	exit 1
+	;;
+esac
+
+exit $RETVAL
+
+# This must be last line !
+# vi:syntax=sh:tw=78:ts=8:sw=4
