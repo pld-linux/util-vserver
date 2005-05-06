@@ -121,8 +121,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/%{name}/legacy
 %{_libdir}/%{name}/defaults/*
 %{_libdir}/%{name}/distributions/*
-%{_libdir}/%{name}/legacy/*
-%attr(755,root,root) %{_libdir}/%{name}/FEATURES.txt
+%attr(755,root,root) %{_libdir}/%{name}/legacy/*
+%{_libdir}/%{name}/FEATURES.txt
 %attr(755,root,root) %{_libdir}/%{name}/capchroot
 %attr(755,root,root) %{_libdir}/%{name}/chain-echo
 %attr(755,root,root) %{_libdir}/%{name}/chcontext-compat
