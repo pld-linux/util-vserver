@@ -10,8 +10,8 @@ Release:	0.1
 Epoch:		0
 License:	GPL
 Group:		Base
-Source0:	http://www.13thfloor.at/vserver/files/alpha/%{name}-%{version}.tar.bz2
-# Source0-md5:	6e3cfa9007e0168583412b0f9b440fab
+Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
+# Source0-md5:	1c8457a687643ae8a7b1f1d34ebbdd68
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	e2fsprogs-devel
 PreReq:		rc-scripts
