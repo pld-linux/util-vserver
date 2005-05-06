@@ -14,8 +14,8 @@ Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{versio
 # Source0-md5:	1c8457a687643ae8a7b1f1d34ebbdd68
 Patch0:		%{name}-no-kernel-includes.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
-BuildRequires:	automake >= 1.9
 BuildRequires:	e2fsprogs-devel
+BuildRequires:	libxslt-progs
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
