@@ -93,11 +93,11 @@ install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d}}
 
 rm -f $RPM_BUILD_ROOT%{_sbindir}/util-vserver-vars
 
-install $SOURCE1 $RPM_BUILD_ROOT/etc/rc.d/init.d/vprocunhide
-install $SOURCE2 $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
-install $SOURCE3 $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
-install $SOURCE4 $RPM_BUILD_ROOT/etc/sysconfig/vservers-default
-install $SOURCE5 $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/vprocunhide
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/vservers-default
+install %{SOURCE5} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 
 %clean
 rm -rf $RPM_BUILD_ROOT
