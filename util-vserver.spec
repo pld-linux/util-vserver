@@ -12,6 +12,11 @@ License:	GPL
 Group:		Base
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
 # Source0-md5:	1c8457a687643ae8a7b1f1d34ebbdd68
+Source1:	vprocunhide.init
+Source2:	vservers-default.init
+Source3:	vservers-legacy.init
+Source4:	vservers-default.sysconfig
+Source5:	vservers-legacy.sysconfig
 Patch0:		%{name}-no-kernel-includes.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	e2fsprogs-devel
@@ -81,12 +86,18 @@ xsltproc --stringparam confdir '%{_sysconfdir}/vservers' -o configuration.html c
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/vservers
+install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d}}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_sbindir}/util-vserver-vars
+
+install $SOURCE1 $RPM_BUILD_ROOT/etc/rc.d/init.d/vprocunhide
+install $SOURCE2 $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
+install $SOURCE3 $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
+install $SOURCE4 $RPM_BUILD_ROOT/etc/sysconfig/vservers-default
+install $SOURCE5 $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -100,7 +111,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sysconfdir}/vservers
 %dir %{_sysconfdir}/vservers/.distributions
 %{_sysconfdir}/vservers/.distributions/*
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/vservers.conf
+%config(noreplace) %verify(not size mtime md5) /etc/sysconfig/vservers*
+%attr(754,root,root) /etc/rc.d/init.d/*
 %attr(755,root,root) %{_sbindir}/*
 %attr(755,root,root) %{_libdir}/lib*.so.*.*.*
 %dir %{_libdir}/%{name}
@@ -142,7 +154,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/%{name}/vserver-build
 %{_libdir}/%{name}/vserver-build.*
 %{_libdir}/%{name}/vserver-setup.functions
-%attr(755,root,root) %{_libdir}/%{name}/vserver-wrapper
 %{_libdir}/%{name}/vserver.*
 %attr(755,root,root) %{_libdir}/%{name}/vservers.grabinfo.sh
 %attr(755,root,root) %{_libdir}/%{name}/vshelper
