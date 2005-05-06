@@ -5,13 +5,13 @@
 Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30
-Release:	0.2
+Version:	0.30.207
+Release:	0.1
 Epoch:		0
 License:	GPL
 Group:		Base
-Source0:	http://www.13thfloor.at/vserver/s_release/v1.29/%{name}-%{version}.tar.bz2
-# Source0-md5:	c88994e7c22eca1a6a4b14aadca54738
+Source0:	http://www.13thfloor.at/vserver/files/alpha/%{name}-%{version}.tar.bz2
+# Source0-md5:	6e3cfa9007e0168583412b0f9b440fab
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	e2fsprogs-devel
 PreReq:		rc-scripts
