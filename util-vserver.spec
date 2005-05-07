@@ -25,6 +25,7 @@ URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	e2fsprogs-devel
 BuildRequires:	libxslt-progs
 BuildRequires:	vlan
+BuildRequires:	doxygen
 %{?with_dietlibc:BuildRequires:	dietlibc >= 0:0.25}
 %{?with_xalan:BuildRequires:	xalan-j}
 PreReq:		rc-scripts
