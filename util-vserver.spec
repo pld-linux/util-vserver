@@ -79,6 +79,7 @@ Ten pakiet zawiera statyczn± wersjê biblioteki vservera.
 
 %package lib
 Summary:	Dynamic libraries for util-vserver
+Summary(pl):	Biblioteki dynamiczne dla pakietu util-vserver
 Group:		Libraries
 
 %description lib
@@ -91,8 +92,19 @@ each other and can't interact with services in the main server.
 This package contains the shared libraries needed by all other
 'util-vserver' subpackages.
 
+%description lib -l pl
+util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
+serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
+jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
+ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
+w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
+
+Ten pakiet zawiera biblioteki wspó³dzielone wymagane przez wszystkie
+podpakiety util-vserver.
+
 %package core
 Summary:	The core-utilities for util-vserver
+Summary(pl):	Podstawowe narzêdzia dla util-vserver
 Group:		Applications/System
 Requires:	util-linux
 
@@ -106,10 +118,26 @@ each other and can't interact with services in the main server.
 This package contains utilities which are required to communicate with
 the Linux-Vserver enabled kernel.
 
+%description core -l pl
+util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
+serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
+jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
+ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
+w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
+
+Ten pakiet zawiera narzêdzia wymagane do komunikacji z j±drem z
+w³±czonym mechanizmem Linux-Vserver.
+
 %package build
 Summary:	Tools which can be used to build vservers
+Summary(pl):	Narzêdzia do budowania vserverów
 Group:		Applications/System
-Requires:	rpm apt wget binutils tar e2fsprogs
+Requires:	apt
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	rpm
+Requires:	tar
+Requires:	wget
 Requires:	%{name} = %{version}-%{release}
 
 %description build
@@ -121,15 +149,25 @@ each other and can't interact with services in the main server.
 
 This package contains utilities which assist in building Vservers.
 
+%description build -l pl
+util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
+serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
+jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
+ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
+w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
+
+Ten pakiet zawiera narzêdzia pomagaj±ce przy budowaniu Vserwerów.
+
 %package init
 Summary:	initscripts for vserver
+Summary(pl):	Skrypty inicjalizuj±ce dla vserwera
 Group:		Base
-Requires:	make
-Requires:	diffutils
-Requires:	rc-scripts
+Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
 Requires:	%{name}-core = %{version}-%{release}
-Requires(post,preun):	/sbin/chkconfig
+Requires:	diffutils
+Requires:	make
+Requires:	rc-scripts
 
 %description init
 util-vserver provides the components and a framework to setup virtual
@@ -139,15 +177,26 @@ with normal configuration. The various vservers can't interact with
 each other and can't interact with services in the main server.
 
 This package contains the SysV initscripts which start and stop
-VServers and related tools.
+Vservers and related tools.
+
+%description init -l pl
+util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
+serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
+jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
+ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
+w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
+
+Ten pakiet zawiera skrypty inicjalizuj±ce SysV uruchamiaj±ce i
+zatrzymuj±ce Vserwery oraz powi±zane narzêdzia.
 
 %package legacy
 Summary:	Legacy utilities for util-vserver
+Summary(pl):	Stare narzêdzia dla util-vserver
 Group:		Applications/System
-Requires:	rc-scripts
+Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
 Requires:	%{name}-core = %{version}-%{release}
-Requires(post,preun):	/sbin/chkconfig
+Requires:	rc-scripts
 
 %description legacy
 util-vserver provides the components and a framework to setup virtual
@@ -156,8 +205,18 @@ nevertheless highly independent. As such, you can run various services
 with normal configuration. The various vservers can't interact with
 each other and can't interact with services in the main server.
 
-This package contains the tools which are needed to work with VServers
+This package contains the tools which are needed to work with Vservers
 having an old-style configuration.
+
+%description legacy -l pl
+util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
+serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
+jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
+ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
+w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
+
+Ten pakiet zawiera narzêdzia potrzebne do pracy z Vserwerami maj±cymi
+konfiguracjê w starym stylu.
 
 %prep
 %setup -q
@@ -208,7 +267,7 @@ rm -rf $RPM_BUILD_ROOT
 %post
 %{_sbindir}/setattr --barrier /vservers || :
 
-%post lib -p /sbin/ldconfig
+%post	lib -p /sbin/ldconfig
 %postun	lib -p /sbin/ldconfig
 
 %post init
