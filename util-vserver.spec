@@ -7,7 +7,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.207
-Release:	0.4
+Release:	0.5
 Epoch:		0
 License:	GPL
 Group:		Base
@@ -218,6 +218,31 @@ w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
 
 Ten pakiet zawiera narzêdzia potrzebne do pracy z Vserwerami maj±cymi
 konfiguracjê w starym stylu.
+
+%package dev
+Summary:	/dev entries for systems in Vservers
+Summary(pl):	Pliki specjalne /dev/* dla systemów w Vserwerach
+Group:		Base
+PreReq:		setup >= 2.4.1-2
+Provides:	dev
+Provides:	devfs
+AutoReqProv:	no
+
+%description
+Unix and unix like systems (including Linux) use file system entries
+to represent devices attached to the machine. All of these entries are
+in the /dev tree (though they don't have to be), and this package
+contains only entries needed for a system running inside Vserver.
+
+DO NOT install this package for a normal system!
+
+%description -l pl
+Wszystkie systemy klasy unices, w tym Linux, u¿ywaj± plików do
+przedstawiania urz±dzeñ pod³±czonych do komputera. Wszystkie te pliki
+znajduj± siê zwykle w katalogu /dev. Pakiet ten wy³±cznie te pliki
+specjalne które s± potrzebne do uruchomienia systemu w Vserwerze.
+
+NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 
 %prep
 %setup -q
@@ -463,3 +488,14 @@ fi
 %{_mandir}/man8/distrib-info*
 %{_mandir}/man8/rebootmgr*
 %{_mandir}/man8/vps.*
+
+%files dev
+%defattr(644,root,root,755)
+%dir /dev/pts
+%dev(c,1,7) %attr(666,root,root) /dev/full
+%dev(c,1,3) %attr(666,root,root) /dev/null
+%dev(c,5,2) %attr(666,root,root) /dev/ptmx
+%dev(c,1,8) %attr(644,root,root) /dev/random
+%dev(c,5,0) %attr(666,root,root) /dev/tty
+%dev(c,1,9) %attr(644,root,root) /dev/urandom
+%dev(c,1,5) %attr(666,root,root) /dev/zero
