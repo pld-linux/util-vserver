@@ -7,7 +7,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.207
-Release:	0.3
+Release:	0.4
 Epoch:		0
 License:	GPL
 Group:		Base
@@ -322,8 +322,8 @@ fi
 %dir %{_sysconfdir}/vservers/.defaults
 %dir %{_sysconfdir}/vservers/.defaults/apps
 %dir %{_sysconfdir}/vservers/.defaults/files
-%ghost %{_sysconfdir}/vservers/.defaults/vdirbase
-%ghost %{_sysconfdir}/vservers/.defaults/run.rev
+%{_sysconfdir}/vservers/.defaults/vdirbase
+%{_sysconfdir}/vservers/.defaults/run.rev
 %{_sysconfdir}/vservers/vdirbase
 %{_sysconfdir}/vservers/run.rev
 /sbin/vshelper
