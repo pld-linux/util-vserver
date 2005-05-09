@@ -219,7 +219,7 @@ w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
 Ten pakiet zawiera narzêdzia potrzebne do pracy z Vserwerami maj±cymi
 konfiguracjê w starym stylu.
 
-%package dev
+%package -n vserver-dev
 Summary:	/dev entries for systems in Vservers
 Summary(pl):	Pliki specjalne /dev/* dla systemów w Vserwerach
 Group:		Base
@@ -228,7 +228,7 @@ Provides:	dev
 Provides:	devfs
 AutoReqProv:	no
 
-%description
+%description -n vserver-dev
 Unix and unix like systems (including Linux) use file system entries
 to represent devices attached to the machine. All of these entries are
 in the /dev tree (though they don't have to be), and this package
@@ -236,7 +236,7 @@ contains only entries needed for a system running inside Vserver.
 
 DO NOT install this package for a normal system!
 
-%description -l pl
+%description -n vserver-dev -l pl
 Wszystkie systemy klasy unices, w tym Linux, u¿ywaj± plików do
 przedstawiania urz±dzeñ pod³±czonych do komputera. Wszystkie te pliki
 znajduj± siê zwykle w katalogu /dev. Pakiet ten wy³±cznie te pliki
@@ -261,7 +261,7 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d}}
+install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d},/dev}
 
 %{__make} install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -286,6 +286,8 @@ install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/rc.d/init.d/rebootmgr
 install %{SOURCE5} $RPM_BUILD_ROOT/etc/sysconfig/vservers-default
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
+
+ln -sf /dev/null $RPM_BUILD_ROOT/dev/initctl
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -339,6 +341,20 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del rebootmgr
 	/sbin/chkconfig --del vservers-legacy
 fi
+
+%post -n vserver-dev
+cat << EOF
+
+ **************************************************
+ *                                                *
+ *  	         BIG FAT WARNING!!!               *
+ *                                                *
+ *  This package is for use inside Vserver ONLY!  *
+ *  DO NOT install it on normal system!           *
+ *                                                *
+ **************************************************
+
+EOF
 
 %files
 %defattr(644,root,root,755)
@@ -489,7 +505,7 @@ fi
 %{_mandir}/man8/rebootmgr*
 %{_mandir}/man8/vps.*
 
-%files dev
+%files -n vserver-dev
 %defattr(644,root,root,755)
 %dir /dev/pts
 %dev(c,1,7) %attr(666,root,root) /dev/full
@@ -499,3 +515,4 @@ fi
 %dev(c,5,0) %attr(666,root,root) /dev/tty
 %dev(c,1,9) %attr(644,root,root) /dev/urandom
 %dev(c,1,5) %attr(666,root,root) /dev/zero
+/dev/initctl
