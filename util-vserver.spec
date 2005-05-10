@@ -7,7 +7,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.207
-Release:	0.5
+Release:	0.6
 Epoch:		0
 License:	GPL
 Group:		Base
