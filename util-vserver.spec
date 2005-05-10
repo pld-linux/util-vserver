@@ -133,7 +133,6 @@ w³±czonym mechanizmem Linux-Vserver.
 Summary:	Tools which can be used to build vservers
 Summary(pl):	Narzêdzia do budowania vserverów
 Group:		Applications/System
-Requires:	apt
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
