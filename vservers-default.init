@@ -12,7 +12,7 @@ fi
 . "$UTIL_VSERVER_VARS"
 
 [ -n "$MARK" ] || MARK=default
-[ -n "$NUMPARALLEL" ] || $NUMPARALLEL=6
+[ -n "$NUMPARALLEL" ] || NUMPARALLEL=6
 
 function _tellResult()
 {
