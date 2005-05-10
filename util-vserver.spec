@@ -224,7 +224,8 @@ Summary:	/dev entries for systems in Vservers
 Summary(pl):	Pliki specjalne /dev/* dla systemów w Vserwerach
 Group:		Base
 PreReq:		setup >= 2.4.1-2
-Provides:	dev
+Provides:	dev = 2.9.0-19
+Obsoletes:	dev
 Provides:	devfs
 AutoReqProv:	no
 
@@ -261,7 +262,7 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d},/dev}
+install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d},/dev/pts}
 
 %{__make} install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
