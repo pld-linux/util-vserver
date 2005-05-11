@@ -1,6 +1,7 @@
 #
 # Conditional build:
 %bcond_with	dietlibc	# use dietlibc instead of glibc
+%bcond_without	doc		# 
 %bcond_with	xalan		# use the xalan xslt processor
 
 Summary:	Linux virtual server utilities
@@ -25,9 +26,10 @@ URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	beecrypt-devel
 %{?with_dietlibc:BuildRequires:	dietlibc >= 0:0.25}
 BuildRequires:	doxygen
-BuildRequires:	e2fsprogs-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libxslt-progs
+%{?with_doc:BuildRequires:	tetex-format-pdflatex}
+%{?with_doc:BuildRequires:	tetex-makeindex}
 BuildRequires:	vlan
 %{?with_xalan:BuildRequires:	xalan-j}
 PreReq:		rc-scripts
@@ -259,10 +261,11 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 	%{!?with_dietlibc:--disable-dietlibc} \
 	IPTABLES=/usr/sbin/iptables \
 	MOUNT=/sbin/mount \
+	NAMEIF=/sbin/nameif \
 	UMOUNT=/sbin/umount
 
 %{__make} all
-%{__make} doc
+%{?with_doc:%{__make} doc}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -363,7 +366,8 @@ EOF
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog NEWS THANKS doc/intro.txt doc/*.html
+%doc AUTHORS ChangeLog NEWS THANKS doc/intro.txt
+%{?with_doc:%doc doc/*.html}
 %dir %{_sysconfdir}/vservers
 %dir %{_sysconfdir}/vservers/.defaults
 %dir %{_sysconfdir}/vservers/.defaults/apps
@@ -414,7 +418,7 @@ EOF
 
 %files devel
 %defattr(644,root,root,755)
-%doc lib/apidoc/latex/refman.pdf lib/apidoc/html
+%{?with_doc:%doc lib/apidoc/latex/refman.pdf lib/apidoc/html}
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
 %{_includedir}/vserver.h
