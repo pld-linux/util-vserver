@@ -1,7 +1,7 @@
 #
 # Conditional build:
 %bcond_with	dietlibc	# use dietlibc instead of glibc
-%bcond_without	doc		# 
+%bcond_without	doc		# don't build documentation which needed LaTeX
 %bcond_with	xalan		# use the xalan xslt processor
 
 Summary:	Linux virtual server utilities
