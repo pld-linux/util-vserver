@@ -22,11 +22,13 @@ Source6:	vservers-legacy.sysconfig
 Patch0:		%{name}-no-kernel-includes.patch
 Patch1:		%{name}-vsysvwrapper.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
+BuildRequires:	beecrypt-devel
+%{?with_dietlibc:BuildRequires:	dietlibc >= 0:0.25}
+BuildRequires:	doxygen
 BuildRequires:	e2fsprogs-devel
+BuildRequires:	libstdc++-devel
 BuildRequires:	libxslt-progs
 BuildRequires:	vlan
-BuildRequires:	doxygen
-%{?with_dietlibc:BuildRequires:	dietlibc >= 0:0.25}
 %{?with_xalan:BuildRequires:	xalan-j}
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
@@ -254,7 +256,10 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 	--with-initrddir=/etc/rc.d/init.d \
 	--enable-release \
 	%{?with_dietlibc:--enable-dietlibc} \
-	%{!?with_dietlibc:--disable-dietlibc}
+	%{!?with_dietlibc:--disable-dietlibc} \
+	IPTABLES=/usr/sbin/iptables \
+	MOUNT=/sbin/mount \
+	UMOUNT=/sbin/umount
 
 %{__make} all
 %{__make} doc
