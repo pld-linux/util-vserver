@@ -27,11 +27,13 @@ BuildRequires:	beecrypt-devel
 %{?with_dietlibc:BuildRequires:	dietlibc >= 0:0.25}
 BuildRequires:	doxygen
 BuildRequires:	libstdc++-devel
-BuildRequires:	libxslt-progs
+%{?with_doc:BuildRequires:	libxslt-progs}
 %{?with_doc:BuildRequires:	tetex-format-pdflatex}
 %{?with_doc:BuildRequires:	tetex-makeindex}
 BuildRequires:	vlan
+%if %{with doc}
 %{?with_xalan:BuildRequires:	xalan-j}
+%endif
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
