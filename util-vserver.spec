@@ -350,20 +350,6 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del vservers-legacy
 fi
 
-%post -n vserver-dev
-cat << EOF
-
- **************************************************
- *                                                *
- *  	         BIG FAT WARNING!!!               *
- *                                                *
- *  This package is for use inside Vserver ONLY!  *
- *  DO NOT install it on normal system!           *
- *                                                *
- **************************************************
-
-EOF
-
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS THANKS doc/intro.txt
