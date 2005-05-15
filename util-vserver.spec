@@ -230,7 +230,6 @@ Summary(pl):	Pliki specjalne /dev/* dla systemów w Vserwerach
 Group:		Base
 PreReq:		setup >= 2.4.1-2
 Provides:	dev = 2.9.0-19
-Obsoletes:	dev
 Provides:	devfs
 AutoReqProv:	no
 
