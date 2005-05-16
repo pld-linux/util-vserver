@@ -8,8 +8,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.207
-Release:	1
-Epoch:		0
+Release:	1.6
 License:	GPL
 Group:		Base
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -22,6 +21,7 @@ Source5:	vservers-default.sysconfig
 Source6:	vservers-legacy.sysconfig
 Patch0:		%{name}-no-kernel-includes.patch
 Patch1:		%{name}-vsysvwrapper.patch
+Patch2:		%{name}-build-poldek.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	beecrypt-devel
 %{?with_dietlibc:BuildRequires:	dietlibc >= 0:0.25}
@@ -253,17 +253,20 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
+%{__aclocal} -I m4
+%{__automake}
 %configure \
 	--with-initrddir=/etc/rc.d/init.d \
 	--enable-release \
 	%{?with_dietlibc:--enable-dietlibc} \
 	%{!?with_dietlibc:--disable-dietlibc} \
 	IPTABLES=/usr/sbin/iptables \
-	MOUNT=/sbin/mount \
 	NAMEIF=/sbin/nameif \
-	UMOUNT=/sbin/umount
+	MOUNT=/bin/mount \
+	UMOUNT=/bin/umount
 
 %{__make} all
 %{?with_doc:%{__make} doc}
@@ -279,6 +282,17 @@ install -d $RPM_BUILD_ROOT/etc/vservices
 install -d $RPM_BUILD_ROOT/vservers/.pkg
 ln -s /vservers $RPM_BUILD_ROOT%{_sysconfdir}/vservers/vdirbase
 ln -s %{_localstatedir}/run/vservers.rev $RPM_BUILD_ROOT%{_sysconfdir}/vservers/run.rev
+
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld2.0
+ln -s pld2.0 $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld1.99
+
+install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld2.0/pkgs
+ln -s pld2.0 $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld1.99
+
+cat > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld2.0/pkgs/01 << EOF
+vserver-basesystem
+glibc
+EOF
 
 for i in $RPM_BUILD_ROOT/etc/rc.d/init.d/v_* ; do
 	s=`basename $i | sed s/v_//`
@@ -476,12 +490,14 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/vcopy
 %attr(755,root,root) %{_libdir}/%{name}/vhashify
 %attr(755,root,root) %{_libdir}/%{name}/vpkg
+%attr(755,root,root) %{_libdir}/%{name}/vpoldek-worker
 %attr(755,root,root) %{_libdir}/%{name}/vrpm-*
 %attr(755,root,root) %{_libdir}/%{name}/vserver-build
 %attr(755,root,root) %{_libdir}/%{name}/vunify
 %attr(755,root,root) %{_libdir}/%{name}/vyum-worker
 %attr(755,root,root) %{_sbindir}/vapt-get
 %attr(755,root,root) %{_sbindir}/vfiles
+%attr(755,root,root) %{_sbindir}/vpoldek
 %attr(755,root,root) %{_sbindir}/vrpm
 %attr(755,root,root) %{_sbindir}/vyum
 %{_mandir}/man8/vserver-copy*
