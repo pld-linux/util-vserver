@@ -1,0 +1,364 @@
+diff -urN util-vserver-0.30.207/scripts/Makefile-files util-vserver-0.30.207-poldek/scripts/Makefile-files
+--- util-vserver-0.30.207/scripts/Makefile-files	2005-04-28 19:45:34.000000000 +0200
++++ util-vserver-0.30.207-poldek/scripts/Makefile-files	2005-05-16 16:28:02.627433152 +0200
+@@ -21,6 +21,7 @@
+ 				scripts/vapt-get-worker \
+ 				scripts/vrpm-worker \
+ 				scripts/vyum-worker \
++				scripts/vpoldek-worker \
+ 				scripts/vrpm-preload \
+ 				scripts/save_s_context \
+ 				scripts/vservers.grabinfo.sh \
+@@ -43,11 +44,13 @@
+ 				scripts/vserver-build.debootstrap \
+ 				scripts/vserver-build.rpm \
+ 				scripts/vserver-build.yum \
++				scripts/vserver-build.poldek \
+ 				scripts/vserver-build.functions \
+ 				scripts/vserver-build.functions.apt \
+ 				scripts/vserver-build.functions.rpm \
+ 				scripts/vserver-build.functions.pkgmgmt \
+ 				scripts/vserver-build.functions.yum \
++				scripts/vserver-build.functions.poldek \
+ 				scripts/vserver-setup.functions \
+ 				scripts/vserver.functions \
+ 				scripts/vserver.start \
+@@ -59,6 +62,7 @@
+ scripts_pkglib_src_SCRPTS =	scripts/pkgmgmt \
+ 				scripts/vapt-get-worker \
+ 				scripts/vpkg \
++				scripts/vpoldek-worker \
+ 				scripts/vrpm-worker \
+ 				scripts/vrpm-preload \
+ 				scripts/start-vservers \
+@@ -80,6 +84,7 @@
+ 
+ scripts_sbin_src_PRGS =		scripts/chcontext \
+ 				scripts/vapt-get \
++				scripts/vpoldek \
+ 				scripts/vpstree \
+ 				scripts/vrpm \
+ 				scripts/vserver \
+diff -urN util-vserver-0.30.207/scripts/util-vserver-vars.pathsubst util-vserver-0.30.207-poldek/scripts/util-vserver-vars.pathsubst
+--- util-vserver-0.30.207/scripts/util-vserver-vars.pathsubst	2005-03-23 03:05:39.000000000 +0100
++++ util-vserver-0.30.207-poldek/scripts/util-vserver-vars.pathsubst	2005-05-16 16:24:45.250439016 +0200
+@@ -49,6 +49,7 @@
+ _LIB_VSERVER_BUILD_FUNCTIONS_RPM="$__PKGLIBDIR/vserver-build.functions.rpm"
+ _LIB_VSERVER_BUILD_FUNCTIONS_YUM="$__PKGLIBDIR/vserver-build.functions.yum"
+ _LIB_VSERVER_BUILD_FUNCTIONS_PKGMGMT="$__PKGLIBDIR/vserver-build.functions.pkgmgmt"
++_LIB_VSERVER_BUILD_FUNCTIONS_POLDEK="$__PKGLIBDIR/vserver-build.functions.poldek"
+ _LISTDEVIP="$__LEGACYDIR/listdevip"
+ _LOCKFILE="$__PKGLIBDIR/lockfile"
+ _MASK2PREFIX="$__PKGLIBDIR/mask2prefix"
+@@ -91,6 +92,8 @@
+ _VUNIFY="$__PKGLIBDIR/vunify"
+ _VYUM="$__SBINDIR/vyum"
+ _VYUM_WORKER="$__PKGLIBDIR/vyum-worker"
++_VPOLDEK="$__SBINDIR/vpoldek"
++_VPOLDEK_WORKER="$__PKGLIBDIR/vpoldek-worker"
+ 
+ _AWK="@AWK@"
+ _CAT="@CAT@"
+diff -urN util-vserver-0.30.207/scripts/vpoldek util-vserver-0.30.207-poldek/scripts/vpoldek
+--- util-vserver-0.30.207/scripts/vpoldek	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.207-poldek/scripts/vpoldek	2005-05-16 15:40:32.951726424 +0200
+@@ -0,0 +1,99 @@
++#! /bin/bash
++# $Id$
++
++# Copyright (C) 2003 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
++#  
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; version 2 of the License.
++#  
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#  
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++
++: ${UTIL_VSERVER_VARS:=/usr/lib/util-vserver/util-vserver-vars}
++test -e "$UTIL_VSERVER_VARS" || {
++    echo $"Can not find util-vserver installation (the file '$UTIL_VSERVER_VARS' would be expected); aborting..." >&2
++    exit 1
++}
++. "$UTIL_VSERVER_VARS"
++. "$_LIB_FUNCTIONS"
++
++
++function showHelp()
++{
++    echo \
++$"Usage: $0 <vserver-name>* [--all] -- <params>+
++
++Report bugs to <$PACKAGE_BUGREPORT>."
++    exit $1
++}
++
++function showVersion()
++{
++    echo \
++$"vpoldek $PACKAGE_VERSION -- poldek for vservers
++This program is part of $PACKAGE_STRING
++
++Copyright (C) 2003 Enrico Scholz
++This program is free software; you may redistribute it under the terms of
++the GNU General Public License.  This program has absolutely no warranty."
++    exit $1
++}
++
++is_quiet=
++declare -a vservers=()
++
++while test "$#" -ge 1; do
++    case "$1" in
++	--)		shift; break;;
++	--help)		showHelp 0;;
++	--quiet|-q)	is_quiet=1 ;;
++	--all)
++	    getAllVservers tmp
++	    vservers=( "${vservers[@]}" "${tmp[@]}" )
++	    ;;
++	--version)
++	    showVersion 0;;
++	*)  vservers=( "${vservers[@]}" "$1" )
++     esac
++     shift
++done
++
++test "$#" -ge 1 || showHelp 1 >&2
++test "${#vservers[@]}" -ne 1 || is_quiet=1
++
++cnt=0
++res=255
++for i in "${vservers[@]}"; do
++    cnt=$[ cnt + 1 ]
++
++    test -n "$is_quiet" || {
++	colorize bold echo -n "vpoldek: operating on vserver "
++	colorize bold colorize emph echo "$i"
++	xtermTitle "vpoldek: operating on vserver '$i'  [$cnt/${#vservers[@]}]"
++    }
++    
++    if pkgmgmt.isInternal "$i"; then
++	$_VSERVER "$i" exec poldek "$@"
++    else
++	callInNamespace "$i" \
++	    "$_VNAMESPACE" --new -- "$_VPOLDEK_WORKER" "$i" "$@"
++    fi
++    res=$?
++
++    test $res -eq 0 -o -n "$is_quiet" || {
++	colorize error echo -n $"vpoldek failed on vserver '$i' with errorcode $res"
++	echo
++    }
++	
++    test -n "$is_quiet" || echo
++done
++
++test "$cnt" -ge 0 || echo "No vservers specified" >&2
++exit $res
+diff -urN util-vserver-0.30.207/scripts/vpoldek-worker util-vserver-0.30.207-poldek/scripts/vpoldek-worker
+--- util-vserver-0.30.207/scripts/vpoldek-worker	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.207-poldek/scripts/vpoldek-worker	2005-05-16 15:38:39.823924464 +0200
+@@ -0,0 +1,40 @@
++#! /bin/bash
++# $Id$
++
++# Copyright (C) 2003 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
++#  
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; version 2 of the License.
++#  
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#  
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++
++set -e
++
++: ${UTIL_VSERVER_VARS:=/usr/lib/util-vserver/util-vserver-vars}
++test -e "$UTIL_VSERVER_VARS" || {
++    echo $"Can not find util-vserver installation (the file '$UTIL_VSERVER_VARS' would be expected); aborting..." >&2
++    exit 1
++}
++. "$UTIL_VSERVER_VARS"
++. "$_LIB_FUNCTIONS"
++
++
++vserver="$1"
++shift
++
++pkgInit "$vserver" rpm poldek
++
++test -z "$_POLDEK" || {
++    warning $"The environment variable \$_POLDEK is not supported anymore; please use \$POLDEK instead of"
++    ${POLDEK:=$_POLDEK}
++}
++
++exec ${_POLDEK:-poldek} --root=$VDIR "$@"
+diff -urN util-vserver-0.30.207/scripts/vserver-build util-vserver-0.30.207-poldek/scripts/vserver-build
+--- util-vserver-0.30.207/scripts/vserver-build	2005-03-21 21:03:31.000000000 +0100
++++ util-vserver-0.30.207-poldek/scripts/vserver-build	2005-05-16 16:29:00.368655152 +0200
+@@ -56,6 +56,9 @@
+     yum     ... -- -d <distribution>
+                 ...  installs the base-packages of the given distribution with
+ 		     help of 'vyum'
++    poldek  ... -- -d <distribution>
++                ...  installs the base-packages of the given distribution with
++		     help of 'vpoldek'
+     rpm     ... -- [-d <distribution>] --empty|([--force] [--nodeps] <manifest>)+
+                 ...  installs lists of rpm-packages
+     skeleton ... -- [<cmd> <args>*]
+@@ -121,7 +124,7 @@
+ 
+ case x"$method" in
+     (xlegacy)	exec $_VSERVER_LEGACY "$VSERVER_NAME" build "$@" ;;
+-    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm)
++    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xpoldek)
+ 		. $__PKGLIBDIR/vserver-build.$method
+ 		;;
+     (x)		panic $"No build-method specified";;
+diff -urN util-vserver-0.30.207/scripts/vserver-build.functions.poldek util-vserver-0.30.207-poldek/scripts/vserver-build.functions.poldek
+--- util-vserver-0.30.207/scripts/vserver-build.functions.poldek	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.207-poldek/scripts/vserver-build.functions.poldek	2005-05-16 16:19:31.930070952 +0200
+@@ -0,0 +1,64 @@
++# $Id$	--*- sh -*--
++
++# Copyright (C) 2003 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
++#  
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; version 2 of the License.
++#  
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#  
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++
++function poldek.installBasePackages
++{
++    local name="$1"
++    local dir="$2"
++
++    test "$dir" != / || return 0
++    for filelist in "$dir"/*; do
++	isRegularFile "$filelist" || continue
++	local idx=0
++	local can_fail=false
++	local flags=
++
++	set -- $(<$filelist)
++	while test "$#" -gt 0; do
++	    case "$1" in
++		--reinstall) flags='--reinstall';;
++		--can-fail)  can_fail=true;;
++		*)  	     break;;
++	    esac
++	    shift
++	done
++	"$_POLDEK" "$name" -- --install $flags $* || $can_fail
++    done
++}
++
++function poldek.initVariables
++{
++    findFile APTCONFDEFAULT \
++	"$__CONFDIR/.distributions/$DISTRIBUTION/poldek.conf" \
++	"$__CONFDIR/.defaults/apps/pkgmgmt/poldek.conf" \
++	"$__DISTRIBDIR/$DISTRIBUTION/poldek.conf" \
++	"$__DISTRIBDIR/defaults/poldek.conf" \
++	''
++}
++
++function poldek.initFilesystem
++{
++    mkdir -p "$PKGCFGDIR"/poldek/{etc,cache}
++    
++    populateDirectory "$PKGCFGDIR/poldek/etc" \
++	"$__DISTRIBDIR/defaults/poldek" \
++	"$__DISTRIBDIR/$DISTRIBUTION/poldek" \
++	"$__CONFDIR/.distributions/$DISTRIBUTION/poldek"
++
++    test -z "$POLDEKCONFDEFAULT" || \
++	$_LN_S "$POLDEKCONFDEFAULT"   "$PKGCFGDIR"/poldek/etc/poldek.conf
++}
+diff -urN util-vserver-0.30.207/scripts/vserver-build.poldek util-vserver-0.30.207-poldek/scripts/vserver-build.poldek
+--- util-vserver-0.30.207/scripts/vserver-build.poldek	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.207-poldek/scripts/vserver-build.poldek	2005-05-16 16:22:45.872587208 +0200
+@@ -0,0 +1,62 @@
++# $Id$	--*- sh -*--
++
++# Copyright (C) 2003 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
++#  
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; version 2 of the License.
++#  
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#  
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++
++tmp=$(getopt -o +d: --long debug -n "$0" -- "$@") || exit 1
++eval set -- "$tmp"
++
++. "$_LIB_VSERVER_BUILD_FUNCTIONS_RPM"
++. "$_LIB_VSERVER_BUILD_FUNCTIONS_POLDEK"
++. "$_LIB_VSERVER_BUILD_FUNCTIONS_PKGMGMT"
++
++while true; do
++    case "$1" in
++	(-d)		DISTRIBUTION=$2; shift;;
++	(--debug)	set -x;;
++	(--)		shift; break ;;
++	(*)		echo "vserver-build.poldek-rpm: internal error: unrecognized option '$1'" >&2
++			exit 1
++			;;
++    esac
++    shift
++done
++
++getDistribution
++
++base.initVariables
++pkgmgmt.initVariables
++rpm.initVariables
++poldek.initVariables
++
++base.initFilesystem    "$OPTION_FORCE"
++pkgmgmt.initFilesystem "$OPTION_FORCE"
++rpm.initFilesystem
++poldek.initFilesystem
++
++setup_writeOption "$VSERVER_NAME"
++setup_writeInitialFstab
++
++test -z "$BUILD_INITPRE"  || "$BUILD_INITPRE" "$SETUP_CONFDIR"  "$UTIL_VSERVER_VARS"
++rpm.initDB           "$SETUP_CONFDIR"
++rpm.importGPGPubKeys "$SETUP_CONFDIR" \
++    "$__CONFDIR/.distributions/$DISTRIBUTION/pubkeys" \
++    "$__CONFDIR/.distributions/.common/pubkeys" \
++    "$__DISTRIBDIR/$DISTRIBUTION/pubkeys"
++
++$_VPOLDEK "$SETUP_CONFDIR" -- --update-whole
++poldek.installBasePackages "$SETUP_CONFDIR" "$PKGINSTALLDIR"
++$_VPOLDEK "$SETUP_CONFDIR" -- --clean
++test -z "$BUILD_INITPOST" || "$BUILD_INITPOST" "$SETUP_CONFDIR" "$UTIL_VSERVER_VARS"
