@@ -1,4 +1,4 @@
-diff -urN -x '*~' util-vserver-0.30.207/scripts/Makefile-files util-vserver-0.30.207-poldek/scripts/Makefile-files
+diff -urN util-vserver-0.30.207/scripts/Makefile-files util-vserver-0.30.207-poldek/scripts/Makefile-files
 --- util-vserver-0.30.207/scripts/Makefile-files	2005-04-28 19:45:34.000000000 +0200
 +++ util-vserver-0.30.207-poldek/scripts/Makefile-files	2005-05-16 16:28:02.627433152 +0200
 @@ -21,6 +21,7 @@
@@ -39,7 +39,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/Makefile-files util-vserver-0.30
  				scripts/vpstree \
  				scripts/vrpm \
  				scripts/vserver \
-diff -urN -x '*~' util-vserver-0.30.207/scripts/functions util-vserver-0.30.207-poldek/scripts/functions
+diff -urN util-vserver-0.30.207/scripts/functions util-vserver-0.30.207-poldek/scripts/functions
 --- util-vserver-0.30.207/scripts/functions	2005-04-28 20:02:27.000000000 +0200
 +++ util-vserver-0.30.207-poldek/scripts/functions	2005-05-16 18:35:20.652426168 +0200
 @@ -324,6 +324,20 @@
@@ -71,7 +71,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/functions util-vserver-0.30.207-
  	    *)		echo "Unknown packaging flavor" >&2; exit 1;;
  	esac
      done
-diff -urN -x '*~' util-vserver-0.30.207/scripts/util-vserver-vars.pathsubst util-vserver-0.30.207-poldek/scripts/util-vserver-vars.pathsubst
+diff -urN util-vserver-0.30.207/scripts/util-vserver-vars.pathsubst util-vserver-0.30.207-poldek/scripts/util-vserver-vars.pathsubst
 --- util-vserver-0.30.207/scripts/util-vserver-vars.pathsubst	2005-03-23 03:05:39.000000000 +0100
 +++ util-vserver-0.30.207-poldek/scripts/util-vserver-vars.pathsubst	2005-05-16 16:24:45.250439016 +0200
 @@ -49,6 +49,7 @@
@@ -91,10 +91,10 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/util-vserver-vars.pathsubst util
  
  _AWK="@AWK@"
  _CAT="@CAT@"
-diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek util-vserver-0.30.207-poldek/scripts/vpoldek
+diff -urN util-vserver-0.30.207/scripts/vpoldek util-vserver-0.30.207-poldek/scripts/vpoldek
 --- util-vserver-0.30.207/scripts/vpoldek	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.207-poldek/scripts/vpoldek	2005-05-16 15:40:32.951726424 +0200
-@@ -0,0 +1,99 @@
++++ util-vserver-0.30.207-poldek/scripts/vpoldek	2005-05-17 01:05:52.770786976 +0200
+@@ -0,0 +1,96 @@
 +#! /bin/bash
 +# $Id$
 +
@@ -128,7 +128,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek util-vserver-0.30.207-po
 +$"Usage: $0 <vserver-name>* [--all] -- <params>+
 +
 +Report bugs to <$PACKAGE_BUGREPORT>."
-+    exit $1
++    exit 0
 +}
 +
 +function showVersion()
@@ -140,7 +140,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek util-vserver-0.30.207-po
 +Copyright (C) 2003 Enrico Scholz
 +This program is free software; you may redistribute it under the terms of
 +the GNU General Public License.  This program has absolutely no warranty."
-+    exit $1
++    exit 0
 +}
 +
 +is_quiet=
@@ -149,21 +149,18 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek util-vserver-0.30.207-po
 +while test "$#" -ge 1; do
 +    case "$1" in
 +	--)		shift; break;;
-+	--help)		showHelp 0;;
++	--help)		showHelp $0;;
 +	--quiet|-q)	is_quiet=1 ;;
 +	--all)
 +	    getAllVservers tmp
 +	    vservers=( "${vservers[@]}" "${tmp[@]}" )
 +	    ;;
 +	--version)
-+	    showVersion 0;;
++	    showVersion ;;
 +	*)  vservers=( "${vservers[@]}" "$1" )
 +     esac
 +     shift
 +done
-+
-+test "$#" -ge 1 || showHelp 1 >&2
-+test "${#vservers[@]}" -ne 1 || is_quiet=1
 +
 +cnt=0
 +res=255
@@ -194,9 +191,9 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek util-vserver-0.30.207-po
 +
 +test "$cnt" -ge 0 || echo "No vservers specified" >&2
 +exit $res
-diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek-worker util-vserver-0.30.207-poldek/scripts/vpoldek-worker
+diff -urN util-vserver-0.30.207/scripts/vpoldek-worker util-vserver-0.30.207-poldek/scripts/vpoldek-worker
 --- util-vserver-0.30.207/scripts/vpoldek-worker	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.207-poldek/scripts/vpoldek-worker	2005-05-16 18:56:47.911733008 +0200
++++ util-vserver-0.30.207-poldek/scripts/vpoldek-worker	2005-05-17 00:50:36.995383984 +0200
 @@ -0,0 +1,40 @@
 +#! /bin/bash
 +# $Id$
@@ -230,7 +227,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek-worker util-vserver-0.30
 +vserver="$1"
 +shift
 +
-+pkgInit "$vserver" rpm poldek
++pkgInit "$vserver" poldek
 +
 +test -z "$_POLDEK" || {
 +    warning $"The environment variable \$_POLDEK is not supported anymore; please use \$POLDEK instead of"
@@ -238,7 +235,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek-worker util-vserver-0.30
 +}
 +
 +exec ${_POLDEK:-poldek} -v --root=$VDIR --cachedir=$POLDEKCACHEDIR "$@"
-diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build util-vserver-0.30.207-poldek/scripts/vserver-build
+diff -urN util-vserver-0.30.207/scripts/vserver-build util-vserver-0.30.207-poldek/scripts/vserver-build
 --- util-vserver-0.30.207/scripts/vserver-build	2005-03-21 21:03:31.000000000 +0100
 +++ util-vserver-0.30.207-poldek/scripts/vserver-build	2005-05-16 18:48:36.353461224 +0200
 @@ -56,6 +56,9 @@
@@ -260,7 +257,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build util-vserver-0.30.
  		. $__PKGLIBDIR/vserver-build.$method
  		;;
      (x)		panic $"No build-method specified";;
-diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.functions util-vserver-0.30.207-poldek/scripts/vserver-build.functions
+diff -urN util-vserver-0.30.207/scripts/vserver-build.functions util-vserver-0.30.207-poldek/scripts/vserver-build.functions
 --- util-vserver-0.30.207/scripts/vserver-build.functions	2005-04-16 23:20:45.000000000 +0200
 +++ util-vserver-0.30.207-poldek/scripts/vserver-build.functions	2005-05-16 18:31:25.209218976 +0200
 @@ -133,6 +133,9 @@
@@ -273,7 +270,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.functions util-vse
      elif test -n "$1"; then
  	DISTRIBUTION=$1
      else
-diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.functions.poldek util-vserver-0.30.207-poldek/scripts/vserver-build.functions.poldek
+diff -urN util-vserver-0.30.207/scripts/vserver-build.functions.poldek util-vserver-0.30.207-poldek/scripts/vserver-build.functions.poldek
 --- util-vserver-0.30.207/scripts/vserver-build.functions.poldek	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.207-poldek/scripts/vserver-build.functions.poldek	2005-05-16 18:50:01.703486048 +0200
 @@ -0,0 +1,64 @@
@@ -341,10 +338,10 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.functions.poldek u
 +    test -z "$POLDEKCONFDEFAULT" || \
 +	$_LN_S "$POLDEKCONFDEFAULT"   "$PKGCFGDIR"/poldek/etc/poldek.conf
 +}
-diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.poldek util-vserver-0.30.207-poldek/scripts/vserver-build.poldek
+diff -urN util-vserver-0.30.207/scripts/vserver-build.poldek util-vserver-0.30.207-poldek/scripts/vserver-build.poldek
 --- util-vserver-0.30.207/scripts/vserver-build.poldek	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.207-poldek/scripts/vserver-build.poldek	2005-05-16 16:22:45.872587208 +0200
-@@ -0,0 +1,62 @@
++++ util-vserver-0.30.207-poldek/scripts/vserver-build.poldek	2005-05-17 00:52:02.964314720 +0200
+@@ -0,0 +1,54 @@
 +# $Id$	--*- sh -*--
 +
 +# Copyright (C) 2003 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
@@ -365,7 +362,6 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.poldek util-vserve
 +tmp=$(getopt -o +d: --long debug -n "$0" -- "$@") || exit 1
 +eval set -- "$tmp"
 +
-+. "$_LIB_VSERVER_BUILD_FUNCTIONS_RPM"
 +. "$_LIB_VSERVER_BUILD_FUNCTIONS_POLDEK"
 +. "$_LIB_VSERVER_BUILD_FUNCTIONS_PKGMGMT"
 +
@@ -374,7 +370,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.poldek util-vserve
 +	(-d)		DISTRIBUTION=$2; shift;;
 +	(--debug)	set -x;;
 +	(--)		shift; break ;;
-+	(*)		echo "vserver-build.poldek-rpm: internal error: unrecognized option '$1'" >&2
++	(*)		echo "vserver-build.poldek: internal error: unrecognized option '$1'" >&2
 +			exit 1
 +			;;
 +    esac
@@ -385,23 +381,16 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.poldek util-vserve
 +
 +base.initVariables
 +pkgmgmt.initVariables
-+rpm.initVariables
 +poldek.initVariables
 +
 +base.initFilesystem    "$OPTION_FORCE"
 +pkgmgmt.initFilesystem "$OPTION_FORCE"
-+rpm.initFilesystem
 +poldek.initFilesystem
 +
 +setup_writeOption "$VSERVER_NAME"
 +setup_writeInitialFstab
 +
 +test -z "$BUILD_INITPRE"  || "$BUILD_INITPRE" "$SETUP_CONFDIR"  "$UTIL_VSERVER_VARS"
-+rpm.initDB           "$SETUP_CONFDIR"
-+rpm.importGPGPubKeys "$SETUP_CONFDIR" \
-+    "$__CONFDIR/.distributions/$DISTRIBUTION/pubkeys" \
-+    "$__CONFDIR/.distributions/.common/pubkeys" \
-+    "$__DISTRIBDIR/$DISTRIBUTION/pubkeys"
 +
 +$_VPOLDEK "$SETUP_CONFDIR" -- --update-whole
 +poldek.installBasePackages "$SETUP_CONFDIR" "$PKGINSTALLDIR"
