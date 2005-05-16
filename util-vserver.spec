@@ -30,7 +30,6 @@ BuildRequires:	libstdc++-devel
 %{?with_doc:BuildRequires:	libxslt-progs}
 %{?with_doc:BuildRequires:	tetex-format-pdflatex}
 %{?with_doc:BuildRequires:	tetex-makeindex}
-BuildRequires:	vlan
 %if %{with doc}
 %{?with_xalan:BuildRequires:	xalan-j}
 %endif
@@ -266,7 +265,8 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 	IPTABLES=/usr/sbin/iptables \
 	NAMEIF=/sbin/nameif \
 	MOUNT=/bin/mount \
-	UMOUNT=/bin/umount
+	UMOUNT=/bin/umount \
+	VCONFIG=/sbin/vconfig
 
 %{__make} all
 %{?with_doc:%{__make} doc}
