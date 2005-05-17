@@ -1,6 +1,135 @@
-diff -urN util-vserver-0.30.207/scripts/Makefile-files util-vserver-0.30.207-poldek/scripts/Makefile-files
+diff -urN -x '*~' util-vserver-0.30.207/distrib/Makefile.am util-vserver-0.30.207-poldek/distrib/Makefile.am
+--- util-vserver-0.30.207/distrib/Makefile.am	2005-05-17 17:53:31.514184912 +0200
++++ util-vserver-0.30.207-poldek/distrib/Makefile.am	2005-05-17 16:39:41.661574720 +0200
+@@ -50,7 +50,8 @@
+ 			   fc1/apt/sources.list \
+ 			   fc2/apt/sources.list \
+ 			   fc3/apt/sources.list \
+-			   suse91/apt/sources.list
++			   suse91/apt/sources.list \
++			   pld2.0/poldek/poldek.conf
+ 
+ AM_INSTALLCHECK_STD_OPTIONS_EXEMPT \
+ 			=  $(nobase_distrib_SCRIPTS)
+@@ -69,6 +70,11 @@
+ 				ln -sf ../redhat/initpre  $(DESTDIR)$(distribdir)/$$i/; \
+ 			done
+ 			ln -sf pld2.0 $(DESTDIR)$(distribdir)/pld1.99
++			ln -sf pld2.0 $(DESTDIR)$(confdistribdir)/pld1.99
++			POLDEKARCH=$(shell rpm -E '%{_target_cpu}' 2>/dev/null); \
++			if [ -z "$$POLDEKARCH" ] ; then POLDEKARCH=$(shell uname -m) ; fi ; \
++			sed "s|%ARCH%|$$POLDEKARCH|g" $(DESTDIR)$(confdistribdir)/pld2.0/poldek/poldek.conf > $(DESTDIR)$(confdistribdir)/pld2.0/poldek/poldek.conf.tmp ; \
++			mv $(DESTDIR)$(confdistribdir)/pld2.0/poldek/poldek.conf.tmp $(DESTDIR)$(confdistribdir)/pld2.0/poldek/poldek.conf
+ 			$(mkinstalldirs) $(DESTDIR)$(confdir) \
+ 				$(DESTDIR)$(confdistribdir)/.common/pubkeys \
+ 				$(DESTDIR)$(confdefaultsdir) \
+diff -urN -x '*~' util-vserver-0.30.207/distrib/pld2.0/poldek/poldek.conf util-vserver-0.30.207-poldek/distrib/pld2.0/poldek/poldek.conf
+--- util-vserver-0.30.207/distrib/pld2.0/poldek/poldek.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.207-poldek/distrib/pld2.0/poldek/poldek.conf	2005-05-17 15:21:01.922627888 +0200
+@@ -0,0 +1,100 @@
++# $Id$
++
++# main packages repository
++source = ac	ftp://ftp.%ARCH%.ac.pld-linux.org/dists/ac/PLD/%ARCH%/PLD/RPMS/
++
++# security updates after Ac gets frozen
++source = ac-updates-security	ftp://ftp.%ARCH%.ac.pld-linux.org/dists/ac/updates/security/%ARCH%/
++
++# non-critical fixes and updates which will be base for next version of Ac
++source = ac-updates-general,noauto	ftp://ftp.%ARCH%.ac.pld-linux.org/dists/ac/updates/general/%ARCH%/
++
++# other, sometimes obsolete, stuff
++source = ac-supported,noauto	ftp://ftp.%ARCH%.ac.pld-linux.org/dists/ac/supported/%ARCH%/
++
++# Things that are scheduled to move to updates/*
++# Testers are *really* needed, but you have to know what are you doing
++source = ac-ready,noauto	ftp://ftp.%ARCH%.ac.pld-linux.org/dists/ac/ready/%ARCH%/
++
++# everything that is built by AC-builders:
++source = ac-test,noauto	ftp://ftp.%ARCH%.ac.pld-linux.org/dists/ac/test/%ARCH%/
++
++#source = nest-test,noauto	ftp://ftp.nest.pld-linux.org/test/%ARCH%/
++
++# NOTE: directory *must* exist; default is ${TMPDIR:-~/.poldek-cache}
++# but if that fails /tmp is taken
++cachedir = /var/tmp/poldek-cache
++
++# use root privileges for installation only; default "no"
++#use_sudo = yes
++
++
++# Installation options
++
++# install packages in small groups instead of doing all-or-nothing
++# installation; default "yes"
++particle_install = no
++
++# remove duplicate packages from available package set, i.e. this
++# option ensures that only one instance (highest version from source
++# with highest priority) of every package will be available
++# for installation; default "no"
++#unique_package_names = yes
++
++# automatically install packages required by installed ones; default "yes"
++#follow = no
++
++# greedy upgrades; default "no"
++#greedy = yes
++
++# "mercy" dependency checking; default "no"
++#mercy = yes
++
++# don't remove downloaded packages after successful installation; default "no"
++#keep_downloads = yes
++
++# confirm each installation; default "no"
++#confirm_installs = yes
++
++# let the user select package among equivalents; default "no"
++#choose_equivalents_manually = yes
++
++
++# prevent kernel* and dev from being upgraded if they are already installed
++#hold = kernel* dev
++
++# remove kernel* packages from available package set, i.e. make them
++# invisible for the user
++ignore = kernel* dev devfs basesystem rc-scripts SysVinit
++
++# do not compare distribution versions of packages
++#nodistver = no
++
++# External downloaders configuration
++# Available semi-macros (as ws-separate tokens only):
++#	%p[n] - package basename
++#	%d - cache dir
++#	%D - cache dir/package basename
++#	%P[n] - package full path(URL)
++#
++# Hint: if you use several PLD powered machines, you may consider using a
++# proxy server to speed up download. To make use of proxy with poldek set
++# HTTP_PROXY and/or FTP_PROXY environment variables or setup transparent
++# proxy and uncomment one of the lines below. For more info use man
++# {poldek|wget|snarf|squid|ipchains or iptables}
++
++#ftp_get	= /usr/bin/snarf %P %D
++#ftp_get	= /usr/bin/wget --dot-style=binary -P %d %Pn
++#http_get	= /usr/bin/wget -N --dot-style=binary -P %d %Pn
++#http_get	= /usr/bin/lwp-download %P %D
++#https_get	= /usr/bin/curl %P -o %D
++#rsync_get	= /usr/bin/rsync -v %P %d
++#cdrom_get	= /usr/bin/vfjuggle %d %Pn
++
++
++# some rpm macros
++#rpmdef		= _install_langs pl:pl_PL:lt:lt_LT
++
++# don't install any documentation
++#rpmdef		= _netsharedpath /usr/share/info:/usr/share/man
++#rpmdef		= _excludedocs 1
+diff -urN -x '*~' util-vserver-0.30.207/scripts/Makefile-files util-vserver-0.30.207-poldek/scripts/Makefile-files
 --- util-vserver-0.30.207/scripts/Makefile-files	2005-04-28 19:45:34.000000000 +0200
-+++ util-vserver-0.30.207-poldek/scripts/Makefile-files	2005-05-16 16:28:02.627433152 +0200
++++ util-vserver-0.30.207-poldek/scripts/Makefile-files	2005-05-17 15:47:26.101796048 +0200
 @@ -21,6 +21,7 @@
  				scripts/vapt-get-worker \
  				scripts/vrpm-worker \
@@ -39,9 +168,9 @@ diff -urN util-vserver-0.30.207/scripts/Makefile-files util-vserver-0.30.207-pol
  				scripts/vpstree \
  				scripts/vrpm \
  				scripts/vserver \
-diff -urN util-vserver-0.30.207/scripts/functions util-vserver-0.30.207-poldek/scripts/functions
+diff -urN -x '*~' util-vserver-0.30.207/scripts/functions util-vserver-0.30.207-poldek/scripts/functions
 --- util-vserver-0.30.207/scripts/functions	2005-04-28 20:02:27.000000000 +0200
-+++ util-vserver-0.30.207-poldek/scripts/functions	2005-05-16 18:35:20.652426168 +0200
++++ util-vserver-0.30.207-poldek/scripts/functions	2005-05-17 15:47:26.102795896 +0200
 @@ -324,6 +324,20 @@
      fi
  }
@@ -50,7 +179,7 @@ diff -urN util-vserver-0.30.207/scripts/functions util-vserver-0.30.207-poldek/s
 +{
 +    if test -n "$PKGDIR"; then
 +	findDir POLDEKETCDIR    $PKGDIR/poldeketc      $PKGDIR/base/poldek/etc       /etc
-+	findDir POLDEKCACHEDIR  $PKGDIR/poldekcache    $PKGDIR/base/poldek/cache
++	findDir POLDEKCACHEDIR  $PKGDIR/poldek-cache   $PKGDIR/base/poldek/cache
 +    else
 +	findDir POLDEKETCDIR    "$VDIR"/etc       	 /etc
 +	findDir POLDEKCACHEDIR  "$VDIR"/var/tmp/poldek-cache
@@ -71,9 +200,9 @@ diff -urN util-vserver-0.30.207/scripts/functions util-vserver-0.30.207-poldek/s
  	    *)		echo "Unknown packaging flavor" >&2; exit 1;;
  	esac
      done
-diff -urN util-vserver-0.30.207/scripts/util-vserver-vars.pathsubst util-vserver-0.30.207-poldek/scripts/util-vserver-vars.pathsubst
+diff -urN -x '*~' util-vserver-0.30.207/scripts/util-vserver-vars.pathsubst util-vserver-0.30.207-poldek/scripts/util-vserver-vars.pathsubst
 --- util-vserver-0.30.207/scripts/util-vserver-vars.pathsubst	2005-03-23 03:05:39.000000000 +0100
-+++ util-vserver-0.30.207-poldek/scripts/util-vserver-vars.pathsubst	2005-05-16 16:24:45.250439016 +0200
++++ util-vserver-0.30.207-poldek/scripts/util-vserver-vars.pathsubst	2005-05-17 15:47:26.102795896 +0200
 @@ -49,6 +49,7 @@
  _LIB_VSERVER_BUILD_FUNCTIONS_RPM="$__PKGLIBDIR/vserver-build.functions.rpm"
  _LIB_VSERVER_BUILD_FUNCTIONS_YUM="$__PKGLIBDIR/vserver-build.functions.yum"
@@ -91,9 +220,9 @@ diff -urN util-vserver-0.30.207/scripts/util-vserver-vars.pathsubst util-vserver
  
  _AWK="@AWK@"
  _CAT="@CAT@"
-diff -urN util-vserver-0.30.207/scripts/vpoldek util-vserver-0.30.207-poldek/scripts/vpoldek
+diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek util-vserver-0.30.207-poldek/scripts/vpoldek
 --- util-vserver-0.30.207/scripts/vpoldek	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.207-poldek/scripts/vpoldek	2005-05-17 01:05:52.770786976 +0200
++++ util-vserver-0.30.207-poldek/scripts/vpoldek	2005-05-17 15:47:26.103795744 +0200
 @@ -0,0 +1,96 @@
 +#! /bin/bash
 +# $Id$
@@ -191,10 +320,10 @@ diff -urN util-vserver-0.30.207/scripts/vpoldek util-vserver-0.30.207-poldek/scr
 +
 +test "$cnt" -ge 0 || echo "No vservers specified" >&2
 +exit $res
-diff -urN util-vserver-0.30.207/scripts/vpoldek-worker util-vserver-0.30.207-poldek/scripts/vpoldek-worker
+diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek-worker util-vserver-0.30.207-poldek/scripts/vpoldek-worker
 --- util-vserver-0.30.207/scripts/vpoldek-worker	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.207-poldek/scripts/vpoldek-worker	2005-05-17 00:50:36.995383984 +0200
-@@ -0,0 +1,40 @@
++++ util-vserver-0.30.207-poldek/scripts/vpoldek-worker	2005-05-17 17:50:10.974671552 +0200
+@@ -0,0 +1,44 @@
 +#! /bin/bash
 +# $Id$
 +
@@ -234,10 +363,14 @@ diff -urN util-vserver-0.30.207/scripts/vpoldek-worker util-vserver-0.30.207-pol
 +    ${POLDEK:=$_POLDEK}
 +}
 +
-+exec ${_POLDEK:-poldek} -v --root=$VDIR --cachedir=$POLDEKCACHEDIR "$@"
-diff -urN util-vserver-0.30.207/scripts/vserver-build util-vserver-0.30.207-poldek/scripts/vserver-build
++exec ${_POLDEK:-poldek} \
++	-v --root=$VDIR \
++	--cachedir=$POLDEKCACHEDIR \
++	--conf=$POLDEK_CONFIG \
++	"$@"
+diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build util-vserver-0.30.207-poldek/scripts/vserver-build
 --- util-vserver-0.30.207/scripts/vserver-build	2005-03-21 21:03:31.000000000 +0100
-+++ util-vserver-0.30.207-poldek/scripts/vserver-build	2005-05-16 18:48:36.353461224 +0200
++++ util-vserver-0.30.207-poldek/scripts/vserver-build	2005-05-17 15:47:26.105795440 +0200
 @@ -56,6 +56,9 @@
      yum     ... -- -d <distribution>
                  ...  installs the base-packages of the given distribution with
@@ -257,23 +390,10 @@ diff -urN util-vserver-0.30.207/scripts/vserver-build util-vserver-0.30.207-pold
  		. $__PKGLIBDIR/vserver-build.$method
  		;;
      (x)		panic $"No build-method specified";;
-diff -urN util-vserver-0.30.207/scripts/vserver-build.functions util-vserver-0.30.207-poldek/scripts/vserver-build.functions
---- util-vserver-0.30.207/scripts/vserver-build.functions	2005-04-16 23:20:45.000000000 +0200
-+++ util-vserver-0.30.207-poldek/scripts/vserver-build.functions	2005-05-16 18:31:25.209218976 +0200
-@@ -133,6 +133,9 @@
-     elif test -e /etc/slackware-release; then
- 	set -- $(cat /etc/slackware-release)
- 	DISTRIBUTION=slackware$2
-+    elif test -e /etc/pld-release; then
-+	set -- $(cat /etc/pld-release)
-+	DISTRIBUTION=pld$1
-     elif test -n "$1"; then
- 	DISTRIBUTION=$1
-     else
-diff -urN util-vserver-0.30.207/scripts/vserver-build.functions.poldek util-vserver-0.30.207-poldek/scripts/vserver-build.functions.poldek
+diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.functions.poldek util-vserver-0.30.207-poldek/scripts/vserver-build.functions.poldek
 --- util-vserver-0.30.207/scripts/vserver-build.functions.poldek	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.207-poldek/scripts/vserver-build.functions.poldek	2005-05-16 18:50:01.703486048 +0200
-@@ -0,0 +1,64 @@
++++ util-vserver-0.30.207-poldek/scripts/vserver-build.functions.poldek	2005-05-17 15:47:26.106795288 +0200
+@@ -0,0 +1,67 @@
 +# $Id$	--*- sh -*--
 +
 +# Copyright (C) 2003 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
@@ -318,7 +438,7 @@ diff -urN util-vserver-0.30.207/scripts/vserver-build.functions.poldek util-vser
 +
 +function poldek.initVariables
 +{
-+    findFile APTCONFDEFAULT \
++    findFile POLDEKCONFDEFAULT \
 +	"$__CONFDIR/.distributions/$DISTRIBUTION/poldek.conf" \
 +	"$__CONFDIR/.defaults/apps/pkgmgmt/poldek.conf" \
 +	"$__DISTRIBDIR/$DISTRIBUTION/poldek.conf" \
@@ -328,8 +448,11 @@ diff -urN util-vserver-0.30.207/scripts/vserver-build.functions.poldek util-vser
 +
 +function poldek.initFilesystem
 +{
-+    mkdir -p "$PKGCFGDIR"/poldek/{etc,cache}
-+    
++    mkdir -p "$PKGCFGDIR"/poldek/etc
++    mkdir -p "$PKGCFGBASE"/poldek/cache
++
++    $_LN_S "$PKGCFGBASE"/poldek-cache "$PKGCFGDIR"/poldek/cache
++
 +    populateDirectory "$PKGCFGDIR/poldek/etc" \
 +	"$__DISTRIBDIR/defaults/poldek" \
 +	"$__DISTRIBDIR/$DISTRIBUTION/poldek" \
@@ -338,9 +461,9 @@ diff -urN util-vserver-0.30.207/scripts/vserver-build.functions.poldek util-vser
 +    test -z "$POLDEKCONFDEFAULT" || \
 +	$_LN_S "$POLDEKCONFDEFAULT"   "$PKGCFGDIR"/poldek/etc/poldek.conf
 +}
-diff -urN util-vserver-0.30.207/scripts/vserver-build.poldek util-vserver-0.30.207-poldek/scripts/vserver-build.poldek
+diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.poldek util-vserver-0.30.207-poldek/scripts/vserver-build.poldek
 --- util-vserver-0.30.207/scripts/vserver-build.poldek	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.207-poldek/scripts/vserver-build.poldek	2005-05-17 00:52:02.964314720 +0200
++++ util-vserver-0.30.207-poldek/scripts/vserver-build.poldek	2005-05-17 15:47:26.106795288 +0200
 @@ -0,0 +1,54 @@
 +# $Id$	--*- sh -*--
 +
