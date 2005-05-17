@@ -449,7 +449,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.functions.poldek u
 +function poldek.initFilesystem
 +{
 +    mkdir -p "$PKGCFGDIR"/poldek/etc
-+    mkdir -p "$PKGCFGBASE"/poldek/cache
++    mkdir -p "$PKGCFGBASE"/poldek-cache
 +
 +    $_LN_S "$PKGCFGBASE"/poldek-cache "$PKGCFGDIR"/poldek/cache
 +
