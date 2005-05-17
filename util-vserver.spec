@@ -8,7 +8,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.207
-Release:	1.6
+Release:	2
 License:	GPL
 Group:		Base
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -21,16 +21,18 @@ Source5:	vservers-default.sysconfig
 Source6:	vservers-legacy.sysconfig
 Patch0:		%{name}-no-kernel-includes.patch
 Patch1:		%{name}-vsysvwrapper.patch
-Patch2:		%{name}-build-poldek.patch
+Patch2:		%{name}-pld.patch
+Patch3:		%{name}-build-poldek.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
+BuildRequires:	automake
 BuildRequires:	beecrypt-devel
 %{?with_dietlibc:BuildRequires:	dietlibc >= 0:0.25}
 BuildRequires:	doxygen
 BuildRequires:	libstdc++-devel
-%{?with_doc:BuildRequires:	libxslt-progs}
-%{?with_doc:BuildRequires:	tetex-format-pdflatex}
-%{?with_doc:BuildRequires:	tetex-makeindex}
 %if %{with doc}
+BuildRequires:	libxslt-progs
+BuildRequires:	tetex-format-pdflatex
+BuildRequires:	tetex-makeindex
 %{?with_xalan:BuildRequires:	xalan-j}
 %endif
 PreReq:		rc-scripts
@@ -253,6 +255,7 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %{__aclocal} -I m4
@@ -262,11 +265,16 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 	--enable-release \
 	%{?with_dietlibc:--enable-dietlibc} \
 	%{!?with_dietlibc:--disable-dietlibc} \
-	IPTABLES=/usr/sbin/iptables \
-	NAMEIF=/sbin/nameif \
+	MKTEMP=/bin/mktemp \
 	MOUNT=/bin/mount \
+	PS=/bin/ps \
 	UMOUNT=/bin/umount \
-	VCONFIG=/sbin/vconfig
+	IPTABLES=/usr/sbin/iptables \
+	MODPROBE=/sbin/modprobe \
+	NAMEIF=/sbin/nameif \
+	RMMOD=/sbin/rmmod \
+	VCONFIG=/sbin/vconfig \
+	WGET=/usr/bin/wget \
 
 %{__make} all
 %{?with_doc:%{__make} doc}
@@ -282,17 +290,6 @@ install -d $RPM_BUILD_ROOT/etc/vservices
 install -d $RPM_BUILD_ROOT/vservers/.pkg
 ln -s /vservers $RPM_BUILD_ROOT%{_sysconfdir}/vservers/vdirbase
 ln -s %{_localstatedir}/run/vservers.rev $RPM_BUILD_ROOT%{_sysconfdir}/vservers/run.rev
-
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld2.0
-ln -s pld2.0 $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld1.99
-
-install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld2.0/pkgs
-ln -s pld2.0 $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld1.99
-
-cat > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld2.0/pkgs/01 << EOF
-vserver-basesystem
-glibc
-EOF
 
 for i in $RPM_BUILD_ROOT/etc/rc.d/init.d/v_* ; do
 	s=`basename $i | sed s/v_//`
