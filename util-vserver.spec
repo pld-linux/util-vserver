@@ -8,7 +8,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.207
-Release:	2
+Release:	3
 License:	GPL
 Group:		Base
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -24,7 +24,7 @@ Patch1:		%{name}-vsysvwrapper.patch
 Patch2:		%{name}-pld.patch
 Patch3:		%{name}-build-poldek.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
-BuildRequires:	automake
+BuildRequires:	automake >= 1.9
 BuildRequires:	beecrypt-devel
 %{?with_dietlibc:BuildRequires:	dietlibc >= 0:0.25}
 BuildRequires:	doxygen
@@ -467,11 +467,18 @@ fi
 %files build
 %defattr(644,root,root,755)
 %doc contrib/yum*.patch
-%dir %{_sysconfdir}/vservers/.distributions
-%{_sysconfdir}/vservers/.distributions/.common
-%{_sysconfdir}/vservers/.distributions/*
 %dir %{_sysconfdir}/vservers/.defaults/apps/vunify
 %dir %{_sysconfdir}/vservers/.defaults/apps/vunify/hash
+%dir %{_sysconfdir}/vservers/.distributions
+%dir %{_sysconfdir}/vservers/.distributions/.common
+%dir %{_sysconfdir}/vservers/.distributions/.common/pubkeys
+%dir %{_sysconfdir}/vservers/.distributions/[frs]*
+%dir %{_sysconfdir}/vservers/.distributions/[frs]*/apt
+%dir %{_sysconfdir}/vservers/.distributions/pld2.0
+%dir %{_sysconfdir}/vservers/.distributions/pld2.0/poldek
+%{_sysconfdir}/vservers/.distributions/pld1.99
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/vservers/.distributions/[frs]*/apt/sources.list
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/vservers/.distributions/pld2.0/poldek/poldek.conf
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %dir %{_libdir}/%{name}/distributions
 %{_libdir}/%{name}/distributions/*
