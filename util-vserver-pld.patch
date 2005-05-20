@@ -22,9 +22,10 @@ diff -urN util-vserver-0.30.207/distrib/Makefile.am util-vserver-0.30.207-pld/di
 diff -urN util-vserver-0.30.207/distrib/pld2.0/pkgs/01 util-vserver-0.30.207-pld/distrib/pld2.0/pkgs/01
 --- util-vserver-0.30.207/distrib/pld2.0/pkgs/01	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.207-pld/distrib/pld2.0/pkgs/01	2005-05-16 19:09:20.000000000 +0200
-@@ -0,0 +1,2 @@
+@@ -0,0 +1,3 @@
 +vserver-basesystem
 +glibc
++issue
 diff -urN util-vserver-0.30.207/distrib/pld2.0/rpm/macros util-vserver-0.30.207-pld/distrib/pld2.0/rpm/macros
 --- util-vserver-0.30.207/distrib/pld2.0/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.207-pld/distrib/pld2.0/rpm/macros	2005-05-17 15:23:04.279026888 +0200
@@ -35,7 +36,7 @@ diff -urN util-vserver-0.30.207/distrib/pld2.0/rpm/macros util-vserver-0.30.207-
 diff -urN util-vserver-0.30.207/distrib/pld2.0/rpmlist.d/00.lst util-vserver-0.30.207-pld/distrib/pld2.0/rpmlist.d/00.lst
 --- util-vserver-0.30.207/distrib/pld2.0/rpmlist.d/00.lst	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.207-pld/distrib/pld2.0/rpmlist.d/00.lst	2005-05-17 15:15:56.643037440 +0200
-@@ -0,0 +1,7 @@
+@@ -0,0 +1,8 @@
 +vserver-basesystem-*.rpm
 +vserver-dev-*.rpm
 +FHS-*.rpm
@@ -43,6 +44,19 @@ diff -urN util-vserver-0.30.207/distrib/pld2.0/rpmlist.d/00.lst util-vserver-0.3
 +glibc-[0-9]*.rpm
 +libgcc-[0-9]*.rpm
 +setup-*.rpm
++issue-[0-9]*.rpm
+diff -ur -x '*~' -x .libs -x .deps util-vserver-0.30.207/scripts/functions util-vserver-0.30.207-poldek/scripts/functions
+--- util-vserver-0.30.207/scripts/functions	2005-05-20 18:33:27.361745984 +0200
++++ util-vserver-0.30.207-poldek/scripts/functions	2005-05-20 18:33:06.191964280 +0200
+@@ -674,6 +674,8 @@
+ 	style=redhat
+     elif test -e "$_pgs_vdir"/etc/mandrake-release; then
+ 	style=mandrake
++    elif test -e "$_pgs_vdir"/etc/pld-release; then
++	style=pld
+     elif test -e "$_pgs_vdir"/etc/debian_version; then
+ 	style=debian
+     elif test -e "$_pgs_vdir"/etc/SuSE-release; then
 diff -urN util-vserver-0.30.207/scripts/vserver-build.functions util-vserver-0.30.207-pld/scripts/vserver-build.functions
 --- util-vserver-0.30.207/scripts/vserver-build.functions	2005-04-16 23:20:45.000000000 +0200
 +++ util-vserver-0.30.207-pld/scripts/vserver-build.functions	2005-05-17 15:13:49.646343872 +0200
@@ -56,3 +70,51 @@ diff -urN util-vserver-0.30.207/scripts/vserver-build.functions util-vserver-0.3
      elif test -n "$1"; then
  	DISTRIBUTION=$1
      else
+diff -ur -x '*~' -x .libs -x .deps util-vserver-0.30.207/scripts/vpkg util-vserver-0.30.207-poldek/scripts/vpkg
+--- util-vserver-0.30.207/scripts/vpkg	2005-03-21 21:03:30.000000000 +0100
++++ util-vserver-0.30.207-poldek/scripts/vpkg	2005-05-20 18:22:18.745391120 +0200
+@@ -115,6 +115,44 @@
+ 	    fi
+ 	fi
+ 	;;
++    (pld)
++	rpm_param=
++	poldek_param=
++	case "$tag" in
++	    ## rpm outputs sometimes '(contains no files)', so return
++	    ## only the valid output
++	    (get-conffiles)
++		rpm_param=( -qac --pipe "$_SED '\!^/!p;d'" );;
++	    (install)
++		rpm_param=( -Uvh "$@" )
++		poldek_param=( --install -v "$@" )
++		;;
++	esac
++	
++	if test -n "$is_external"; then
++	    have_poldek=1
++	    test -d "$cfgdir"/base/poldek -o -d "$cfgdir"/poldeketc || have_poldek=
++	else
++	    have_poldek=
++	    for i in /bin /usr/bin /usr/local/bin; do
++		test ! -x "$vdir$i"/poldek || { have_poldek=1; break; }
++	    done
++	fi
++	
++	if test -n "$is_external"; then
++	    if test "$have_poldek" -a "$poldek_param"; then
++		cmd=( "$_VPOLDEK" "$vserver" -- "${poldek_param[@]}" )
++	    else
++		cmd=( "$_VRPM" "$vserver" -- "${rpm_param[@]}" )
++	    fi
++	else
++	    if test "$have_poldek" -a "$poldek_param"; then
++		cmd=( "$_VSERVER" --silent "$vserver" exec poldek "${poldek_param[@]}" )
++	    else
++		cmd=( "$_VSERVER" --silent "$vserver" exec rpm "${rpm_param[@]}" )
++	    fi
++	fi
++	;;
+     (debian)
+ 	case "$tag" in
+ 	    (get-conffiles)
