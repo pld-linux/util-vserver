@@ -509,7 +509,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek util-vserver-0.30.207-po
 diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek-worker util-vserver-0.30.207-poldek/scripts/vpoldek-worker
 --- util-vserver-0.30.207/scripts/vpoldek-worker	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.207-poldek/scripts/vpoldek-worker	2005-05-17 17:50:10.974671552 +0200
-@@ -0,0 +1,44 @@
+@@ -0,0 +1,45 @@
 +#! /bin/bash
 +# $Id$
 +
@@ -553,6 +553,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek-worker util-vserver-0.30
 +	-v --root=$VDIR \
 +	--cachedir=$POLDEKCACHEDIR \
 +	--conf=$POLDEK_CONFIG \
++	--rpmcmd=$RPM_BINARY \
 +	"$@"
 diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build util-vserver-0.30.207-poldek/scripts/vserver-build
 --- util-vserver-0.30.207/scripts/vserver-build	2005-03-21 21:03:31.000000000 +0100
@@ -607,7 +608,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.functions.poldek u
 +	isRegularFile "$filelist" || continue
 +	local idx=0
 +	local can_fail=false
-+	local flags=
++	local flags='--install'
 +
 +	set -- $(<$filelist)
 +	while test "$#" -gt 0; do
@@ -618,7 +619,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.functions.poldek u
 +	    esac
 +	    shift
 +	done
-+	"$_VPOLDEK" "$name" -- --install $flags $* || $can_fail
++	"$_VPOLDEK" "$name" -- $flags $* || $can_fail
 +    done
 +}
 +
