@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_with	dietlibc	# use dietlibc instead of glibc
+%bcond_without	dietlibc	# don't use dietlibc (ask for troubles)
 %bcond_without	doc		# don't build documentation which needed LaTeX
 %bcond_with	xalan		# use the xalan xslt processor
 
@@ -8,7 +8,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.207
-Release:	3.2
+Release:	3.3
 License:	GPL
 Group:		Base
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -29,7 +29,7 @@ Patch3:		%{name}-build-poldek.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	automake >= 1.9
 BuildRequires:	beecrypt-devel
-%{?with_dietlibc:BuildRequires:	dietlibc >= 0:0.25}
+%{?with_dietlibc:BuildRequires:	dietlibc-static >= 0:0.25}
 BuildRequires:	doxygen
 BuildRequires:	libstdc++-devel
 %if %{with doc}
@@ -40,6 +40,7 @@ BuildRequires:	tetex-makeindex
 %endif
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
+#Conflicts:	poldek < 0.18.8-6
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
