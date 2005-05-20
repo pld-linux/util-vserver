@@ -8,7 +8,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.207
-Release:	3
+Release:	3.2
 License:	GPL
 Group:		Base
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -19,6 +19,9 @@ Source3:	vservers-legacy.init
 Source4:	rebootmgr.init
 Source5:	vservers-default.sysconfig
 Source6:	vservers-legacy.sysconfig
+# A bit of documentation explaining package menagement
+# http://www.paul.sladen.org/vserver/archives/200505/0078.html
+Source7:	util-vserver-pkgmgmt.txt
 Patch0:		%{name}-no-kernel-includes.patch
 Patch1:		%{name}-vsysvwrapper.patch
 Patch2:		%{name}-pld.patch
@@ -257,6 +260,8 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 %patch2 -p1
 %patch3 -p1
 
+install %{SOURCE7} package-menagament.txt
+
 %build
 %{__aclocal} -I m4
 %{__automake}
@@ -285,6 +290,8 @@ install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d},/dev/pts}
 
 %{__make} install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
+
+chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
 
 install -d $RPM_BUILD_ROOT/etc/vservices
 install -d $RPM_BUILD_ROOT/vservers/.pkg
@@ -466,7 +473,7 @@ fi
 
 %files build
 %defattr(644,root,root,755)
-%doc contrib/yum*.patch
+%doc contrib/yum*.patch package-menagament.txt
 %dir %{_sysconfdir}/vservers/.defaults/apps/vunify
 %dir %{_sysconfdir}/vservers/.defaults/apps/vunify/hash
 %dir %{_sysconfdir}/vservers/.distributions
@@ -481,7 +488,7 @@ fi
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/vservers/.distributions/pld2.0/poldek/poldek.conf
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %dir %{_libdir}/%{name}/distributions
-%{_libdir}/%{name}/distributions/*
+%attr(-, root, root) %{_libdir}/%{name}/distributions/*
 %{_libdir}/%{name}/vserver-build.*
 %{_libdir}/%{name}/vserver-setup.functions
 %{_libdir}/%{name}/defaults/fstab
