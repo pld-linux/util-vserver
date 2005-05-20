@@ -1,0 +1,128 @@
+From: Enrico Scholz (enrico.scholz_at_informatik.tu-chemnitz.de)
+Date: Fri 06 May 2005 - 20:04:18 BST
+
+    * Previous message: Paul S. Gumerman: "Re: [Vserver] problems with vserver create -m yum"
+    * In reply to: Paul S. Gumerman: "Re: [Vserver] problems with vserver create -m yum"
+    * Next in thread: Paul S. Gumerman: "Re: [Vserver] problems with vserver create -m yum"
+    * Next in thread: Kevin Pendleton: "Re: [Vserver] problems with vserver create -m yum"
+    * Reply: Paul S. Gumerman: "Re: [Vserver] problems with vserver create -m yum"
+    * Reply: Eric Jorgensen: "Re: [Vserver] problems with vserver create -m yum" 
+
+psg_at_cooldog.com ("Paul S. Gumerman") writes:
+
+> Is there anywhere to be found an explanation of how package management
+> works with the new util-vserver system?
+
+I would suggest (for Fedora based systems):
+
+1. create your own yum or apt repository by:
+   a) copy all the shipped RPMs somewhere into your harddrive; e.g.
+      | D=/srv/data/mirror/fedora/core
+      | rsync -a /media/cdrom/Fedora/RPMS/ $D/3/i386
+   b) ditto for updates (e.g. execute a daily cronjob mirroring the
+      updates directory)
+      | rsync -a http://..../ $D/3-updates/i386
+   c) create the yum filesystem structure there:
+      | mkdir -p $D/.yum/3/i386/{base,updates}
+      | ln -s ../../../../3/i386 $D/.yum/i386/base/RPMS
+      | ln -s ../../../../3-updates/i386 $D/.yum/i386/updates/RPMS
+   d) create the repo there
+      | createrepo $D/.yum/i386/base
+      | createrepo $D/.yum/i386/updates
+
+   e) ... similarly for apt ... ;)
+
+2. register them as the repository for FC3
+   a) | mkdir -p /etc/vservers/.distributions/fc3/yum.repos.d
+   b) | cat <<EOF >/etc/vservers/.distributions/fc3/yum.repos.d/fc3.repo
+[base]
+name=Fedora Core $releasever - $basearch - Base
+baseurl=file:///srv/data/mirror/fedora/core/.yum/3/$basearch/base
+enabled=1
+gpgcheck=1
+EOF
+   c) | cat <<EOF >/etc/vservers/.distributions/fc3/yum.repos.d/fc3-updates.repo
+[updates]
+name=Fedora Core $releasever - $basearch - Updates
+baseurl=file:///srv/data/mirror/fedora/core/.yum/3/$basearch/updates
+enabled=1
+gpgcheck=0
+EOF
+
+   To be more flexible, I strongly suggest to create an ftp or http
+   vserver which provides the tree at $D. But for bootstrapping, the
+   file:// based repo is ok.
+
+   You will have to use hardcoded version strings ('3') instead of the
+   flexible '$releasever' in the URL; yum does not provide any way to
+   override this at runtime. Feel free to write a bugreport for yum ;)
+
+3. Now, you can begin to create vservers
+
+   | # vserver test build -m yum -- -d fc3
+
+   and install additional packages; e.g.
+
+   | # vyum test -- install cfengine
+   | # vrpm test -- -q cfengine
+
+4. When you really need it, you can internalize the packagemanagement
+   with
+
+   | # vserver test pkgmgmt internalize
+
+   But most of my vservers do not have internal packagemanagement; it
+   adds additional dependencies and my vservers shall be minimal.
+
+   Current (0.30.207) util-vserver version has a bug in the
+   internalization process: you have to remove the '%_rpmdb' macro
+   manually from /etc/rpm/macros in the vserver. Currently, yum
+   configuration is not copied neither so you have to do this manually.
+
+> What I am particularly curious about is the usage of the various
+> .rpmdb directories inside each vserver,
+
+It is used to mount the rpm database in a secure way. "Secure" means
+that programs running in the vserver can not modify it. This is solved
+by
+
+1. creating a new namespace before real rpm operations
+2. bind-mounting '/vservers/.pkg/.../rpm/state' to /vservers/.../.rpmdb;
+   this operation is done in a secure way
+3. creating a new namespace and unmounting /.rpmdb before scripts are
+   executed
+4. changing the context before executing scripts
+
+The /.rpmdb mountpoint has to be in the toplevel directory; else when it
+would be e.g. /var/lib/rpm, an attacker within the vserver could create a
+/var/lib -> /var/foo symlink and place a malicious rpm database (e.g. a
+such one which causes buffer overflows) into /var/foo/rpm.
+
+There are some tricks like mounting the new database into the host also
+which workarounds some bugs in rpm.
+
+> and the .pkg directory structure under the vdirbase, and how they are
+> related.
+
+Program-depending directories are directly placed under /vservers/.pkg
+(e.g. 'rpm', 'apt' or 'yum'). Then, there are case depending directories
+like 'rpm/etc' which corresponds to '/etc/rpm', or 'rpm/state' which
+holds the rpm database, or 'yum/etc' for the configuration, or ...
+
+An important file is the the generated rpm-macros file (rpm/etc/macros):
+it contains both the %_rpmdb macro mentioned above and a line like:
+
+| %_netsharedpath /dev:/etc/rc.d/init.d/halt:/sbin/new-kernel-pkg:/usr/bin/rhgb-client
+
+This is needed to prevent installation of certain files (e.g. the
+default '/etc/rc.d/init.d/halt' causes problems on vserver shutdown,
+or '/sbin/new-kernel-pkg' makes installation of kernel package fail).
+
+Enrico
+
+    * application/pgp-signature attachment: stored 
+
+_______________________________________________
+Vserver mailing list
+Vserver_at_list.linux-vserver.org
+http://list.linux-vserver.org/mailman/listinfo/vserver
