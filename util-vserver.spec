@@ -8,7 +8,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.207
-Release:	3.3
+Release:	3.4
 License:	GPL
 Group:		Base
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -40,7 +40,7 @@ BuildRequires:	tetex-makeindex
 %endif
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
-#Conflicts:	poldek < 0.18.8-6
+Conflicts:	poldek < 0.18.8-6
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
