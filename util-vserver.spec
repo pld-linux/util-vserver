@@ -40,7 +40,7 @@ BuildRequires:	tetex-makeindex
 %endif
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
-Conflicts:	poldek < 0.18.8-6
+Requires:	%{name}-lib = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -119,6 +119,7 @@ Summary:	The core-utilities for util-vserver
 Summary(pl):	Podstawowe narzêdzia dla util-vserver
 Group:		Applications/System
 Requires:	util-linux
+Requires:	%{name} = %{version}-%{release}
 
 %description core
 util-vserver provides the components and a framework to setup virtual
@@ -149,6 +150,9 @@ Requires:	e2fsprogs
 Requires:	rpm
 Requires:	tar
 Requires:	wget
+Conflicts:	poldek < 0.18.8-6
+# remove the following when poldek 0.19 will have --rpmcmd oprion
+Conflicts:	poldek >= 0.19
 Requires:	%{name} = %{version}-%{release}
 
 %description build
