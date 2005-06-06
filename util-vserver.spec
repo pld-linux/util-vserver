@@ -27,6 +27,7 @@ Patch1:		%{name}-vsysvwrapper.patch
 Patch2:		%{name}-pld.patch
 Patch3:		%{name}-build-poldek.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
+BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
 BuildRequires:	beecrypt-devel
 %{?with_dietlibc:BuildRequires:	dietlibc-static >= 0:0.25}
