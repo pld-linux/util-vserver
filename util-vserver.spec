@@ -31,10 +31,10 @@ BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
 BuildRequires:	beecrypt-devel
 %{?with_dietlibc:BuildRequires:	dietlibc-static >= 2:0.29}
-BuildRequires:	doxygen
-BuildRequires:	graphviz
 BuildRequires:	libstdc++-devel
 %if %{with doc}
+BuildRequires:	doxygen
+BuildRequires:	graphviz
 BuildRequires:	libxslt-progs
 BuildRequires:	tetex-format-pdflatex
 BuildRequires:	tetex-makeindex
