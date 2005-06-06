@@ -280,6 +280,7 @@ install %{SOURCE7} package-menagament.txt
 	MOUNT=/bin/mount \
 	PS=/bin/ps \
 	UMOUNT=/bin/umount \
+	IP=/sbin/ip \
 	IPTABLES=/usr/sbin/iptables \
 	MODPROBE=/sbin/modprobe \
 	NAMEIF=/sbin/nameif \
