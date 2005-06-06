@@ -42,6 +42,7 @@ BuildRequires:	tetex-makeindex
 %endif
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
+Requires:	%{name}-core = %{version}-%{release}
 Requires:	%{name}-lib = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
