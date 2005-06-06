@@ -30,7 +30,7 @@ URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
 BuildRequires:	beecrypt-devel
-%{?with_dietlibc:BuildRequires:	dietlibc-static >= 0:0.25}
+%{?with_dietlibc:BuildRequires:	dietlibc-static >= 2:0.29}
 BuildRequires:	doxygen
 BuildRequires:	libstdc++-devel
 %if %{with doc}
