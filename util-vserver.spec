@@ -26,6 +26,7 @@ Patch0:		%{name}-no-kernel-includes.patch
 Patch1:		%{name}-vsysvwrapper.patch
 Patch2:		%{name}-pld.patch
 Patch3:		%{name}-build-poldek.patch
+Patch4:		%{name}-include.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -267,8 +268,11 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 install %{SOURCE7} package-menagament.txt
+
+cp -a compat.h vserver-compat.h
 
 %build
 %{__aclocal} -I m4
@@ -299,6 +303,8 @@ install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d},/dev/pts}
 
 %{__make} install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
+
+install vserver-compat.h $RPM_BUILD_ROOT%{_includedir}/
 
 chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
 
@@ -435,7 +441,7 @@ fi
 %{?with_doc:%doc lib/apidoc/latex/refman.pdf lib/apidoc/html}
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
-%{_includedir}/vserver.h
+%{_includedir}/vserver*.h
 %{_pkgconfigdir}/*.pc
 
 %files static
