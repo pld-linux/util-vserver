@@ -70,7 +70,7 @@ new_s_context i set_ipv4root.
 Summary:	Development files for Linux vserver libraries
 Summary(pl):	Pliki programistyczne dla bibliotek linuksowego vserwera
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-lib = %{version}-%{release}
 
 %description devel
 This package contains the development files necessary for developing
