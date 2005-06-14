@@ -14,7 +14,7 @@ fi
 [ -n "$MARK" ] || MARK=default
 [ -n "$NUMPARALLEL" ] || NUMPARALLEL=6
 
-function _tellResult()
+_tellResult()
 {
     local rc=$1
     case "$rc" in
