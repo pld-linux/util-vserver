@@ -155,9 +155,7 @@ Requires:	e2fsprogs
 Requires:	rpm
 Requires:	tar
 Requires:	wget
-Conflicts:	poldek < 0.18.8-6
-# remove the following when poldek 0.19 will have --rpmcmd oprion
-Conflicts:	poldek >= 0.19
+Conflicts:	poldek < 0.18.8-10
 Requires:	%{name} = %{version}-%{release}
 
 %description build
