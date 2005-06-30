@@ -8,7 +8,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.207
-Release:	5.2
+Release:	5.3
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -34,6 +34,7 @@ BuildRequires:	beecrypt-devel
 %{?with_dietlibc:BuildRequires:	dietlibc-static >= 2:0.29}
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 1.5.14
+BuildREquires:	sed
 %if %{with doc}
 BuildRequires:	doxygen
 BuildRequires:	graphviz
@@ -299,10 +300,15 @@ for i in $RPM_BUILD_ROOT/etc/rc.d/init.d/v_* ; do
 EOF
 done
 
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/vprocunhide
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/rc.d/init.d/rebootmgr
+sed 's|/usr/lib/util-vserver|%{_libdir}/%{name}|g' %{SOURCE1} > \
+	$RPM_BUILD_ROOT/etc/rc.d/init.d/vprocunhide
+sed 's|/usr/lib/util-vserver|%{_libdir}/%{name}|g' %{SOURCE2} > \
+	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
+sed 's|/usr/lib/util-vserver|%{_libdir}/%{name}|g' %{SOURCE3} > \
+	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
+sed 's|/usr/lib/util-vserver|%{_libdir}/%{name}|g' %{SOURCE4} > \
+	$RPM_BUILD_ROOT/etc/rc.d/init.d/rebootmgr
+
 install %{SOURCE5} $RPM_BUILD_ROOT/etc/sysconfig/vservers-default
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 
