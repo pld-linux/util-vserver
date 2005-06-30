@@ -428,7 +428,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek util-vserver-0.30.207-po
 +# along with this program; if not, write to the Free Software
 +# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 +
-+: ${UTIL_VSERVER_VARS:=/usr/__LIBDIR/util-vserver/util-vserver-vars}
++: ${UTIL_VSERVER_VARS:=/usr/lib/util-vserver/util-vserver-vars}
 +test -e "$UTIL_VSERVER_VARS" || {
 +    echo $"Can not find util-vserver installation (the file '$UTIL_VSERVER_VARS' would be expected); aborting..." >&2
 +    exit 1
@@ -530,7 +530,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek-worker util-vserver-0.30
 +
 +set -e
 +
-+: ${UTIL_VSERVER_VARS:=/usr/__LIBDIR/util-vserver/util-vserver-vars}
++: ${UTIL_VSERVER_VARS:=/usr/lib/util-vserver/util-vserver-vars}
 +test -e "$UTIL_VSERVER_VARS" || {
 +    echo $"Can not find util-vserver installation (the file '$UTIL_VSERVER_VARS' would be expected); aborting..." >&2
 +    exit 1
