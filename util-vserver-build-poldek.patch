@@ -553,7 +553,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vpoldek-worker util-vserver-0.30
 +	-v --root=$VDIR \
 +	--cachedir=$POLDEKCACHEDIR \
 +	--conf=$POLDEK_CONFIG \
-+	--rpmcmd=$RPM_BINARY \
++	--pmcmd=$RPM_BINARY \
 +	"$@"
 diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build util-vserver-0.30.207-poldek/scripts/vserver-build
 --- util-vserver-0.30.207/scripts/vserver-build	2005-03-21 21:03:31.000000000 +0100
