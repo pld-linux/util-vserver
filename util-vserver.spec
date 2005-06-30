@@ -8,7 +8,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.207
-Release:	5.4
+Release:	5.5
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -315,6 +315,11 @@ install %{SOURCE5} $RPM_BUILD_ROOT/etc/sysconfig/vservers-default
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 
 ln -sf /dev/null $RPM_BUILD_ROOT/dev/initctl
+
+%ifarch %{x8664}
+sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld2.0/pkgs/01
+sed -i 's/glibc\-\[0\-9\]\*\.rpm/glibc64\-\[0\-9\]\*\.rpm/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld2.0/rpmlist.d/00.lst
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
