@@ -8,9 +8,9 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.207
-Release:	5.1
+Release:	5.2
 License:	GPL
-Group:		Base
+Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
 # Source0-md5:	1c8457a687643ae8a7b1f1d34ebbdd68
 Source1:	vprocunhide.init
@@ -43,10 +43,10 @@ BuildRequires:	tetex-makeindex
 %{?with_xalan:BuildRequires:	xalan-j}
 %endif
 PreReq:		rc-scripts
-Requires(post):	%{name}-core
+Requires:	util-linux
 Requires(post,preun):	/sbin/chkconfig
-Requires:	%{name}-core = %{version}-%{release}
 Requires:	%{name}-lib = %{version}-%{release}
+Obsoletes:	%{name}-core
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -59,6 +59,9 @@ each other and can't interact with services in the main server.
 This requires a special kernel supporting the new new_s_context and
 set_ipv4root system call.
 
+This package contains utilities which are required to communicate with
+the Linux-Vserver enabled kernel.
+
 %description -l pl
 Ten pakiet dostarcza sk³adniki i szkielet do tworzenia wirtualnych
 serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
@@ -68,6 +71,9 @@ w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
 
 Wymaga to specjalnego j±dra obs³uguj±cego nowe wywo³ania systemowe
 new_s_context i set_ipv4root.
+
+Ten pakiet zawiera narzêdzia wymagane do komunikacji z j±drem z
+w³±czonym mechanizmem Linux-Vserver.
 
 %package devel
 Summary:	Development files for Linux vserver libraries
@@ -120,33 +126,6 @@ w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
 Ten pakiet zawiera biblioteki wspó³dzielone wymagane przez wszystkie
 podpakiety util-vserver.
 
-%package core
-Summary:	The core-utilities for util-vserver
-Summary(pl):	Podstawowe narzêdzia dla util-vserver
-Group:		Applications/System
-Requires:	util-linux
-Requires:	%{name} = %{version}-%{release}
-
-%description core
-util-vserver provides the components and a framework to setup virtual
-servers. A virtual server runs inside a linux server. It is
-nevertheless highly independent. As such, you can run various services
-with normal configuration. The various vservers can't interact with
-each other and can't interact with services in the main server.
-
-This package contains utilities which are required to communicate with
-the Linux-Vserver enabled kernel.
-
-%description core -l pl
-util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
-serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
-jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
-ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
-w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
-
-Ten pakiet zawiera narzêdzia wymagane do komunikacji z j±drem z
-w³±czonym mechanizmem Linux-Vserver.
-
 %package build
 Summary:	Tools which can be used to build vservers
 Summary(pl):	Narzêdzia do budowania vserverów
@@ -180,10 +159,9 @@ Ten pakiet zawiera narzêdzia pomagaj±ce przy budowaniu Vserwerów.
 %package init
 Summary:	initscripts for vserver
 Summary(pl):	Skrypty inicjalizuj±ce dla vserwera
-Group:		Base
+Group:		Applications/System
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
-Requires:	%{name}-core = %{version}-%{release}
 Requires:	diffutils
 Requires:	make
 Requires:	rc-scripts
@@ -214,7 +192,6 @@ Summary(pl):	Stare narzêdzia dla util-vserver
 Group:		Applications/System
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
-Requires:	%{name}-core = %{version}-%{release}
 Requires:	rc-scripts
 
 %description legacy
@@ -397,20 +374,40 @@ fi
 %{_sysconfdir}/vservers/vdirbase
 %{_sysconfdir}/vservers/run.rev
 /sbin/vshelper
+%attr(755,root,root) %{_sbindir}/chbind
+%attr(755,root,root) %{_sbindir}/chcontext
+%attr(755,root,root) %{_sbindir}/chxid
 %attr(755,root,root) %{_sbindir}/exec-cd
+%attr(755,root,root) %{_sbindir}/lsxid
+%attr(755,root,root) %{_sbindir}/reducecap
+%attr(755,root,root) %{_sbindir}/setattr
+%attr(755,root,root) %{_sbindir}/showattr
+%attr(755,root,root) %{_sbindir}/vattribute
+%attr(755,root,root) %{_sbindir}/vcontext
+%attr(755,root,root) %{_sbindir}/vdlimit
+%attr(755,root,root) %{_sbindir}/vnamespace
+%attr(755,root,root) %{_sbindir}/vkill
+%attr(755,root,root) %{_sbindir}/vlimit
 %attr(755,root,root) %{_sbindir}/vdu
 %attr(755,root,root) %{_sbindir}/vps
 %attr(755,root,root) %{_sbindir}/vpstree
+%attr(755,root,root) %{_sbindir}/vrsetup
+%attr(755,root,root) %{_sbindir}/vsched
 %attr(755,root,root) %{_sbindir}/vserver
+%attr(755,root,root) %{_sbindir}/vserver-info
 %attr(755,root,root) %{_sbindir}/vserver-stat
 %attr(755,root,root) %{_sbindir}/vsomething
 %attr(755,root,root) %{_sbindir}/vtop
+%attr(755,root,root) %{_sbindir}/vuname
 %dir %{_libdir}/%{name}
 %dir %{_libdir}/%{name}/defaults
+%{_libdir}/%{name}/FEATURES.txt
+%{_libdir}/%{name}/util-vserver-vars
 %{_libdir}/%{name}/defaults/*
 %attr(755,root,root) %{_libdir}/%{name}/capchroot
 %attr(755,root,root) %{_libdir}/%{name}/chain-echo
 %attr(755,root,root) %{_libdir}/%{name}/check-unixfile
+%attr(755,root,root) %{_libdir}/%{name}/chcontext-compat
 %attr(755,root,root) %{_libdir}/%{name}/chroot-*
 %attr(755,root,root) %{_libdir}/%{name}/exec-ulimit
 %attr(755,root,root) %{_libdir}/%{name}/fakerunlevel
@@ -429,7 +426,14 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/vservers.grabinfo.sh
 %attr(755,root,root) %{_libdir}/%{name}/vshelper
 %attr(755,root,root) %{_libdir}/%{name}/vshelper-sync
-%{_mandir}/man8/*
+%{_mandir}/man8/chbind.8*
+%{_mandir}/man8/chcontext.8*
+%{_mandir}/man8/reducecap.8*
+%{_mandir}/man8/vps.8*
+%{_mandir}/man8/vpstree.8*
+%{_mandir}/man8/vserver-stat.8*
+%{_mandir}/man8/vserver.8*
+%{_mandir}/man8/vtop.8*
 %attr(0,root,root) %dir /vservers
 %attr(755,root,root) %dir /vservers/.pkg
 %dir %{_localstatedir}/run/vservers
@@ -458,33 +462,6 @@ fi
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers-default
 %attr(754,root,root) /etc/rc.d/init.d/vprocunhide
 %attr(754,root,root) /etc/rc.d/init.d/vservers-default
-
-%files core
-%defattr(644,root,root,755)
-%dir %{_libdir}/%{name}
-%{_libdir}/%{name}/FEATURES.txt
-%{_libdir}/%{name}/util-vserver-vars
-%attr(755,root,root) %{_libdir}/%{name}/chcontext-compat
-%attr(755,root,root) %{_sbindir}/chbind
-%attr(755,root,root) %{_sbindir}/chcontext
-%attr(755,root,root) %{_sbindir}/chxid
-%attr(755,root,root) %{_sbindir}/lsxid
-%attr(755,root,root) %{_sbindir}/reducecap
-%attr(755,root,root) %{_sbindir}/setattr
-%attr(755,root,root) %{_sbindir}/showattr
-%attr(755,root,root) %{_sbindir}/vattribute
-%attr(755,root,root) %{_sbindir}/vcontext
-%attr(755,root,root) %{_sbindir}/vdlimit
-%attr(755,root,root) %{_sbindir}/vnamespace
-%attr(755,root,root) %{_sbindir}/vkill
-%attr(755,root,root) %{_sbindir}/vlimit
-%attr(755,root,root) %{_sbindir}/vrsetup
-%attr(755,root,root) %{_sbindir}/vsched
-%attr(755,root,root) %{_sbindir}/vserver-info
-%attr(755,root,root) %{_sbindir}/vuname
-%{_mandir}/man8/chbind*
-%{_mandir}/man8/chcontext*
-%{_mandir}/man8/reducecap*
 
 %files build
 %defattr(644,root,root,755)
@@ -526,7 +503,6 @@ fi
 %attr(755,root,root) %{_sbindir}/vpoldek
 %attr(755,root,root) %{_sbindir}/vrpm
 %attr(755,root,root) %{_sbindir}/vyum
-%{_mandir}/man8/vserver-copy*
 
 %files legacy
 %defattr(644,root,root,755)
@@ -539,9 +515,9 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/rebootmgr
 %attr(754,root,root) /etc/rc.d/init.d/vservers-legacy
 %attr(755,root,root) %{_sbindir}/vserver-copy
-%{_mandir}/man8/distrib-info*
-%{_mandir}/man8/rebootmgr*
-%{_mandir}/man8/vps.*
+%{_mandir}/man8/distrib-info.8*
+%{_mandir}/man8/rebootmgr.8*
+%{_mandir}/man8/vserver-copy.8*
 
 %files -n vserver-dev
 %defattr(644,root,root,755)
