@@ -49,6 +49,7 @@ Requires:	util-linux
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-lib = %{version}-%{release}
 Obsoletes:	%{name}-core
+ExclusiveArch:	%{ix86} amd64 x86_64 alpha
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
