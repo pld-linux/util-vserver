@@ -8,7 +8,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.207
-Release:	5.5
+Release:	6
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -335,9 +335,13 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/chkconfig --add vprocunhide
 #if [ -r /var/lock/subsys/vprocunhide ]; then
 #	/etc/rc.d/init.d/vprocunhide restart >&2
+#else
+	echo "Type \"/etc/rc.d/init.d/vprocunhide start\" to set /proc visibility for vservers" 1>&2
 #fi
 #if [ -r /var/lock/subsys/vservers-default ]; then
 #	/etc/rc.d/init.d/vservers-default restart >&2
+#else
+	echo "Type \"/etc/rc.d/init.d/vservers-default start\" to start default vservers" 1>&2
 #fi
 
 %preun init
@@ -357,9 +361,13 @@ fi
 /sbin/chkconfig --add vservers-legacy
 #if [ -r /var/lock/subsys/rebootmgr ] ; then
 #	/etc/rc.d/init.d/rebootmgr restart >&2
+#else
+	echo "Type \"/etc/rc.d/init.d/rebootmgr start\" to start reboot manager for legacy vservers" 1>&2
 #fi
 #if [ -r /var/lock/subsys/vservers-legacy ] ; then
 #	/etc/rc.d/init.d/vservers-legacy restart >&2
+#else
+	echo "Type \"/etc/rc.d/init.d/vservers-legacy start\" to start legacy vservers" 1>&2
 #fi
 
 %preun legacy
