@@ -48,8 +48,8 @@ PreReq:		rc-scripts
 Requires:	util-linux
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-lib = %{version}-%{release}
-Obsoletes:	%{name}-core
-ExclusiveArch:	%{ix86} amd64 x86_64 alpha
+Obsoletes:	util-vserver-core
+ExclusiveArch:	%{ix86} %{x8664} alpha
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
