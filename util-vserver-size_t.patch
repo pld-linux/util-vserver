@@ -1,0 +1,22 @@
+Writer (rpm-fake.so) sends size_t sized data, we must read it as size_t
+
+--- util-vserver-0.30.207/src/rpm-fake-resolver.c~	2005-04-28 20:08:01.000000000 +0200
++++ util-vserver-0.30.207/src/rpm-fake-resolver.c	2005-07-07 13:59:56.343332673 +0200
+@@ -150,7 +150,7 @@
+ static void
+ do_getpwnam()
+ {
+-  uint32_t	len;
++  size_t	len;
+   Eread(0, &len, sizeof len);
+ 
+   if (len<MAX_RQSIZE) {
+@@ -169,7 +169,7 @@
+ static void
+ do_getgrnam()
+ {
+-  uint32_t	len;
++  size_t	len;
+   Eread(0, &len, sizeof len);
+ 
+   if (len<MAX_RQSIZE) {
