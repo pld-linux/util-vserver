@@ -251,7 +251,7 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
+%patch6 -p2
 
 install %{SOURCE7} package-menagament.txt
 
