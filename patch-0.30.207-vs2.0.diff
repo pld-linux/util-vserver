@@ -1,0 +1,884 @@
+diff -NurpP --minimal util-vserver-0.30.207/kernel/context_cmd.h util-vserver-0.30.207-b/kernel/context_cmd.h
+--- util-vserver-0.30.207/kernel/context_cmd.h	2005-04-28 19:43:54.000000000 +0200
++++ util-vserver-0.30.207-b/kernel/context_cmd.h	2005-07-11 04:51:19.000000000 +0200
+@@ -27,7 +27,13 @@ extern int vc_vx_info(uint32_t, void __u
+ 
+ /* context commands */
+ 
+-#define VCMD_ctx_create		VC_CMD(VPROC, 1, 0)
++#define VCMD_ctx_create_v0	VC_CMD(VPROC, 1, 0)
++#define VCMD_ctx_create		VC_CMD(VPROC, 1, 1)
++
++struct	vcmd_ctx_create {
++	uint64_t flagword;
++};
++
+ #define VCMD_ctx_migrate	VC_CMD(PROCMIG, 1, 0)
+ 
+ #ifdef	__KERNEL__
+diff -NurpP --minimal util-vserver-0.30.207/kernel/context.h util-vserver-0.30.207-b/kernel/context.h
+--- util-vserver-0.30.207/kernel/context.h	2005-04-28 12:58:02.000000000 +0200
++++ util-vserver-0.30.207-b/kernel/context.h	2005-07-11 04:51:19.000000000 +0200
+@@ -36,6 +36,8 @@
+ #define VXF_STATE_SETUP		(1ULL<<32)
+ #define VXF_STATE_INIT		(1ULL<<33)
+ 
++#define VXF_STATE_HELPER	(1ULL<<36)
++
+ #define VXF_FORK_RSS		(1ULL<<48)
+ #define VXF_PROLIFIC		(1ULL<<49)
+ 
+@@ -43,6 +45,8 @@
+ 
+ #define VXF_ONE_TIME		(0x0003ULL<<32)
+ 
++#define VXF_INIT_SET		(VXF_STATE_SETUP|VXF_STATE_INIT)
++
+ 
+ /* context caps */
+ 
+@@ -52,6 +56,7 @@
+ #define VXC_SET_RLIMIT		0x00000002
+ 
+ #define VXC_RAW_ICMP		0x00000100
++#define VXC_SYSLOG		0x00001000
+ 
+ #define VXC_SECURE_MOUNT	0x00010000
+ #define VXC_SECURE_REMOUNT	0x00020000
+@@ -60,10 +65,15 @@
+ #define VXC_QUOTA_CTL		0x00100000
+ 
+ 
+-/* vshelper sync commands */
++/* context state changes */
+ 
+-#define	VS_CONTEXT_CREATED	1
+-#define	VS_CONTEXT_DESTROY	2
++enum {
++	VSC_STARTUP = 1,
++	VSC_SHUTDOWN,
++
++	VSC_NETUP,
++	VSC_NETDOWN,
++};
+ 
+ 
+ #ifdef	__KERNEL__
+@@ -78,7 +88,6 @@
+ 
+ struct vx_info {
+ 	struct hlist_node vx_hlist;		/* linked list of contexts */
+-	struct rcu_head vx_rcu;			/* the rcu head */
+ 	xid_t vx_id;				/* context id */
+ 	atomic_t vx_usecnt;			/* usage count */
+ 	atomic_t vx_tasks;			/* tasks count */
+@@ -93,8 +102,7 @@ struct vx_info {
+ 
+ 	pid_t vx_initpid;			/* PID of fake init process */
+ 
+-	spinlock_t vx_lock;
+-	wait_queue_head_t vx_exit;		/* context exit waitqueue */
++	wait_queue_head_t vx_wait;		/* context exit waitqueue */
+ 
+ 	struct _vx_limit limit;			/* vserver limits */
+ 	struct _vx_sched sched;			/* vserver scheduler */
+@@ -111,7 +119,6 @@ struct vx_info {
+ #define VXS_PAUSED	0x0010
+ #define VXS_ONHOLD	0x0020
+ #define VXS_SHUTDOWN	0x0100
+-#define VXS_DEFUNCT	0x1000
+ #define VXS_RELEASED	0x8000
+ 
+ /* check conditions */
+@@ -145,9 +152,7 @@ extern int xid_is_hashed(xid_t);
+ 
+ extern int vx_migrate_task(struct task_struct *, struct vx_info *);
+ 
+-extern long vs_context_state(struct vx_info *, unsigned int);
+-
+-extern void free_vx_info(struct vx_info *);
++extern long vs_state_change(struct vx_info *, unsigned int);
+ 
+ 
+ #endif	/* __KERNEL__ */
+diff -NurpP --minimal util-vserver-0.30.207/kernel/cvirt_cmd.h util-vserver-0.30.207-b/kernel/cvirt_cmd.h
+--- util-vserver-0.30.207/kernel/cvirt_cmd.h	2005-04-28 19:43:54.000000000 +0200
++++ util-vserver-0.30.207-b/kernel/cvirt_cmd.h	2005-07-11 04:51:19.000000000 +0200
+@@ -1,7 +1,34 @@
+ #ifndef _VX_CVIRT_CMD_H
+ #define _VX_CVIRT_CMD_H
+ 
+-/*  cvirt vserver commands */
++/* virtual host info name commands */
+ 
++#define VCMD_set_vhi_name	VC_CMD(VHOST, 1, 0)
++#define VCMD_get_vhi_name	VC_CMD(VHOST, 2, 0)
+ 
++struct	vcmd_vhi_name_v0 {
++	uint32_t field;
++	char name[65];
++};
++
++
++enum vhi_name_field {
++	VHIN_CONTEXT=0,
++	VHIN_SYSNAME,
++	VHIN_NODENAME,
++	VHIN_RELEASE,
++	VHIN_VERSION,
++	VHIN_MACHINE,
++	VHIN_DOMAINNAME,
++};
++
++
++#ifdef	__KERNEL__
++
++#include <linux/compiler.h>
++
++extern int vc_set_vhi_name(uint32_t, void __user *);
++extern int vc_get_vhi_name(uint32_t, void __user *);
++
++#endif	/* __KERNEL__ */
+ #endif	/* _VX_CVIRT_CMD_H */
+diff -NurpP --minimal util-vserver-0.30.207/kernel/cvirt.h util-vserver-0.30.207-b/kernel/cvirt.h
+--- util-vserver-0.30.207/kernel/cvirt.h	2005-04-28 12:58:02.000000000 +0200
++++ util-vserver-0.30.207-b/kernel/cvirt.h	2005-07-11 04:51:19.000000000 +0200
+@@ -13,6 +13,10 @@ struct vx_info;
+ void vx_update_load(struct vx_info *);
+ 
+ 
++int vx_uts_virt_handler(struct ctl_table *ctl, int write, xid_t xid,
++	void **datap, size_t *lenp);
++
++
+ int vx_do_syslog(int, char __user *, int);
+ 
+ #endif	/* __KERNEL__ */
+diff -NurpP --minimal util-vserver-0.30.207/kernel/debug.h util-vserver-0.30.207-b/kernel/debug.h
+--- util-vserver-0.30.207/kernel/debug.h	2005-04-28 12:58:02.000000000 +0200
++++ util-vserver-0.30.207-b/kernel/debug.h	2005-07-11 04:51:19.000000000 +0200
+@@ -152,186 +152,85 @@ static inline void __vxh_copy_vxi(struct
+ 	}
+ }
+ 
+-static inline void vxh_throw_oops(void)
+-{
+-	struct _vx_hist_entry *entry;
+-
+-	preempt_disable();
+-	entry = vxh_advance(VXH_HERE());
+-	entry->type = VXH_THROW_OOPS;
+-	preempt_enable();
+-
+-	/* prevent further acquisition */
+-	vxh_active = 0;
+-}
+-
+-static inline void vxh_get_vx_info(struct vx_info *vxi)
+-{
+-	struct _vx_hist_entry *entry;
+-
+-	preempt_disable();
+-	entry = vxh_advance(VXH_HERE());
+-	__vxh_copy_vxi(entry, vxi);
+-	entry->type = VXH_GET_VX_INFO;
+-	preempt_enable();
+-}
+-
+-static inline void vxh_put_vx_info(struct vx_info *vxi)
+-{
+-	struct _vx_hist_entry *entry;
+-
+-	preempt_disable();
+-	entry = vxh_advance(VXH_HERE());
+-	__vxh_copy_vxi(entry, vxi);
+-	entry->type = VXH_PUT_VX_INFO;
+-	preempt_enable();
+-}
+-
+-static inline void vxh_init_vx_info(struct vx_info *vxi, void *data)
+-{
+-	struct _vx_hist_entry *entry;
+-
+-	preempt_disable();
+-	entry = vxh_advance(VXH_HERE());
+-	__vxh_copy_vxi(entry, vxi);
+-	entry->sc.data = data;
+-	entry->type = VXH_INIT_VX_INFO;
+-	preempt_enable();
+-}
+ 
+-static inline void vxh_set_vx_info(struct vx_info *vxi, void *data)
+-{
+-	struct _vx_hist_entry *entry;
+-
+-	preempt_disable();
+-	entry = vxh_advance(VXH_HERE());
+-	__vxh_copy_vxi(entry, vxi);
+-	entry->sc.data = data;
+-	entry->type = VXH_SET_VX_INFO;
+-	preempt_enable();
+-}
+-
+-static inline void vxh_clr_vx_info(struct vx_info *vxi, void *data)
+-{
+-	struct _vx_hist_entry *entry;
+-
+-	preempt_disable();
+-	entry = vxh_advance(VXH_HERE());
+-	__vxh_copy_vxi(entry, vxi);
+-	entry->sc.data = data;
+-	entry->type = VXH_CLR_VX_INFO;
++#define __VXH_BODY(__type, __data)		\
++	struct _vx_hist_entry *entry;		\
++						\
++	preempt_disable();			\
++	entry = vxh_advance(VXH_HERE());	\
++	__data;					\
++	entry->type = __type;			\
+ 	preempt_enable();
+-}
+ 
+-static inline void vxh_claim_vx_info(struct vx_info *vxi, void *data)
+-{
+-	struct _vx_hist_entry *entry;
+ 
+-	preempt_disable();
+-	entry = vxh_advance(VXH_HERE());
+-	__vxh_copy_vxi(entry, vxi);
+-	entry->sc.data = data;
+-	entry->type = VXH_CLAIM_VX_INFO;
+-	preempt_enable();
+-}
+-
+-static inline void vxh_release_vx_info(struct vx_info *vxi, void *data)
+-{
+-	struct _vx_hist_entry *entry;
++	/* pass vxi only */
++#define __VXH_SIMPLE				\
++	__vxh_copy_vxi(entry, vxi)
+ 
+-	preempt_disable();
+-	entry = vxh_advance(VXH_HERE());
+-	__vxh_copy_vxi(entry, vxi);
+-	entry->sc.data = data;
+-	entry->type = VXH_RELEASE_VX_INFO;
+-	preempt_enable();
++#define VXH_SIMPLE(__name, __type)		\
++static inline void __name(struct vx_info *vxi)	\
++{						\
++	__VXH_BODY(__type, __VXH_SIMPLE)	\
+ }
+ 
+-static inline void vxh_alloc_vx_info(struct vx_info *vxi)
+-{
+-	struct _vx_hist_entry *entry;
++	/* pass vxi and data (void *) */
++#define __VXH_DATA				\
++	__vxh_copy_vxi(entry, vxi);		\
++	entry->sc.data = data
+ 
+-	preempt_disable();
+-	entry = vxh_advance(VXH_HERE());
+-	__vxh_copy_vxi(entry, vxi);
+-	entry->type = VXH_ALLOC_VX_INFO;
+-	preempt_enable();
++#define VXH_DATA(__name, __type)		\
++static inline 					\
++void __name(struct vx_info *vxi, void *data)	\
++{						\
++	__VXH_BODY(__type, __VXH_DATA)		\
+ }
+ 
+-static inline void vxh_dealloc_vx_info(struct vx_info *vxi)
+-{
+-	struct _vx_hist_entry *entry;
++	/* pass vxi and arg (long) */
++#define __VXH_LARG				\
++	__vxh_copy_vxi(entry, vxi);		\
++	entry->ll.arg = arg
+ 
+-	preempt_disable();
+-	entry = vxh_advance(VXH_HERE());
+-	__vxh_copy_vxi(entry, vxi);
+-	entry->type = VXH_DEALLOC_VX_INFO;
+-	preempt_enable();
++#define VXH_LARG(__name, __type)		\
++static inline 					\
++void __name(struct vx_info *vxi, long arg)	\
++{						\
++	__VXH_BODY(__type, __VXH_LARG)		\
+ }
+ 
+-static inline void vxh_hash_vx_info(struct vx_info *vxi)
+-{
+-	struct _vx_hist_entry *entry;
+ 
+-	preempt_disable();
+-	entry = vxh_advance(VXH_HERE());
+-	__vxh_copy_vxi(entry, vxi);
+-	entry->type = VXH_HASH_VX_INFO;
+-	preempt_enable();
+-}
+-
+-static inline void vxh_unhash_vx_info(struct vx_info *vxi)
++static inline void vxh_throw_oops(void)
+ {
+-	struct _vx_hist_entry *entry;
+-
+-	preempt_disable();
+-	entry = vxh_advance(VXH_HERE());
+-	__vxh_copy_vxi(entry, vxi);
+-	entry->type = VXH_UNHASH_VX_INFO;
+-	preempt_enable();
++	__VXH_BODY(VXH_THROW_OOPS, {});
++	/* prevent further acquisition */
++	vxh_active = 0;
+ }
+ 
+-static inline void vxh_loc_vx_info(unsigned arg, struct vx_info *vxi)
+-{
+-	struct _vx_hist_entry *entry;
+-
+-	preempt_disable();
+-	entry = vxh_advance(VXH_HERE());
+-	__vxh_copy_vxi(entry, vxi);
+-	entry->ll.arg = arg;
+-	entry->type = VXH_LOC_VX_INFO;
+-	preempt_enable();
+-}
++VXH_SIMPLE(vxh_get_vx_info,	VXH_GET_VX_INFO);
++VXH_SIMPLE(vxh_put_vx_info,	VXH_PUT_VX_INFO);
+ 
+-static inline void vxh_lookup_vx_info(unsigned arg, struct vx_info *vxi)
+-{
+-	struct _vx_hist_entry *entry;
++VXH_DATA(vxh_init_vx_info,	VXH_INIT_VX_INFO);
++VXH_DATA(vxh_set_vx_info,	VXH_SET_VX_INFO);
++VXH_DATA(vxh_clr_vx_info,	VXH_CLR_VX_INFO);
+ 
+-	preempt_disable();
+-	entry = vxh_advance(VXH_HERE());
+-	__vxh_copy_vxi(entry, vxi);
+-	entry->ll.arg = arg;
+-	entry->type = VXH_LOOKUP_VX_INFO;
+-	preempt_enable();
+-}
++VXH_DATA(vxh_claim_vx_info,	VXH_CLAIM_VX_INFO);
++VXH_DATA(vxh_release_vx_info,	VXH_RELEASE_VX_INFO);
+ 
+-static inline void vxh_create_vx_info(unsigned arg, struct vx_info *vxi)
+-{
+-	struct _vx_hist_entry *entry;
++VXH_SIMPLE(vxh_alloc_vx_info,	VXH_ALLOC_VX_INFO);
++VXH_SIMPLE(vxh_dealloc_vx_info, VXH_DEALLOC_VX_INFO);
+ 
+-	preempt_disable();
+-	entry = vxh_advance(VXH_HERE());
+-	__vxh_copy_vxi(entry, vxi);
+-	entry->ll.arg = arg;
+-	entry->type = VXH_CREATE_VX_INFO;
+-	preempt_enable();
+-}
++VXH_SIMPLE(vxh_hash_vx_info,	VXH_HASH_VX_INFO);
++VXH_SIMPLE(vxh_unhash_vx_info,	VXH_UNHASH_VX_INFO);
+ 
++VXH_LARG(vxh_loc_vx_info,	VXH_LOC_VX_INFO);
++VXH_LARG(vxh_lookup_vx_info,	VXH_LOOKUP_VX_INFO);
++VXH_LARG(vxh_create_vx_info,	VXH_CREATE_VX_INFO);
+ 
+ extern void vxh_dump_history(void);
+ 
++
+ #else  /* CONFIG_VSERVER_HISTORY */
+ 
++
+ #define vxh_throw_oops()		do { } while (0)
+ 
+ #define vxh_get_vx_info(v)		do { } while (0)
+diff -NurpP --minimal util-vserver-0.30.207/kernel/dlimit_cmd.h util-vserver-0.30.207-b/kernel/dlimit_cmd.h
+--- util-vserver-0.30.207/kernel/dlimit_cmd.h	2005-04-28 19:43:54.000000000 +0200
++++ util-vserver-0.30.207-b/kernel/dlimit_cmd.h	2005-07-11 04:51:19.000000000 +0200
+@@ -27,13 +27,15 @@ struct	vcmd_ctx_dlimit_v0 {
+ 
+ #ifdef	__KERNEL__
+ 
++#ifdef	CONFIG_COMPAT
++
+ struct	vcmd_ctx_dlimit_base_v0_x32 {
+-	uint32_t __user name_ptr;
++	compat_uptr_t name_ptr;
+ 	uint32_t flags;
+ };
+ 
+ struct	vcmd_ctx_dlimit_v0_x32 {
+-	uint32_t __user name_ptr;
++	compat_uptr_t name_ptr;
+ 	uint32_t space_used;			/* used space in kbytes */
+ 	uint32_t space_total;			/* maximum space in kbytes */
+ 	uint32_t inodes_used;			/* used inodes */
+@@ -42,6 +44,8 @@ struct	vcmd_ctx_dlimit_v0_x32 {
+ 	uint32_t flags;
+ };
+ 
++#endif	/* CONFIG_COMPAT */
++
+ #include <linux/compiler.h>
+ 
+ extern int vc_add_dlimit(uint32_t, void __user *);
+@@ -50,5 +54,15 @@ extern int vc_rem_dlimit(uint32_t, void 
+ extern int vc_set_dlimit(uint32_t, void __user *);
+ extern int vc_get_dlimit(uint32_t, void __user *);
+ 
++#ifdef	CONFIG_COMPAT
++
++extern int vc_add_dlimit_x32(uint32_t, void __user *);
++extern int vc_rem_dlimit_x32(uint32_t, void __user *);
++
++extern int vc_set_dlimit_x32(uint32_t, void __user *);
++extern int vc_get_dlimit_x32(uint32_t, void __user *);
++
++#endif	/* CONFIG_COMPAT */
++
+ #endif	/* __KERNEL__ */
+ #endif	/* _VX_DLIMIT_CMD_H */
+diff -NurpP --minimal util-vserver-0.30.207/kernel/dlimit.h util-vserver-0.30.207-b/kernel/dlimit.h
+--- util-vserver-0.30.207/kernel/dlimit.h	2005-04-28 12:58:02.000000000 +0200
++++ util-vserver-0.30.207-b/kernel/dlimit.h	2005-07-11 04:51:19.000000000 +0200
+@@ -2,7 +2,6 @@
+ #define _VX_DLIMIT_H
+ 
+ #include "switch.h"
+-#include <linux/spinlock.h>
+ 
+ #define CDLIM_UNSET		(0ULL)
+ #define CDLIM_INFINITY		(~0ULL)
+@@ -11,6 +10,8 @@
+ 
+ #ifdef	__KERNEL__
+ 
++#include <linux/spinlock.h>
++
+ struct super_block;
+ 
+ struct dl_info {
+diff -NurpP --minimal util-vserver-0.30.207/kernel/inode_cmd.h util-vserver-0.30.207-b/kernel/inode_cmd.h
+--- util-vserver-0.30.207/kernel/inode_cmd.h	2005-04-28 19:43:54.000000000 +0200
++++ util-vserver-0.30.207-b/kernel/inode_cmd.h	2005-07-11 04:51:19.000000000 +0200
+@@ -27,13 +27,17 @@ struct	vcmd_ctx_iattr_v1 {
+ 
+ #ifdef	__KERNEL__
+ 
++#ifdef	CONFIG_COMPAT
++
+ struct	vcmd_ctx_iattr_v1_x32 {
+-	uint32_t __user name;
++	compat_uptr_t name_ptr;
+ 	uint32_t xid;
+ 	uint32_t flags;
+ 	uint32_t mask;
+ };
+ 
++#endif	/* CONFIG_COMPAT */
++
+ #include <linux/compiler.h>
+ 
+ extern int vc_get_iattr_v0(uint32_t, void __user *);
+@@ -42,5 +46,12 @@ extern int vc_set_iattr_v0(uint32_t, voi
+ extern int vc_get_iattr(uint32_t, void __user *);
+ extern int vc_set_iattr(uint32_t, void __user *);
+ 
++#ifdef	CONFIG_COMPAT
++
++extern int vc_get_iattr_x32(uint32_t, void __user *);
++extern int vc_set_iattr_x32(uint32_t, void __user *);
++
++#endif	/* CONFIG_COMPAT */
++
+ #endif	/* __KERNEL__ */
+ #endif	/* _VX_INODE_CMD_H */
+diff -NurpP --minimal util-vserver-0.30.207/kernel/legacy.h util-vserver-0.30.207-b/kernel/legacy.h
+--- util-vserver-0.30.207/kernel/legacy.h	2005-04-28 14:02:25.000000000 +0200
++++ util-vserver-0.30.207-b/kernel/legacy.h	2005-07-11 04:51:19.000000000 +0200
+@@ -40,11 +40,6 @@ struct	vcmd_set_ipv4root_v3 {
+ #define VX_INFO_NAMESPACE	128	/* save private namespace */
+ 
+ 
+-#define NB_S_CONTEXT	16
+-
+-#define NB_IPV4ROOT	16
+-
+-
+ #ifdef	__KERNEL__
+ extern int vc_new_s_context(uint32_t, void __user *);
+ extern int vc_set_ipv4root(uint32_t, void __user *);
+diff -NurpP --minimal util-vserver-0.30.207/kernel/namespace_cmd.h util-vserver-0.30.207-b/kernel/namespace_cmd.h
+--- util-vserver-0.30.207/kernel/namespace_cmd.h	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.207-b/kernel/namespace_cmd.h	2005-07-11 04:51:19.000000000 +0200
+@@ -0,0 +1,16 @@
++#ifndef _VX_NAMESPACE_CMD_H
++#define _VX_NAMESPACE_CMD_H
++
++#define VCMD_enter_namespace	VC_CMD(PROCALT, 1, 0)
++#define VCMD_cleanup_namespace	VC_CMD(PROCALT, 2, 0)
++#define VCMD_set_namespace	VC_CMD(PROCALT, 3, 0)
++
++
++#ifdef	__KERNEL__
++
++extern int vc_enter_namespace(uint32_t, void __user *);
++extern int vc_cleanup_namespace(uint32_t, void __user *);
++extern int vc_set_namespace(uint32_t, void __user *);
++
++#endif	/* __KERNEL__ */
++#endif	/* _VX_NAMESPACE_CMD_H */
+diff -NurpP --minimal util-vserver-0.30.207/kernel/namespace.h util-vserver-0.30.207-b/kernel/namespace.h
+--- util-vserver-0.30.207/kernel/namespace.h	2005-04-28 12:58:02.000000000 +0200
++++ util-vserver-0.30.207-b/kernel/namespace.h	2005-07-11 04:51:19.000000000 +0200
+@@ -3,56 +3,12 @@
+ 
+ #include <linux/types.h>
+ 
+-
+-/* virtual host info names */
+-
+-#define VCMD_vx_set_vhi_name	VC_CMD(VHOST, 1, 0)
+-#define VCMD_vx_get_vhi_name	VC_CMD(VHOST, 2, 0)
+-
+-struct	vcmd_vx_vhi_name_v0 {
+-	uint32_t field;
+-	char name[65];
+-};
+-
+-
+-enum vx_vhi_name_field {
+-	VHIN_CONTEXT=0,
+-	VHIN_SYSNAME,
+-	VHIN_NODENAME,
+-	VHIN_RELEASE,
+-	VHIN_VERSION,
+-	VHIN_MACHINE,
+-	VHIN_DOMAINNAME,
+-};
+-
+-
+-#ifdef	__KERNEL__
+-
+-#include <linux/compiler.h>
+-
+-extern int vc_set_vhi_name(uint32_t, void __user *);
+-extern int vc_get_vhi_name(uint32_t, void __user *);
+-
+-#endif	/* __KERNEL__ */
+-
+-#define VCMD_enter_namespace	VC_CMD(PROCALT, 1, 0)
+-#define VCMD_cleanup_namespace	VC_CMD(PROCALT, 2, 0)
+-#define VCMD_set_namespace	VC_CMD(PROCALT, 3, 0)
+-
+-#ifdef	__KERNEL__
+-
+ struct vx_info;
+ struct namespace;
+ struct fs_struct;
+-struct vfsmount;
+ 
+ extern int vx_set_namespace(struct vx_info *, struct namespace *, struct fs_struct *);
+ 
+-extern int vc_enter_namespace(uint32_t, void __user *);
+-extern int vc_cleanup_namespace(uint32_t, void __user *);
+-extern int vc_set_namespace(uint32_t, void __user *);
+-
+-#endif	/* __KERNEL__ */
+ #else	/* _VX_NAMESPACE_H */
+ #warning duplicate inclusion
+ #endif	/* _VX_NAMESPACE_H */
+diff -NurpP --minimal util-vserver-0.30.207/kernel/network_cmd.h util-vserver-0.30.207-b/kernel/network_cmd.h
+--- util-vserver-0.30.207/kernel/network_cmd.h	2005-04-28 19:43:54.000000000 +0200
++++ util-vserver-0.30.207-b/kernel/network_cmd.h	2005-07-11 04:51:19.000000000 +0200
+@@ -23,13 +23,19 @@ extern int vc_nx_info(uint32_t, void __u
+ 
+ #endif	/* __KERNEL__ */
+ 
+-#define VCMD_net_create		VC_CMD(VNET, 1, 0)
++#define VCMD_net_create_v0	VC_CMD(VNET, 1, 0)
++#define VCMD_net_create		VC_CMD(VNET, 1, 1)
++
++struct  vcmd_net_create {
++	uint64_t flagword;
++};
++
+ #define VCMD_net_migrate	VC_CMD(NETMIG, 1, 0)
+ 
+ #define VCMD_net_add		VC_CMD(NETALT, 1, 0)
+ #define VCMD_net_remove		VC_CMD(NETALT, 2, 0)
+ 
+-struct	vcmd_net_nx_v0 {
++struct	vcmd_net_addr_v0 {
+ 	uint16_t type;
+ 	uint16_t count;
+ 	uint32_t ip[4];
+@@ -37,15 +43,19 @@ struct	vcmd_net_nx_v0 {
+ 	/* more to come */
+ };
+ 
+-//	IPN_TYPE_IPV4
+-
+ 
+ #ifdef	__KERNEL__
+ extern int vc_net_create(uint32_t, void __user *);
+ extern int vc_net_migrate(uint32_t, void __user *);
+ 
++extern int vc_net_add(uint32_t, void __user *);
++extern int vc_net_remove(uint32_t, void __user *);
++
+ #endif	/* __KERNEL__ */
+ 
++
++/* flag commands */
++
+ #define VCMD_get_nflags		VC_CMD(FLAGS, 5, 0)
+ #define VCMD_set_nflags		VC_CMD(FLAGS, 6, 0)
+ 
+@@ -60,10 +70,8 @@ extern int vc_set_nflags(uint32_t, void 
+ 
+ #endif	/* __KERNEL__ */
+ 
+-#define IPF_STATE_SETUP		(1ULL<<32)
+-
+ 
+-#define IPF_ONE_TIME		(0x0001ULL<<32)
++/* network caps commands */
+ 
+ #define VCMD_get_ncaps		VC_CMD(FLAGS, 7, 0)
+ #define VCMD_set_ncaps		VC_CMD(FLAGS, 8, 0)
+diff -NurpP --minimal util-vserver-0.30.207/kernel/network.h util-vserver-0.30.207-b/kernel/network.h
+--- util-vserver-0.30.207/kernel/network.h	2005-04-28 12:58:02.000000000 +0200
++++ util-vserver-0.30.207-b/kernel/network.h	2005-07-11 04:51:19.000000000 +0200
+@@ -11,6 +11,27 @@
+ #define NB_IPV4ROOT	16
+ 
+ 
++/* network flags */
++
++#define NXF_STATE_SETUP		(1ULL<<32)
++
++#define NXF_STATE_HELPER	(1ULL<<36)
++
++#define NXF_ONE_TIME		(0x0001ULL<<32)
++
++#define NXF_INIT_SET		(0)
++
++
++/* address types */
++
++#define	NXA_TYPE_IPV4		1
++#define	NXA_TYPE_IPV6		2
++
++#define	NXA_MOD_BCAST		(1<<8)
++
++#define	NXA_TYPE_ANY		(~0)
++
++
+ #ifdef	__KERNEL__
+ 
+ #include <linux/list.h>
+@@ -21,10 +42,10 @@
+ 
+ struct nx_info {
+ 	struct hlist_node nx_hlist;	/* linked list of nxinfos */
+-	struct rcu_head nx_rcu;		/* the rcu head */
+ 	nid_t nx_id;			/* vnet id */
+ 	atomic_t nx_usecnt;		/* usage count */
+-	atomic_t nx_refcnt;		/* reference count */
++	atomic_t nx_tasks;		/* tasks count */
++	int nx_state;			/* context state */
+ 
+ 	uint64_t nx_flags;		/* network flag word */
+ 	uint64_t nx_ncaps;		/* network capabilities */
+@@ -43,9 +64,11 @@ struct nx_info {
+ };
+ 
+ 
+-struct rcu_head;
++/* status flags */
+ 
+-extern void unhash_nx_info(struct nx_info *);
++#define NXS_HASHED      0x0001
++#define NXS_SHUTDOWN    0x0100
++#define NXS_RELEASED    0x8000
+ 
+ extern struct nx_info *locate_nx_info(int);
+ extern struct nx_info *locate_or_create_nx_info(int);
+@@ -55,6 +78,8 @@ extern int nid_is_hashed(nid_t);
+ 
+ extern int nx_migrate_task(struct task_struct *, struct nx_info *);
+ 
++extern long vs_net_change(struct nx_info *, unsigned int);
++
+ struct in_ifaddr;
+ struct net_device;
+ 
+diff -NurpP --minimal util-vserver-0.30.207/kernel/signal_cmd.h util-vserver-0.30.207-b/kernel/signal_cmd.h
+--- util-vserver-0.30.207/kernel/signal_cmd.h	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.207-b/kernel/signal_cmd.h	2005-07-11 04:51:19.000000000 +0200
+@@ -0,0 +1,25 @@
++#ifndef _VX_SIGNAL_CMD_H
++#define _VX_SIGNAL_CMD_H
++
++/*  signalling vserver commands */
++
++#define VCMD_ctx_kill		VC_CMD(PROCTRL, 1, 0)
++#define VCMD_wait_exit		VC_CMD(EVENT, 99, 0)
++
++struct	vcmd_ctx_kill_v0 {
++	int32_t pid;
++	int32_t sig;
++};
++
++struct	vcmd_wait_exit_v0 {
++	int32_t a;
++	int32_t b;
++};
++
++#ifdef	__KERNEL__
++
++extern int vc_ctx_kill(uint32_t, void __user *);
++extern int vc_wait_exit(uint32_t, void __user *);
++
++#endif	/* __KERNEL__ */
++#endif	/* _VX_SIGNAL_CMD_H */
+diff -NurpP --minimal util-vserver-0.30.207/kernel/switch.h util-vserver-0.30.207-b/kernel/switch.h
+--- util-vserver-0.30.207/kernel/switch.h	2005-04-28 12:58:02.000000000 +0200
++++ util-vserver-0.30.207-b/kernel/switch.h	2005-07-11 04:51:19.000000000 +0200
+@@ -77,8 +77,8 @@
+ 
+ /*  interface version */
+ 
+-#define VCI_VERSION		0x00010025
+-
++#define VCI_VERSION		0x00020001
++#define VCI_LEGACY_VERSION	0x000100FF
+ 
+ /*  query version */
+ 
+diff -NurpP --minimal util-vserver-0.30.207/kernel/xid.h util-vserver-0.30.207-b/kernel/xid.h
+--- util-vserver-0.30.207/kernel/xid.h	2005-04-28 12:58:02.000000000 +0200
++++ util-vserver-0.30.207-b/kernel/xid.h	2005-07-11 04:51:19.000000000 +0200
+@@ -5,9 +5,18 @@
+ #warning config options missing
+ #endif
+ 
++#define XID_TAG_SB(sb)	(sb->s_flags & MS_TAGXID)
++
+ #define XID_TAG(in)	(!(in) || \
+ 	(((struct inode *)in)->i_sb && \
+-	(((struct inode *)in)->i_sb->s_flags & MS_TAGXID)))
++	XID_TAG_SB(((struct inode *)in)->i_sb)))
++
++
++#ifdef CONFIG_XID_TAG_NFSD
++#define	XID_TAG_NFSD	1
++#else
++#define	XID_TAG_NFSD	0
++#endif
+ 
+ 
+ #ifdef CONFIG_INOXID_NONE
+@@ -96,6 +105,13 @@
+ #endif
+ 
+ 
++#ifdef CONFIG_INOXID_NONE
++#define vx_current_fsxid(sb)	(0)
++#else
++#define vx_current_fsxid(sb)	\
++	(XID_TAG_SB(sb) ? current->xid : 0)
++#endif
++
+ #define INOXID_UID(tag, uid, gid)	\
+ 	((tag) ? ((uid) & MAX_UID) : (uid))
+ #define INOXID_GID(tag, uid, gid)	\
+diff -NurpP --minimal util-vserver-0.30.207/lib/syscall_getvhiname-v13.hc util-vserver-0.30.207-b/lib/syscall_getvhiname-v13.hc
+--- util-vserver-0.30.207/lib/syscall_getvhiname-v13.hc	2004-02-03 13:54:10.000000000 +0100
++++ util-vserver-0.30.207-b/lib/syscall_getvhiname-v13.hc	2005-07-11 04:56:34.000000000 +0200
+@@ -25,12 +25,12 @@
+ static inline ALWAYSINLINE int
+ vc_get_vhi_name_v13(xid_t xid, vc_uts_type type, char *val, size_t len)
+ {
+-  struct vcmd_vx_vhi_name_v0	cmd;
++  struct vcmd_vhi_name_v0	cmd;
+   int				rc;
+   size_t			l = sizeof(cmd.name);
+ 
+   cmd.field = VHI_USER2KERNEL(type);
+-  rc = vserver(VCMD_vx_get_vhi_name, CTX_USER2KERNEL(xid), &cmd);
++  rc = vserver(VCMD_get_vhi_name, CTX_USER2KERNEL(xid), &cmd);
+   ENSC_FIX_IOCTL(rc);
+   if (rc==-1) return -1;
+ 
+diff -NurpP --minimal util-vserver-0.30.207/lib/syscall_netadd-net.hc util-vserver-0.30.207-b/lib/syscall_netadd-net.hc
+--- util-vserver-0.30.207/lib/syscall_netadd-net.hc	2004-04-22 22:46:43.000000000 +0200
++++ util-vserver-0.30.207-b/lib/syscall_netadd-net.hc	2005-07-11 04:58:17.000000000 +0200
+@@ -23,7 +23,7 @@
+ static inline ALWAYSINLINE int
+ vc_net_add_net(nid_t nid, struct vc_net_nx const *info)
+ {
+-  struct vcmd_net_nx_v0		k_info;
++  struct vcmd_net_addr_v0	k_info;
+ 
+   k_info.type  = NETTYPE_USER2KERNEL(info->type);
+   k_info.count = info->count;
+diff -NurpP --minimal util-vserver-0.30.207/lib/syscall_netremove-net.hc util-vserver-0.30.207-b/lib/syscall_netremove-net.hc
+--- util-vserver-0.30.207/lib/syscall_netremove-net.hc	2004-04-22 22:46:43.000000000 +0200
++++ util-vserver-0.30.207-b/lib/syscall_netremove-net.hc	2005-07-11 04:58:10.000000000 +0200
+@@ -23,7 +23,7 @@
+ static inline ALWAYSINLINE int
+ vc_net_remove_net(nid_t nid, struct vc_net_nx const *info)
+ {
+-  struct vcmd_net_nx_v0		k_info;
++  struct vcmd_net_addr_v0	k_info;
+ 
+   k_info.type  = NETTYPE_USER2KERNEL(info->type);
+   k_info.count = info->count;
+diff -NurpP --minimal util-vserver-0.30.207/lib/syscall_setvhiname-v13.hc util-vserver-0.30.207-b/lib/syscall_setvhiname-v13.hc
+--- util-vserver-0.30.207/lib/syscall_setvhiname-v13.hc	2004-09-24 17:08:26.000000000 +0200
++++ util-vserver-0.30.207-b/lib/syscall_setvhiname-v13.hc	2005-07-11 04:59:01.000000000 +0200
+@@ -25,7 +25,7 @@
+ static inline ALWAYSINLINE int
+ vc_set_vhi_name_v13(xid_t xid, vc_uts_type type, char const *val, size_t len)
+ {
+-  struct vcmd_vx_vhi_name_v0	cmd;
++  struct vcmd_vhi_name_v0	cmd;
+   int				rc;
+ 
+   if (len>=sizeof(cmd.name)) {
+@@ -37,7 +37,7 @@ vc_set_vhi_name_v13(xid_t xid, vc_uts_ty
+   memcpy(cmd.name, val, len);
+   cmd.name[len] = '\0';
+ 
+-  rc = vserver(VCMD_vx_set_vhi_name, CTX_USER2KERNEL(xid), &cmd);
++  rc = vserver(VCMD_set_vhi_name, CTX_USER2KERNEL(xid), &cmd);
+   ENSC_FIX_IOCTL(rc);
+ 
+   return rc;
+diff -NurpP --minimal util-vserver-0.30.207/lib/virtual.h util-vserver-0.30.207-b/lib/virtual.h
+--- util-vserver-0.30.207/lib/virtual.h	2005-04-28 19:53:21.000000000 +0200
++++ util-vserver-0.30.207-b/lib/virtual.h	2005-07-11 04:54:52.000000000 +0200
+@@ -25,10 +25,11 @@
+ #include <kernel/dlimit_cmd.h>
+ #include <kernel/inode_cmd.h>
+ #include <kernel/limit_cmd.h>
+-#include <kernel/namespace.h>
++#include <kernel/namespace_cmd.h>
+ #include <kernel/network_cmd.h>
+ #include <kernel/sched_cmd.h>
+-#include <kernel/signal.h>
++#include <kernel/signal_cmd.h>
++#include <kernel/cvirt_cmd.h>
+ 
+ #include <kernel/network.h>
+ #include <kernel/legacy.h>
+Binary files util-vserver-0.30.207/tests/.libs/getctx and util-vserver-0.30.207-b/tests/.libs/getctx differ
+Binary files util-vserver-0.30.207/tests/.libs/getinitpid and util-vserver-0.30.207-b/tests/.libs/getinitpid differ
+Binary files util-vserver-0.30.207/tests/.libs/vserver-info and util-vserver-0.30.207-b/tests/.libs/vserver-info differ
+Binary files util-vserver-0.30.207/vserver-start/.libs/vserver.start.bin and util-vserver-0.30.207-b/vserver-start/.libs/vserver.start.bin differ
