@@ -17,6 +17,12 @@ fi
 
 case "$1" in
     start)
+	if [ ! -d /proc/virtual ]; then
+	    show "Fixing vservers /proc entries visibility. kernel not capable"
+	    fail
+	    exit 1
+	fi
+
     	show "Fixing vservers /proc entries visibility"
 	busy
 	$_VPROCUNHIDE
