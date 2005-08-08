@@ -2,9 +2,9 @@ diff -urN -x '*~' util-vserver-0.30.207/distrib/Makefile.am util-vserver-0.30.20
 --- util-vserver-0.30.207/distrib/Makefile.am	2005-05-17 17:53:31.514184912 +0200
 +++ util-vserver-0.30.207-poldek/distrib/Makefile.am	2005-05-17 16:39:41.661574720 +0200
 @@ -50,7 +50,8 @@
- 			   fc1/apt/sources.list \
  			   fc2/apt/sources.list \
  			   fc3/apt/sources.list \
+ 			   fc4/apt/sources.list \
 -			   suse91/apt/sources.list
 +			   suse91/apt/sources.list \
 +			   pld2.0/poldek/poldek.conf
