@@ -261,6 +261,7 @@ cp -a compat.h vserver-compat.h
 %build
 %{__aclocal} -I m4
 %{__automake}
+%{__autoconf}
 %configure \
 	--with-initrddir=/etc/rc.d/init.d \
 	--enable-release \
@@ -424,6 +425,7 @@ fi
 %attr(755,root,root) %{_sbindir}/vsomething
 %attr(755,root,root) %{_sbindir}/vtop
 %attr(755,root,root) %{_sbindir}/vuname
+%attr(755,root,root) %{_sbindir}/vwait
 %dir %{_libdir}/%{name}
 %dir %{_libdir}/%{name}/defaults
 %{_libdir}/%{name}/FEATURES.txt
@@ -433,7 +435,7 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/chain-echo
 %attr(755,root,root) %{_libdir}/%{name}/check-unixfile
 %attr(755,root,root) %{_libdir}/%{name}/chcontext-compat
-%attr(755,root,root) %{_libdir}/%{name}/chroot-*
+%attr(755,root,root) %{_libdir}/%{name}/chroot-sh
 %attr(755,root,root) %{_libdir}/%{name}/exec-ulimit
 %attr(755,root,root) %{_libdir}/%{name}/fakerunlevel
 %attr(755,root,root) %{_libdir}/%{name}/filetime
@@ -513,8 +515,6 @@ fi
 %{_libdir}/%{name}/defaults/vunify-exclude
 %attr(755,root,root) %{_libdir}/%{name}/pkgmgmt
 %attr(755,root,root) %{_libdir}/%{name}/vapt-get-worker
-%attr(755,root,root) %{_libdir}/%{name}/vbuild
-%attr(755,root,root) %{_libdir}/%{name}/vcheck
 %attr(755,root,root) %{_libdir}/%{name}/vcopy
 %attr(755,root,root) %{_libdir}/%{name}/vhashify
 %attr(755,root,root) %{_libdir}/%{name}/vpkg
@@ -524,7 +524,6 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/vunify
 %attr(755,root,root) %{_libdir}/%{name}/vyum-worker
 %attr(755,root,root) %{_sbindir}/vapt-get
-%attr(755,root,root) %{_sbindir}/vfiles
 %attr(755,root,root) %{_sbindir}/vpoldek
 %attr(755,root,root) %{_sbindir}/vrpm
 %attr(755,root,root) %{_sbindir}/vyum
