@@ -651,7 +651,7 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.functions.poldek u
 diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.poldek util-vserver-0.30.207-poldek/scripts/vserver-build.poldek
 --- util-vserver-0.30.207/scripts/vserver-build.poldek	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.207-poldek/scripts/vserver-build.poldek	2005-05-17 15:47:26.106795288 +0200
-@@ -0,0 +1,61 @@
+@@ -0,0 +1,64 @@
 +# $Id$	--*- sh -*--
 +
 +# Copyright (C) 2003 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
@@ -690,7 +690,8 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.poldek util-vserve
 +
 +getDistribution
 +
-+base.initVariables
++base.init
++
 +pkgmgmt.initVariables
 +rpm.initVariables
 +poldek.initVariables
@@ -713,3 +714,5 @@ diff -urN -x '*~' util-vserver-0.30.207/scripts/vserver-build.poldek util-vserve
 +$_VPOLDEK "$SETUP_CONFDIR" -- --update-whole
 +poldek.installBasePackages "$SETUP_CONFDIR" "$PKGINSTALLDIR"
 +test -z "$BUILD_INITPOST" || "$BUILD_INITPOST" "$SETUP_CONFDIR" "$UTIL_VSERVER_VARS"
++
++base.setSuccess
