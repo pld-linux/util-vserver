@@ -1,4 +1,6 @@
 #
+# m68k and mips are the only not supported archs
+#
 # Conditional build:
 %bcond_without	dietlibc	# don't use dietlibc (ask for troubles)
 %bcond_without	doc		# don't build documentation which needed LaTeX
@@ -7,12 +9,12 @@
 Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30.207
-Release:	9
+Version:	0.30.208
+Release:	0.1
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
-# Source0-md5:	1c8457a687643ae8a7b1f1d34ebbdd68
+# Source0-md5:	4453ad0ae7f351fec651d6904e00521f
 Source1:	vprocunhide.init
 Source2:	vservers-default.init
 Source3:	vservers-legacy.init
@@ -27,8 +29,8 @@ Patch1:		%{name}-pld.patch
 Patch2:		%{name}-build-poldek.patch
 Patch3:		%{name}-include.patch
 Patch4:		%{name}-m4-diet.patch
-Patch5:		%{name}-size_t.patch
-Patch6:		http://vserver.13thfloor.at/Experimental/patch-0.30.207-vs2.0.diff
+Patch5:		http://vserver.13thfloor.at/Experimental/UTIL-VSERVER/delta-0.30.208-kheaders.diff
+Patch6:		http://vserver.13thfloor.at/Experimental/UTIL-VSERVER/delta-0.30.208-shiny6.diff
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -50,7 +52,6 @@ Requires:	util-linux
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-lib = %{version}-%{release}
 Obsoletes:	util-vserver-core
-ExclusiveArch:	%{ix86} %{x8664} alpha
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -250,7 +251,7 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p2
+%patch5 -p1
 %patch6 -p1
 
 install %{SOURCE7} package-menagament.txt
