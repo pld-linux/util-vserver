@@ -38,7 +38,9 @@ BuildRequires:	beecrypt-devel
 %{?with_dietlibc:BuildRequires:	dietlibc-static >= 2:0.29}
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 1.5.14
-BuildREquires:	sed
+%ifarch %{x8664}
+BuildRequires:	sed >= 4.0
+%endif
 %if %{with doc}
 BuildRequires:	doxygen
 BuildRequires:	graphviz
