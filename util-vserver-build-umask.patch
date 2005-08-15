@@ -1,0 +1,15 @@
+--- util-vserver-0.30.208/scripts/vserver-build~	2005-08-15 21:15:55.737388075 +0200
++++ util-vserver-0.30.208.umask/scripts/vserver-build	2005-08-15 22:46:47.439347258 +0200
+@@ -127,6 +127,12 @@
+ 
+ setup_setDefaults "$VSERVER_NAME"
+ 
++# Set sane umask to avoid nasty surprises like this:
++# umask 077 ; mkdir -p -m755 /tmp/a/b ; ls -ld /tmp/a /tmp/a/b
++#drwx------  3 baggins users 14 Aug 15 22:46 /tmp/a
++#drwxr-xr-x  2 baggins users  6 Aug 15 22:46 /tmp/a/b
++umask 022
++
+ case x"$method" in
+     (xlegacy)	exec $_VSERVER_LEGACY "$VSERVER_NAME" build "$@" ;;
+     (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xpoldek)
