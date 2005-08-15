@@ -1,6 +1,15 @@
 diff -ur util-vserver-0.30.208/scripts/vserver-setup.functions util-vserver-0.30.208.cpuset/scripts/vserver-setup.functions
 --- util-vserver-0.30.208/scripts/vserver-setup.functions	2005-02-26 00:32:02.000000000 +0100
 +++ util-vserver-0.30.208.cpuset/scripts/vserver-setup.functions	2005-08-15 20:16:58.741453736 +0200
+@@ -28,7 +28,7 @@
+ declare -a SETUP_INTERFACES=()
+ declare -a SETUP_FLAGS=()
+ 
+-declare -r SETUP_OPTIONS="confdir:,lockfile:,hostname:,netdev:,netmask:,netprefix:,netbcast:,interface:,flags:,context:,initstyle:"
++declare -r SETUP_OPTIONS="confdir:,lockfile:,hostname:,netdev:,netmask:,netprefix:,netbcast:,interface:,flags:,context:,initstyle:,cpuset:"
+ declare -r SETUP_HELPMSG=$"
+     --context   ...  the static context of the vserver [default: none; a dynamic
+                      context will be assumed]
 @@ -55,6 +55,8 @@
  			    this becomes a per vserver limit)
  		     private: No other process can join this security context.
