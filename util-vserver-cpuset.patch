@@ -38,7 +38,7 @@ diff -ur util-vserver-0.30.208/scripts/vserver-setup.functions util-vserver-0.30
 diff -ur util-vserver-0.30.208/scripts/vserver.functions util-vserver-0.30.208.cpuset/scripts/vserver.functions
 --- util-vserver-0.30.208/scripts/vserver.functions	2005-07-03 19:47:06.000000000 +0200
 +++ util-vserver-0.30.208.cpuset/scripts/vserver.functions	2005-08-15 20:16:58.743453432 +0200
-@@ -667,6 +667,17 @@
+@@ -667,6 +667,23 @@
      fi
  }
  
@@ -50,7 +50,13 @@ diff -ur util-vserver-0.30.208/scripts/vserver.functions util-vserver-0.30.208.c
 +
 +    test -e "$f" || return 0
 +    read cpuset < "$f"
-+    [ -e /dev/cpuset/$cpuset/tasks ] && echo $$ >/dev/cpuset/$cpuset/tasks
++    if [ -e /dev/cpuset/$cpuset/tasks ] ; then
++	echo $$ >/dev/cpuset/$cpuset/tasks
++    else
++	warning $"\
++WARNING: CPUSET \"$cpuset\" does not exist! Not using it!" >&2
++	return 0
++    fi
 +}
 +
  function _mountVserverInternal
