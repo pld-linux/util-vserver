@@ -10,7 +10,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.208
-Release:	0.1
+Release:	0.2
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -31,6 +31,7 @@ Patch3:		%{name}-include.patch
 Patch4:		%{name}-m4-diet.patch
 Patch5:		http://vserver.13thfloor.at/Experimental/UTIL-VSERVER/delta-0.30.208-kheaders.diff
 Patch6:		http://vserver.13thfloor.at/Experimental/UTIL-VSERVER/delta-0.30.208-shiny6.diff
+Patch7:		%{name}-cpuset.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -255,6 +256,7 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 install %{SOURCE7} package-menagament.txt
 
