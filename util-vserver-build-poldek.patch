@@ -252,7 +252,7 @@ diff -ur -x '*~' -x .libs -x .deps util-vserver-0.30.207/scripts/pkgmgmt util-vs
    installed. It is suggested to install such a program before setting
    up internal package management."
  		    res=1
-@@ -341,6 +341,125 @@
+@@ -341,6 +341,131 @@
      fi
  }
  
@@ -345,6 +345,10 @@ diff -ur -x '*~' -x .libs -x .deps util-vserver-0.30.207/scripts/pkgmgmt util-vs
 +	_copySecure "$vdir" "$RPMETCDIR"   /etc/rpm
 +	_copySecure "$vdir" "$RPMSTATEDIR" /var/lib/rpm
 +
++	pushd "$vdir" >/dev/null
++	    ## remove %_dbpath settings
++	    _substFile /etc/rpm/macros '/^%_dbpath[ \t].*/D'
++	popd >/dev/null
 +    else
 +	if test -n "$have_poldek"; then
 +	    _copySecureRev "$vdir" /etc/poldek "$POLDEKETCDIR"
@@ -353,6 +357,8 @@ diff -ur -x '*~' -x .libs -x .deps util-vserver-0.30.207/scripts/pkgmgmt util-vs
 +
 +	_copySecureRev "$vdir" /etc/rpm     "$RPMETCDIR"
 +	_copySecureRev "$vdir" /var/lib/rpm "$RPMSTATEDIR"
++
++	echo -e "%_dbpath\t\t$rpmdb_mntpoint" >>$RPMETCDIR/macros
 +    fi
 +
 +    ## Cleanups...
