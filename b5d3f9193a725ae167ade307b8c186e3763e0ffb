@@ -1,0 +1,3 @@
+- changed dev subpackage name to vserver-dev
+- added /dev/initctl -> /dev/null
+- BIG FAT WARNING in %post vserver-dev
