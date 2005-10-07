@@ -1,0 +1,4 @@
+- release 3
+- strict BR
+- config noreplace for config files
+- systematized %files for build package
