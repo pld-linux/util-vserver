@@ -1,0 +1,2 @@
+- merged core with main package (it was unneedded entity)
+- cleaned up duplicate %files
