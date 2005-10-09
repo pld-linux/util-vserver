@@ -1,6 +1,5 @@
 #
 # m68k and mips are the only not supported archs
-#
 # Conditional build:
 %bcond_without	dietlibc	# don't use dietlibc (ask for troubles)
 %bcond_without	doc		# don't build documentation which needed LaTeX
@@ -23,7 +22,7 @@ Source5:	vservers-default.sysconfig
 Source6:	vservers-legacy.sysconfig
 # A bit of documentation explaining package menagement
 # http://www.paul.sladen.org/vserver/archives/200505/0078.html
-Source7:	util-vserver-pkgmgmt.txt
+Source7:	%{name}-pkgmgmt.txt
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
 Patch2:		%{name}-build-poldek.patch
@@ -51,12 +50,17 @@ BuildRequires:	tetex-format-pdflatex
 BuildRequires:	tetex-makeindex
 %{?with_xalan:BuildRequires:	xalan-j}
 %endif
-PreReq:		rc-scripts
+Requires:	rc-scripts
 Requires:	util-linux
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-lib = %{version}-%{release}
 Obsoletes:	util-vserver-core
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+# for adapter
+%define		_usrbin		/usr/bin
+%define		_usrsbin	/usr/bin
+%define		_usrlib		/usr/lib/util-vserver
 
 %description
 This package provides the components and a framework to setup virtual
@@ -227,7 +231,7 @@ konfiguracjê w starym stylu.
 Summary:	/dev entries for systems in Vservers
 Summary(pl):	Pliki specjalne /dev/* dla systemów w Vserwerach
 Group:		Base
-PreReq:		setup >= 2.4.1-2
+Requires:	setup >= 2.4.1-2
 Provides:	dev = 2.9.0-19
 Provides:	devfs
 AutoReqProv:	no
@@ -278,12 +282,12 @@ cp -a compat.h vserver-compat.h
 	PS=/bin/ps \
 	UMOUNT=/bin/umount \
 	IP=/sbin/ip \
-	IPTABLES=/usr/sbin/iptables \
+	IPTABLES=%{_usrsbin}/iptables \
 	MODPROBE=/sbin/modprobe \
 	NAMEIF=/sbin/nameif \
 	RMMOD=/sbin/rmmod \
 	VCONFIG=/sbin/vconfig \
-	WGET=/usr/bin/wget \
+	WGET=%{_usrbin}/wget \
 
 %{__make} all
 %{?with_doc:%{__make} doc}
@@ -295,31 +299,31 @@ install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d},/dev/pts}
 %{__make} install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install vserver-compat.h $RPM_BUILD_ROOT%{_includedir}/
+cp -a vserver-compat.h $RPM_BUILD_ROOT%{_includedir}
 
 chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
 
-install -d $RPM_BUILD_ROOT/etc/vservices
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/vservices
 install -d $RPM_BUILD_ROOT/vservers/.pkg
 ln -s /vservers $RPM_BUILD_ROOT%{_sysconfdir}/vservers/vdirbase
 ln -s %{_localstatedir}/run/vservers.rev $RPM_BUILD_ROOT%{_sysconfdir}/vservers/run.rev
 
 for i in $RPM_BUILD_ROOT/etc/rc.d/init.d/v_* ; do
 	s=`basename $i | sed s/v_//`
-	cat >$RPM_BUILD_ROOT/etc/vservices/$s << EOF
+	cat >$RPM_BUILD_ROOT%{_sysconfdir}/vservices/$s << EOF
 # IP addresses/interfaces to bound $s service to
 #IP=10.0.0.1
 #IP=eth0
 EOF
 done
 
-sed 's|/usr/lib/util-vserver|%{_libdir}/%{name}|g' %{SOURCE1} > \
+sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE1} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/vprocunhide
-sed 's|/usr/lib/util-vserver|%{_libdir}/%{name}|g' %{SOURCE2} > \
+sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE2} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
-sed 's|/usr/lib/util-vserver|%{_libdir}/%{name}|g' %{SOURCE3} > \
+sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE3} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
-sed 's|/usr/lib/util-vserver|%{_libdir}/%{name}|g' %{SOURCE4} > \
+sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE4} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/rebootmgr
 
 install %{SOURCE5} $RPM_BUILD_ROOT/etc/sysconfig/vservers-default
@@ -467,7 +471,7 @@ fi
 %{_mandir}/man8/vserver-stat.8*
 %{_mandir}/man8/vserver.8*
 %{_mandir}/man8/vtop.8*
-%attr(0,root,root) %dir /vservers
+%attr(000,root,root) %dir /vservers
 %attr(755,root,root) %dir /vservers/.pkg
 %dir %{_localstatedir}/run/vservers
 %dir %{_localstatedir}/run/vservers.rev
@@ -509,8 +513,8 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/pld2.0
 %dir %{_sysconfdir}/vservers/.distributions/pld2.0/poldek
 %{_sysconfdir}/vservers/.distributions/pld1.99
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/vservers/.distributions/[frs]*/apt/sources.list
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/vservers/.distributions/pld2.0/poldek/poldek.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/[frs]*/apt/sources.list
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld2.0/poldek/poldek.conf
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %dir %{_libdir}/%{name}/distributions
 %attr(-, root, root) %{_libdir}/%{name}/distributions/*
@@ -536,8 +540,8 @@ fi
 
 %files legacy
 %defattr(644,root,root,755)
-%dir /etc/vservices
-/etc/vservices/*
+%dir %{_sysconfdir}/vservices
+%{_sysconfdir}/vservices/*
 %dir %{_libdir}/%{name}/legacy
 %attr(755,root,root) %{_libdir}/%{name}/legacy/*
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers-legacy
