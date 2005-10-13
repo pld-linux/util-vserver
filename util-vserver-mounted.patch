@@ -1,0 +1,71 @@
+diff -ur util-vserver-0.30.208/scripts/vserver-build.functions /usr/lib/util-vserver/vserver-build.functions
+--- util-vserver-0.30.208/scripts/vserver-build.functions	2005-10-12 15:34:51.640803600 +0200
++++ /usr/lib/util-vserver/vserver-build.functions	2005-10-12 15:32:33.616786440 +0200
+@@ -102,14 +102,16 @@
+ function _renameVserverCfg
+ {
+     local suffix=.~$(date +'%s')~
+-    local i
+-    
+-    for i in "$VDIR" "$SETUP_CONFDIR"; do
+-	test ! -e "$i" || {
+-	    mv "$i" "$i$suffix"
+-	    say "Renamed '$i' to '$i$suffix'"
+-	}
+-    done
++
++    if [ -e "$VDIR" -a "$1" -ne 0 ]; then
++	mv "$VDIR" "$VDIR$suffix"
++	say "Renamed '$VDIR' to '$VDIR$suffix'"
++    fi
++
++    if [ -e "$SETUP_CONFDIR" ]; then
++	mv "$SETUP_CONFDIR" "$SETUP_CONFDIR$suffix"
++	say "Renamed '$SETUP_CONFDIR' to '$SETUP_CONFDIR$suffix'"
++    fi
+ }
+ 
+ 
+@@ -157,11 +159,38 @@
+ ## Usage: initFilesystem [force]
+ function base.initFilesystem
+ {
+-    test -z "$1" || _renameVserverCfg
+-    test ! -d "$VDIR" -a ! -d "$SETUP_CONFDIR" || {
++    local list
++    local vdirl
++    local mounted
++
++    vdirl="$(readlink $ROOTDIR)/$VSERVERDIRNAME"
++    mount | grep -q "$vdirl"
++    mounted=$?
++
++    test -z "$1" || _renameVserverCfg $mounted
++    test -d "$VDIR" && {
++	if [ "$mounted" -eq 0 ]; then
++	    list=$(ls -1a "$vdirl" | awk '! /^(\.|\.\.|lost\+found)$/ { print $1; }')
++	    if [ -n "$list" ]; then
++		echo \
++"vserver-topdirectory '$vdirl' is a non-empty mounted filesystem;
++please clean it manually"
++>&2
++		exit 1
++	    fi
++	else
++	    echo \
++"vserver-topdirectory '$VDIR' exist already;
++please try to use '--force', or remove them manually"
++>&2
++	    exit 1
++	fi
++    } >&2
++
++    test -d "$SETUP_CONFDIR" && {
+ 	echo \
+-"vserver-topdirectory '$VDIR' and/or configuration at '$SETUP_CONFDIR'
+-exist already; please try to use '--force', or remove them manually"
++"configuration at '$SETUP_CONFDIR' exist already;
++please try to use '--force', or remove them manually"
+ >&2
+ 	exit 1
+     } >&2
