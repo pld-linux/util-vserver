@@ -37,8 +37,8 @@ diff -ur util-vserver-0.30.208/scripts/vserver-build.functions /usr/lib/util-vse
 +    local mounted
 +
 +    vdirl="$(readlink $ROOTDIR)/$VSERVERDIRNAME"
-+    mount | grep -q "$vdirl"
-+    mounted=$?
++    mounted=0
++    mount | grep -q "$vdirl" || mounted=$?
 +
 +    test -z "$1" || _renameVserverCfg $mounted
 +    test -d "$VDIR" && {
