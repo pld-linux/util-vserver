@@ -9,7 +9,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.208
-Release:	2.7
+Release:	2.10
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -146,11 +146,6 @@ podpakiety util-vserver.
 Summary:	Tools which can be used to build vservers
 Summary(pl):	Narzêdzia do budowania vserverów
 Group:		Applications/System
-Requires:	binutils
-Requires:	e2fsprogs
-Requires:	rpm
-Requires:	tar
-Requires:	wget
 Conflicts:	poldek < 0.18.8-10
 Requires:	%{name} = %{version}-%{release}
 
@@ -171,6 +166,45 @@ ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
 w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
 
 Ten pakiet zawiera narzêdzia pomagaj±ce przy budowaniu Vserwerów.
+
+%package -n vserver-distro-fedora
+Summary:	VServer build templates for Fedora Core
+Group:		Applications/System
+Requires:	%{name} = %{version}-%{release}
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	rpm
+Requires:	tar
+Requires:	wget
+
+%description -n vserver-distro-fedora
+VServer build templates for Fedora Core 1,2,3,4
+
+%package -n vserver-distro-redhat
+Summary:	VServer build template for RedHat Linux 9
+Group:		Applications/System
+Requires:	%{name} = %{version}-%{release}
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	rpm
+Requires:	tar
+Requires:	wget
+
+%description -n vserver-distro-redhat
+VServer build template for RedHat Linux 9.
+
+%package -n vserver-distro-suse
+Summary:	VServer build template for SuSE 9.1
+Group:		Applications/System
+Requires:	%{name} = %{version}-%{release}
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	rpm
+Requires:	tar
+Requires:	wget
+
+%description -n vserver-distro-suse
+VServer build template for SuSE Linux 9.1.
 
 %package init
 Summary:	initscripts for vserver
@@ -509,16 +543,16 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions
 %dir %{_sysconfdir}/vservers/.distributions/.common
 %dir %{_sysconfdir}/vservers/.distributions/.common/pubkeys
-%dir %{_sysconfdir}/vservers/.distributions/[frs]*
-%dir %{_sysconfdir}/vservers/.distributions/[frs]*/apt
 %dir %{_sysconfdir}/vservers/.distributions/pld2.0
 %dir %{_sysconfdir}/vservers/.distributions/pld2.0/poldek
 %{_sysconfdir}/vservers/.distributions/pld1.99
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/[frs]*/apt/sources.list
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld2.0/poldek/poldek.conf
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %dir %{_libdir}/%{name}/distributions
-%attr(-, root, root) %{_libdir}/%{name}/distributions/*
+%attr(-, root, root) %{_libdir}/%{name}/distributions/defaults
+%attr(-, root, root) %{_libdir}/%{name}/distributions/pld*
+%attr(-, root, root) %{_libdir}/%{name}/distributions/template
+%attr(-, root, root) %{_libdir}/%{name}/distributions/redhat*
 %{_libdir}/%{name}/vserver-build.*
 %{_libdir}/%{name}/vserver-setup.functions
 %{_libdir}/%{name}/defaults/fstab
@@ -538,6 +572,27 @@ fi
 %attr(755,root,root) %{_sbindir}/vpoldek
 %attr(755,root,root) %{_sbindir}/vrpm
 %attr(755,root,root) %{_sbindir}/vyum
+
+%files -n vserver-distro-fedora
+%defattr(644,root,root,755)
+%dir %{_sysconfdir}/vservers/.distributions/fc*
+%dir %{_sysconfdir}/vservers/.distributions/fc*/apt
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
+%{_libdir}/%{name}/distributions/fc*
+
+%files -n vserver-distro-redhat
+%defattr(644,root,root,755)
+%dir %{_sysconfdir}/vservers/.distributions/rh*
+%dir %{_sysconfdir}/vservers/.distributions/rh*/apt
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/rh*/apt/sources.list
+%{_libdir}/%{name}/distributions/rh*
+
+%files -n vserver-distro-suse
+%defattr(644,root,root,755)
+%dir %{_sysconfdir}/vservers/.distributions/suse*
+%dir %{_sysconfdir}/vservers/.distributions/suse*/apt
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/suse*/apt/sources.list
+%{_libdir}/%{name}/distributions/suse*
 
 %files legacy
 %defattr(644,root,root,755)
