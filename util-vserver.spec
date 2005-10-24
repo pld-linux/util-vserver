@@ -1,10 +1,11 @@
 #
 # m68k and mips are the only not supported archs
+#
 # Conditional build:
 %bcond_without	dietlibc	# don't use dietlibc (ask for troubles)
 %bcond_without	doc		# don't build documentation which needed LaTeX
 %bcond_with	xalan		# use the xalan xslt processor
-
+#
 Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -169,6 +170,7 @@ Ten pakiet zawiera narzêdzia pomagaj±ce przy budowaniu Vserwerów.
 
 %package -n vserver-distro-fedora
 Summary:	VServer build templates for Fedora Core
+Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Fedora Core
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	binutils
@@ -178,10 +180,14 @@ Requires:	tar
 Requires:	wget
 
 %description -n vserver-distro-fedora
-VServer build templates for Fedora Core 1,2,3,4
+VServer build templates for Fedora Core 1,2,3,4.
+
+%description -n vserver-distro-fedora -l pl
+Szablony do tworzenia VServerów dla dystrybucji Fedora Core 1,2,3,4.
 
 %package -n vserver-distro-redhat
-Summary:	VServer build template for RedHat Linux 9
+Summary:	VServer build template for Red Hat Linux 9
+Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	binutils
@@ -193,8 +199,12 @@ Requires:	wget
 %description -n vserver-distro-redhat
 VServer build template for RedHat Linux 9.
 
+%description -n vserver-distro-redhat -l pl
+Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
+
 %package -n vserver-distro-suse
 Summary:	VServer build template for SuSE 9.1
+Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	binutils
@@ -205,6 +215,9 @@ Requires:	wget
 
 %description -n vserver-distro-suse
 VServer build template for SuSE Linux 9.1.
+
+%description -n vserver-distro-suse -l pl
+Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 
 %package init
 Summary:	initscripts for vserver
