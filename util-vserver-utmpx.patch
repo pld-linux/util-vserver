@@ -1,0 +1,11 @@
+--- util-vserver-0.30.208/scripts/vserver.functions~	2005-10-11 19:51:05.061289264 +0200
++++ util-vserver-0.30.208/scripts/vserver.functions	2005-10-20 23:13:31.825830032 +0200
+@@ -266,7 +266,7 @@
+ 		INITCMD_START=( "$i" "$RUNLEVEL_START" )
+ 		INITCMD_STOP=(  "$i" "$RUNLEVEL_STOP"  )
+ 	    done
+-	    INITCMD_PREPARE=( $_FAKE_RUNLEVEL "$RUNLEVEL_START" /var/run/utmp )
++	    INITCMD_PREPARE=( $_FAKE_RUNLEVEL "$RUNLEVEL_START" /var/run/utmpx )
+ 	    ;;
+ 	    
+ 	(xplain)
