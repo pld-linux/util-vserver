@@ -1,7 +1,7 @@
 # Copyright 1999-2005 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-# A space-delimited list of vserver MARKS to start. 
+# A space-delimited list of vserver MARKS to start.
 # Identification of vservers happens by
 # putting the flavor into /etc/vservers/<vserver-id>/apps/init/mark.
 # Note: on stop the init script will stop ALL running vservers
@@ -12,7 +12,7 @@ MARKS="default"
 # Note: on stop the init script will stop ALL running vservers
 #START_VSERVERS=""
 
-# Wether to start all vserver MARKS by default (supersedes MARKS)
+# Whether to start all vserver MARKS by default (supersedes MARKS)
 # This will be enabled if STARTALL is set regardless of its content
 # i.e. you have to comment to disable it
 # Note: on stop the init script will stop ALL running vservers
@@ -20,7 +20,7 @@ MARKS="default"
 
 # Number of vservers which shall be started in parallel; since most
 # initmethods are spending much time in sleeps, it is safe to
-# use a high number here, though you should pay attention if you make 
+# use a high number here, though you should pay attention if you make
 # use of depends in /etc/vservers as some services may not be up if
 # started in parallel
 #NUMPARALLEL=6
