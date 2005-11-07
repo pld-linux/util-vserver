@@ -9,12 +9,12 @@
 Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30.208
-Release:	2.11
+Version:	0.30.209
+Release:	0.1
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
-# Source0-md5:	4453ad0ae7f351fec651d6904e00521f
+# Source0-md5:	674b122824292c20d3c53245b91f6088
 Source1:	vprocunhide.init
 Source2:	vservers-default.init
 Source3:	vservers-legacy.init
@@ -29,11 +29,8 @@ Patch1:		%{name}-pld.patch
 Patch2:		%{name}-build-poldek.patch
 Patch3:		%{name}-include.patch
 Patch4:		%{name}-m4-diet.patch
-Patch5:		http://vserver.13thfloor.at/Experimental/UTIL-VSERVER/delta-0.30.208-kheaders.diff
-Patch6:		http://vserver.13thfloor.at/Experimental/UTIL-VSERVER/delta-0.30.208-shiny6.diff
 Patch7:		%{name}-cpuset.patch
 Patch8:		%{name}-build-umask.patch
-Patch9:		%{name}-vwait-timeout-fix.patch
 Patch10:	%{name}-mounted.patch
 Patch11:	%{name}-utmpx.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
@@ -219,6 +216,19 @@ VServer build template for SuSE Linux 9.1.
 %description -n vserver-distro-suse -l pl
 Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 
+%package -n vserver-distro-centos
+Summary:	VServer build template for CentOS 4.2
+Summary(pl):	Szablon budowania VServera dla CentOS 4.2
+Group:		Applications/System
+Requires:	util-vserver-build
+Requires:	yum
+
+%description -n vserver-distro-centos
+VServer build template for CentOS 4.2.
+
+%description -n vserver-distro-centos -l pl
+Szablon budowania VServera dla CentOS 4.2.
+
 %package init
 Summary:	initscripts for vserver
 Summary(pl):	Skrypty inicjalizuj±ce dla vserwera
@@ -309,12 +319,9 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
-%patch6 -p1
 %patch7 -p1
 %patch8 -p1
-%patch9 -p1
-%patch10 -p1
+#%patch10 -p1
 %patch11 -p1
 
 install %{SOURCE7} package-menagament.txt
@@ -606,6 +613,10 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/suse*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/suse*/apt/sources.list
 %{_libdir}/%{name}/distributions/suse*
+
+%files -n vserver-distro-centos
+%defattr(644,root,root,755)
+%{_libdir}/util-vserver/distributions/centos42
 
 %files legacy
 %defattr(644,root,root,755)
