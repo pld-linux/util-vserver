@@ -16,10 +16,10 @@ Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
 # Source0-md5:	674b122824292c20d3c53245b91f6088
 Source1:	vprocunhide.init
-Source2:	vservers-default.init
+Source2:	vservers.init
 Source3:	vservers-legacy.init
 Source4:	rebootmgr.init
-Source5:	vservers-default.sysconfig
+Source5:	vservers.sysconfig
 Source6:	vservers-legacy.sysconfig
 # A bit of documentation explaining package menagement
 # http://www.paul.sladen.org/vserver/archives/200505/0078.html
@@ -29,10 +29,9 @@ Patch1:		%{name}-pld.patch
 Patch2:		%{name}-build-poldek.patch
 Patch3:		%{name}-include.patch
 Patch4:		%{name}-m4-diet.patch
-Patch7:		%{name}-cpuset.patch
-Patch8:		%{name}-build-umask.patch
-Patch10:	%{name}-mounted.patch
-Patch11:	%{name}-utmpx.patch
+Patch5:		%{name}-cpuset.patch
+Patch6:		%{name}-build-umask.patch
+Patch7:		%{name}-utmpx.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -319,10 +318,9 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
+%patch6 -p1
 %patch7 -p1
-%patch8 -p1
-#%patch10 -p1
-%patch11 -p1
 
 install %{SOURCE7} package-menagament.txt
 
@@ -383,13 +381,14 @@ done
 sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE1} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/vprocunhide
 sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE2} > \
-	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
+	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers
 sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE3} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
 sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE4} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/rebootmgr
+sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE5} > \
+	$RPM_BUILD_ROOT/etc/sysconfig/vservers
 
-install %{SOURCE5} $RPM_BUILD_ROOT/etc/sysconfig/vservers-default
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 
 ln -sf null $RPM_BUILD_ROOT/dev/initctl
