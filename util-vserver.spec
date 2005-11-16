@@ -9,17 +9,17 @@
 Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30.208
-Release:	2.11
+Version:	0.30.209
+Release:	0.1
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
-# Source0-md5:	4453ad0ae7f351fec651d6904e00521f
+# Source0-md5:	674b122824292c20d3c53245b91f6088
 Source1:	vprocunhide.init
-Source2:	vservers-default.init
+Source2:	vservers.init
 Source3:	vservers-legacy.init
 Source4:	rebootmgr.init
-Source5:	vservers-default.sysconfig
+Source5:	vservers.sysconfig
 Source6:	vservers-legacy.sysconfig
 # A bit of documentation explaining package menagement
 # http://www.paul.sladen.org/vserver/archives/200505/0078.html
@@ -29,13 +29,9 @@ Patch1:		%{name}-pld.patch
 Patch2:		%{name}-build-poldek.patch
 Patch3:		%{name}-include.patch
 Patch4:		%{name}-m4-diet.patch
-Patch5:		http://vserver.13thfloor.at/Experimental/UTIL-VSERVER/delta-0.30.208-kheaders.diff
-Patch6:		http://vserver.13thfloor.at/Experimental/UTIL-VSERVER/delta-0.30.208-shiny6.diff
-Patch7:		%{name}-cpuset.patch
-Patch8:		%{name}-build-umask.patch
-Patch9:		%{name}-vwait-timeout-fix.patch
-Patch10:	%{name}-mounted.patch
-Patch11:	%{name}-utmpx.patch
+Patch5:		%{name}-cpuset.patch
+Patch6:		%{name}-build-umask.patch
+Patch7:		%{name}-utmpx.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -52,6 +48,12 @@ BuildRequires:	graphviz
 BuildRequires:	libxslt-progs
 BuildRequires:	tetex-format-pdflatex
 BuildRequires:	tetex-makeindex
+# To be removed when tetex-format-pdflatex, tetex-pdftex...
+# ...and graphviz packages get fixed
+BuildRequires:	tetex-fonts-jknappen
+BuildRequires:	tetex-metafont
+BuildRequires:	ghostscript
+BuildRequires:	ghostscript-fonts-std
 %{?with_xalan:BuildRequires:	xalan-j}
 %endif
 Requires:	rc-scripts
@@ -219,6 +221,19 @@ VServer build template for SuSE Linux 9.1.
 %description -n vserver-distro-suse -l pl
 Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 
+%package -n vserver-distro-centos
+Summary:	VServer build template for CentOS 4.2
+Summary(pl):	Szablon budowania VServera dla CentOS 4.2
+Group:		Applications/System
+Requires:	util-vserver-build
+Requires:	yum
+
+%description -n vserver-distro-centos
+VServer build template for CentOS 4.2.
+
+%description -n vserver-distro-centos -l pl
+Szablon budowania VServera dla CentOS 4.2.
+
 %package init
 Summary:	initscripts for vserver
 Summary(pl):	Skrypty inicjalizuj±ce dla vserwera
@@ -312,10 +327,6 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
 
 install %{SOURCE7} package-menagament.txt
 
@@ -376,13 +387,14 @@ done
 sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE1} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/vprocunhide
 sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE2} > \
-	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
+	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers
 sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE3} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
 sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE4} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/rebootmgr
+sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE5} > \
+	$RPM_BUILD_ROOT/etc/sysconfig/vservers
 
-install %{SOURCE5} $RPM_BUILD_ROOT/etc/sysconfig/vservers-default
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 
 ln -sf null $RPM_BUILD_ROOT/dev/initctl
@@ -402,25 +414,25 @@ rm -rf $RPM_BUILD_ROOT
 %postun	lib -p /sbin/ldconfig
 
 %post init
-/sbin/chkconfig --add vservers-default
 /sbin/chkconfig --add vprocunhide
+/sbin/chkconfig --add vservers
 if [ ! -f /var/lock/subsys/vprocunhide ]; then
 	echo "Type \"/etc/rc.d/init.d/vprocunhide start\" to set /proc visibility for vservers" 1>&2
 fi
-if [ ! -f /var/lock/subsys/vservers-default ]; then
-	echo "Type \"/etc/rc.d/init.d/vservers-default start\" to start default vservers" 1>&2
+if [ ! -f /var/lock/subsys/vservers ]; then
+	echo "Type \"/etc/rc.d/init.d/vservers start\" to start vservers" 1>&2
 fi
 
 %preun init
 if [ "$1" = "0" ]; then
+	if [ -r /var/lock/subsys/vservers ]; then
+		/etc/rc.d/init.d/vservers stop >&2
+	fi
 	if [ -r /var/lock/subsys/vprocunhide ]; then
 		/etc/rc.d/init.d/vprocunhide stop >&2
 	fi
-	if [ -r /var/lock/subsys/vservers-default ]; then
-		/etc/rc.d/init.d/vservers-default stop >&2
-	fi
+	/sbin/chkconfig --del vservers
 	/sbin/chkconfig --del vprocunhide
-	/sbin/chkconfig --del vservers-default
 fi
 
 %post legacy
@@ -544,9 +556,9 @@ fi
 %files init
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/%{name}/vsysvwrapper
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers-default
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers
 %attr(754,root,root) /etc/rc.d/init.d/vprocunhide
-%attr(754,root,root) /etc/rc.d/init.d/vservers-default
+%attr(754,root,root) /etc/rc.d/init.d/vservers
 
 %files build
 %defattr(644,root,root,755)
@@ -606,6 +618,10 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/suse*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/suse*/apt/sources.list
 %{_libdir}/%{name}/distributions/suse*
+
+%files -n vserver-distro-centos
+%defattr(644,root,root,755)
+%{_libdir}/util-vserver/distributions/centos42
 
 %files legacy
 %defattr(644,root,root,755)
