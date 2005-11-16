@@ -49,10 +49,10 @@ BuildRequires:	libxslt-progs
 BuildRequires:	tetex-format-pdflatex
 BuildRequires:	tetex-makeindex
 # To be removed when tetex-format-pdflatex, tetex-pdftex...
+# ...and graphviz packages get fixed
 BuildRequires:	tetex-fonts-jknappen
 BuildRequires:	tetex-metafont
 BuildRequires:	ghostscript
-# ...and graphviz packages get fixed
 BuildRequires:	ghostscript-fonts-std
 %{?with_xalan:BuildRequires:	xalan-j}
 %endif
@@ -414,25 +414,25 @@ rm -rf $RPM_BUILD_ROOT
 %postun	lib -p /sbin/ldconfig
 
 %post init
-/sbin/chkconfig --add vservers-default
 /sbin/chkconfig --add vprocunhide
+/sbin/chkconfig --add vservers
 if [ ! -f /var/lock/subsys/vprocunhide ]; then
 	echo "Type \"/etc/rc.d/init.d/vprocunhide start\" to set /proc visibility for vservers" 1>&2
 fi
-if [ ! -f /var/lock/subsys/vservers-default ]; then
-	echo "Type \"/etc/rc.d/init.d/vservers-default start\" to start default vservers" 1>&2
+if [ ! -f /var/lock/subsys/vservers ]; then
+	echo "Type \"/etc/rc.d/init.d/vservers start\" to start vservers" 1>&2
 fi
 
 %preun init
 if [ "$1" = "0" ]; then
+	if [ -r /var/lock/subsys/vservers ]; then
+		/etc/rc.d/init.d/vservers stop >&2
+	fi
 	if [ -r /var/lock/subsys/vprocunhide ]; then
 		/etc/rc.d/init.d/vprocunhide stop >&2
 	fi
-	if [ -r /var/lock/subsys/vservers-default ]; then
-		/etc/rc.d/init.d/vservers-default stop >&2
-	fi
+	/sbin/chkconfig --del vservers
 	/sbin/chkconfig --del vprocunhide
-	/sbin/chkconfig --del vservers-default
 fi
 
 %post legacy
@@ -556,9 +556,9 @@ fi
 %files init
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/%{name}/vsysvwrapper
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers-default
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers
 %attr(754,root,root) /etc/rc.d/init.d/vprocunhide
-%attr(754,root,root) /etc/rc.d/init.d/vservers-default
+%attr(754,root,root) /etc/rc.d/init.d/vservers
 
 %files build
 %defattr(644,root,root,755)
