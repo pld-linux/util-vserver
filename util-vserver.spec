@@ -48,6 +48,12 @@ BuildRequires:	graphviz
 BuildRequires:	libxslt-progs
 BuildRequires:	tetex-format-pdflatex
 BuildRequires:	tetex-makeindex
+# To be removed when tetex-format-pdflatex, tetex-pdftex...
+BuildRequires:	tetex-fonts-jknappen
+BuildRequires:	tetex-metafont
+BuildRequires:	ghostscript
+# ...and graphviz packages get fixed
+BuildRequires:	ghostscript-fonts-std
 %{?with_xalan:BuildRequires:	xalan-j}
 %endif
 Requires:	rc-scripts
