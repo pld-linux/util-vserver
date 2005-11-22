@@ -25,6 +25,7 @@ start)
 
 	show "Fixing vservers /proc entries visibility"
 	busy
+	${_SETATTR} -Rx --hide /proc
 	$_VPROCUNHIDE
 	RETVAL=$?
 	deltext
@@ -38,6 +39,7 @@ start)
 stop)
 	show "Stopping vservers /proc entries visibility"
 	busy
+	${_SETATTR} -Rx --hide /proc
 	rm -f /var/lock/subsys/vprocunhide
 	ok
 	;;
