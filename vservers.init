@@ -9,7 +9,10 @@
 # Copyright 1999-2004 Gentoo Foundation
 # Modified for PLD by Jan Rêkorajski <baggins@pld-linux.org>
 # Distributed under the terms of the GNU General Public License v2
-# 
+#
+
+# Source function library
+. /etc/rc.d/init.d/functions
 
 [ -n "$UTIL_VSERVER_VARS" ] || UTIL_VSERVER_VARS=/usr/lib/util-vserver/util-vserver-vars
 if [ ! -e "$UTIL_VSERVER_VARS" ] ; then
@@ -68,7 +71,7 @@ start)
 			[ $rc -eq 0 ] && touch /var/lock/subsys/vservers-$MARK
 		done
 	fi
-	
+
 	for VSERVER in $START_VSERVERS; do
 		if [ -f /var/lock/subsys/vserver-$VSERVER ]; then
 			echo "Vserver '$VSERVER' is already startred"
@@ -124,26 +127,26 @@ stop)
 	;;
 status)
 	echo "The following types of vservers are running:"
-	
+
 	for i in /var/lock/subsys/vservers-*; do
 		[ -f "$i" ] || continue
 		echo $i | awk '{gsub("/var/lock/subsys/vservers-",""); printf("	%s\n",$0); }'
 		local running="true"
 	done
-	
+
 	if [[ "${running}" != "true" ]]; then
 		echo "  none"
 	fi
-	
+
 	echo
 	echo "/proc/virtual/ says these are running:"
-	
+
 	for i in /proc/virtual/*; do
 		[ -d $i ] || continue
 		NAME=$( basename $( vuname -g --xid $( basename ${i} ) CONTEX ) )
 		echo "  ${NAME}"
 	done
-	
+
 	echo
 	echo "vserver-stat says these are running:"
 	/usr/sbin/vserver-stat
