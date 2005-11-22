@@ -46,7 +46,7 @@ start)
 		exit 1
 	fi
 
-	if [ is_yes "$STARTALL" ]; then
+	if is_yes "$STARTALL"; then
 		if [ ! -f /var/lock/subsys/vservers-all ]; then
 			show "Starting all types of vservers"
 			busy
@@ -99,7 +99,7 @@ stop)
 		rm -f /var/lock/subsys/vserver-$VSERVER
 	done
 
-	if [ is_yes "$STARTALL" ]; then
+	if is_yes "$STARTALL"; then
 		if [ -f /var/lock/subsys/vservers-all ]; then
 			show "Stopping all types of vservers"
 			busy
@@ -131,7 +131,7 @@ status)
 	for i in /var/lock/subsys/vservers-*; do
 		[ -f "$i" ] || continue
 		echo $i | awk '{gsub("/var/lock/subsys/vservers-",""); printf("	%s\n",$0); }'
-		local running="true"
+		running="true"
 	done
 
 	if [[ "${running}" != "true" ]]; then
@@ -152,7 +152,7 @@ status)
 	/usr/sbin/vserver-stat
 	;;
 *)
-	echo "Usage: $0 {start|stop|restart|status}"
+	echo "Usage: $0 {start|stop|status}"
 	exit 1
 	;;
 esac
