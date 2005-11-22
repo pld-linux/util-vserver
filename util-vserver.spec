@@ -165,6 +165,7 @@ fi
 %{_datadir}/%{name}/lib/*
 %{_datadir}/%{name}/pathconfig
 %attr(000,root,root) %dir /vservers
+/var/lock/vservers
 
 %files build
 %defattr(644,root,root,755)
