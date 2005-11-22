@@ -23,7 +23,7 @@ diff -urN util-vserver-0.30.207/distrib/pld2.0/pkgs/01 util-vserver-0.30.207-pld
 --- util-vserver-0.30.207/distrib/pld2.0/pkgs/01	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.207-pld/distrib/pld2.0/pkgs/01	2005-05-16 19:09:20.000000000 +0200
 @@ -0,0 +1,3 @@
-+vserver-basesystem
++basesystem
 +glibc
 +issue
 diff -urN util-vserver-0.30.207/distrib/pld2.0/rpm/macros util-vserver-0.30.207-pld/distrib/pld2.0/rpm/macros
@@ -38,8 +38,8 @@ diff -urN util-vserver-0.30.207/distrib/pld2.0/rpmlist.d/00.lst util-vserver-0.3
 --- util-vserver-0.30.207/distrib/pld2.0/rpmlist.d/00.lst	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.207-pld/distrib/pld2.0/rpmlist.d/00.lst	2005-05-17 15:15:56.643037440 +0200
 @@ -0,0 +1,8 @@
-+vserver-basesystem-*.rpm
-+vserver-dev-*.rpm
++basesystem-*.rpm
++dev-*.rpm
 +FHS-*.rpm
 +glibc-misc-*.rpm
 +glibc-[0-9]*.rpm

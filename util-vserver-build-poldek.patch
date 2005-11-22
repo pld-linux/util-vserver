@@ -94,7 +94,7 @@ diff -urN -x '*~' util-vserver-0.30.207/distrib/pld2.0/poldek/poldek.conf util-v
 +
 +# remove kernel* packages from available package set, i.e. make them
 +# invisible for the user
-+ignore = kernel* dev devfs basesystem rc-scripts
++ignore = kernel* dev devfs
 +
 +# do not compare distribution versions of packages
 +#nodistver = no
