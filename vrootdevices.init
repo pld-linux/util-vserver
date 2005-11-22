@@ -1,0 +1,90 @@
+#!/bin/sh
+#
+# vrootdevices:	setup vroot devices
+#
+# chkconfig:	345 97 03
+# description:	Setup vroot devices for use inside vservers
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+[ -f /etc/sysconfig/vrootdevices ] && . /etc/sysconfig/vrootdevices
+
+function assign_vroot()
+{
+	cat /etc/sysconfig/rawdevices | egrep -v '^ *#' | while read VROOT BLOCK; do
+	if [ -n "$VROOT" -a -n "$BLOCK" ]; then
+		if [ -d /dev/vroot ]; then
+			VROOT="/dev/vroot/$VROOT"
+		else
+			VROOT="/dev/vroot$VROOT"
+		fi
+		show "$(nls "Assigning device: %s --> %s" "$VROOT" "$BLOCK")"
+		busy
+		vrsetup $VROOT $BLOCK > /dev/null
+		ok
+	fi
+	done
+}
+
+function remove_vroot()
+{
+	cat /etc/sysconfig/rawdevices | egrep -v '^ *#' | while read VROOT BLOCK; do
+	if [ -n "$VROOT" -a -n "$BLOCK" ]; then
+		if [ -d /dev/vroot ]; then
+			VROOT="/dev/vroot/$VROOT"
+		else
+			VROOT="/dev/vroot$VROOT"
+		fi
+		show "$(nls "Removing assignment: %s --> %s" "$VROOT" "$BLOCK")"
+		busy
+		vrsetup -d $VROOT > /dev/null
+		ok
+	fi
+	done
+}
+
+case "$1" in
+  start|reload)
+	if [ ! -f /var/lock/subsys/vrootdevices ]; then
+		msg_starting vrootdevices
+		ok
+		assign_vroot
+		touch /var/lock/subsys/vrootdevices
+	else
+		msg_already_running vrootdevices
+	fi
+
+	;;
+  stop)
+	if [ -f /var/lock/subsys/vrootdevices ]; then
+		msg_stopping vrootdevices
+		ok
+		remove_vroot
+		rm -f /var/lock/subsys/vrootdevices >/dev/null 2>&1
+	else
+		msg_not_running vrootdevices
+	fi
+	;;
+  status)
+	ID=`id -u`
+	if [ $ID -eq 0 ]; then
+		echo "There is no way to tell"
+	else
+		# don't remove the space at the end!!!
+		nls "You need to be root to use this command ! "
+	fi
+	;;
+  restart|force-reload)
+	$0 stop
+	$0 start
+  *)
+	echo "Usage: $0 {start|stop|restart|reload|force-reload|status}"
+	exit 3
+	;;
+esac
+
+exit $RETVAL
+
+# This must be last line !
+# vi:syntax=sh
