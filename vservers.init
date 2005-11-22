@@ -18,6 +18,9 @@ if [ ! -e "$UTIL_VSERVER_VARS" ] ; then
 fi
 . "$UTIL_VSERVER_VARS"
 
+# Source function library
+. /etc/rc.d/init.d/functions
+
 [ -f /etc/sysconfig/vservers ] && . /etc/sysconfig/vservers
 
 [ -n "$MARKS" ] || MARKS="default"
