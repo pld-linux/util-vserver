@@ -10,7 +10,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.209
-Release:	0.1
+Release:	0.2
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -21,6 +21,8 @@ Source3:	vservers-legacy.init
 Source4:	rebootmgr.init
 Source5:	vservers.sysconfig
 Source6:	vservers-legacy.sysconfig
+Source7:	vrootdevices.init
+Source8:	vrootdevices.sysconfig
 # A bit of documentation explaining package menagement
 # http://www.paul.sladen.org/vserver/archives/200505/0078.html
 Source7:	%{name}-pkgmgmt.txt
@@ -396,6 +398,9 @@ sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE5} > \
 	$RPM_BUILD_ROOT/etc/sysconfig/vservers
 
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
+
+install %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
+install %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/vrootdevices
 
 ln -sf null $RPM_BUILD_ROOT/dev/initctl
 
