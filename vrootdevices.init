@@ -8,11 +8,9 @@
 # Source function library
 . /etc/rc.d/init.d/functions
 
-[ -f /etc/sysconfig/vrootdevices ] && . /etc/sysconfig/vrootdevices
-
-function assign_vroot()
+assign_vroot()
 {
-	cat /etc/sysconfig/rawdevices | egrep -v '^ *#' | while read VROOT BLOCK; do
+	cat /etc/sysconfig/vrootdevices | egrep -v '^ *#' | while read VROOT BLOCK; do
 	if [ -n "$VROOT" -a -n "$BLOCK" ]; then
 		if [ -d /dev/vroot ]; then
 			VROOT="/dev/vroot/$VROOT"
@@ -27,9 +25,9 @@ function assign_vroot()
 	done
 }
 
-function remove_vroot()
+remove_vroot()
 {
-	cat /etc/sysconfig/rawdevices | egrep -v '^ *#' | while read VROOT BLOCK; do
+	cat /etc/sysconfig/vrootdevices | egrep -v '^ *#' | while read VROOT BLOCK; do
 	if [ -n "$VROOT" -a -n "$BLOCK" ]; then
 		if [ -d /dev/vroot ]; then
 			VROOT="/dev/vroot/$VROOT"
@@ -78,6 +76,7 @@ case "$1" in
   restart|force-reload)
 	$0 stop
 	$0 start
+	;;
   *)
 	echo "Usage: $0 {start|stop|restart|reload|force-reload|status}"
 	exit 3
