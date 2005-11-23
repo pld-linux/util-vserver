@@ -25,7 +25,7 @@ Source7:	vrootdevices.init
 Source8:	vrootdevices.sysconfig
 # A bit of documentation explaining package menagement
 # http://www.paul.sladen.org/vserver/archives/200505/0078.html
-Source7:	%{name}-pkgmgmt.txt
+Source9:	%{name}-pkgmgmt.txt
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
 Patch2:		%{name}-build-poldek.patch
@@ -330,7 +330,7 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 %patch6 -p1
 %patch7 -p1
 
-install %{SOURCE7} package-menagament.txt
+install %{SOURCE9} package-menagament.txt
 
 cp -a compat.h vserver-compat.h
 
