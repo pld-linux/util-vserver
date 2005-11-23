@@ -10,7 +10,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.209
-Release:	0.2
+Release:	0.3
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -419,8 +419,12 @@ rm -rf $RPM_BUILD_ROOT
 %postun	lib -p /sbin/ldconfig
 
 %post init
+/sbin/chkconfig --add vrootdevices
 /sbin/chkconfig --add vprocunhide
 /sbin/chkconfig --add vservers
+if [ ! -f /var/lock/subsys/vrootdevices ]; then
+	echo "Type \"/etc/rc.d/init.d/vrootdevices start\" to assign virtual root devices" 1>&2
+fi
 if [ ! -f /var/lock/subsys/vprocunhide ]; then
 	echo "Type \"/etc/rc.d/init.d/vprocunhide start\" to set /proc visibility for vservers" 1>&2
 fi
@@ -436,8 +440,12 @@ if [ "$1" = "0" ]; then
 	if [ -r /var/lock/subsys/vprocunhide ]; then
 		/etc/rc.d/init.d/vprocunhide stop >&2
 	fi
+	if [ -r /var/lock/subsys/vrootdevices ]; then
+		/etc/rc.d/init.d/vrootdevices stop >&2
+	fi
 	/sbin/chkconfig --del vservers
 	/sbin/chkconfig --del vprocunhide
+	/sbin/chkconfig --del vrootdevices
 fi
 
 %post legacy
@@ -561,8 +569,10 @@ fi
 %files init
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/%{name}/vsysvwrapper
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vrootdevices
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers
 %attr(754,root,root) /etc/rc.d/init.d/vprocunhide
+%attr(754,root,root) /etc/rc.d/init.d/vrootdevices
 %attr(754,root,root) /etc/rc.d/init.d/vservers
 
 %files build
