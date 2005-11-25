@@ -13,7 +13,7 @@ diff -ur util-vserver-0.30.209/scripts/vserver-setup.functions util-vserver-0.30
  declare -a SETUP_FLAGS=()
  
 -declare -r SETUP_OPTIONS="confdir:,lockfile:,hostname:,netdev:,netmask:,netprefix:,netbcast:,interface:,flags:,context:,initstyle:"
-+declare -r SETUP_OPTIONS="confdir:,lockfile:,hostname:,netdev:,netmask:,netprefix:,netbcast:,interface:,flags:,context:,initstyle:,cpuset,cpusetcpus,cpusetmems:"
++declare -r SETUP_OPTIONS="confdir:,lockfile:,hostname:,netdev:,netmask:,netprefix:,netbcast:,interface:,flags:,context:,initstyle:,cpuset:,cpusetcpus:,cpusetmems:"
  declare -r SETUP_HELPMSG=$"
      --context   ...  the static context of the vserver [default: none; a dynamic
                       context will be assumed]
@@ -34,7 +34,7 @@ diff -ur util-vserver-0.30.209/scripts/vserver-setup.functions util-vserver-0.30
      --initstyle <style>
                  ...  configures the initstyle (e.g. minit,sysv,plain)
  "
-@@ -72,6 +85,19 @@
+@@ -72,6 +85,21 @@
  	(--netbcast)	SETUP_NETBCAST=$2;;
  	(--interface)	SETUP_INTERFACES=( "${SETUP_INTERFACES[@]}" "$2" );;
  	(--initstyle)   SETUP_INITSTYLE=$2;;
@@ -49,8 +49,10 @@ diff -ur util-vserver-0.30.209/scripts/vserver-setup.functions util-vserver-0.30
 +	(--cpusetmems)	old_IFS=$IFS
 +			IFS=:
 +			set -- $2
-+			SETUP_CPUSETMEMS=$1;;
-+			SETUP_CPUSETMEMSEXCL=$1;;
++			SETUP_CPUSETMEMS=$1
++			SETUP_CPUSETMEMSEXCL=$2
++			IFS=$old_IFS
++			;;
  	(--flags)	old_IFS=$IFS
  			IFS=,
  			set -- $2
@@ -78,7 +80,7 @@ diff -ur util-vserver-0.30.209/scripts/vserver-setup.functions util-vserver-0.30
 diff -ur util-vserver-0.30.209/scripts/vserver.functions util-vserver-0.30.209.cpuset/scripts/vserver.functions
 --- util-vserver-0.30.209/scripts/vserver.functions	2005-11-25 14:30:27.665999880 +0100
 +++ util-vserver-0.30.209.cpuset/scripts/vserver.functions	2005-11-25 15:11:04.593027880 +0100
-@@ -687,6 +687,48 @@
+@@ -687,6 +687,54 @@
      fi
  }
  
@@ -88,6 +90,7 @@ diff -ur util-vserver-0.30.209/scripts/vserver.functions util-vserver-0.30.209.c
 +    local cpuset
 +    local f="$vdir"/cpuset
 +    local i
++    local v
 +
 +    test -d "$f" || return 0
 +    test -e "$f"/name || return 0
@@ -96,7 +99,12 @@ diff -ur util-vserver-0.30.209/scripts/vserver.functions util-vserver-0.30.209.c
 +    test -e "$f"/nocreate || {
 +	test -d /dev/cpuset/"$cpuset" || mkdir /dev/cpuset/"$cpuset"
 +	for i in cpus mems cpu_exclusive mem_exclusive; do
-+	    test -e "$f"/"$i" && cat "$f"/"$i" > /dev/cpuset/"$cpuset"/"$i"
++	    if test -e "$f"/"$i"; then
++		read v < "$f"/"$i"
++		echo $v >/dev/cpuset/"$cpuset"/"$i" || {
++		    rmdir /dev/cpuset/"$cpuset"
++		    break
++		}
 +	done
 +    }
 +
