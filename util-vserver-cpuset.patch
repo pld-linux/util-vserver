@@ -18,7 +18,7 @@ diff -ur util-vserver-0.30.209/scripts/vserver-setup.functions util-vserver-0.30
  declare -r SETUP_HELPMSG=$"
      --context   ...  the static context of the vserver [default: none; a dynamic
                       context will be assumed]
-@@ -55,6 +58,18 @@
+@@ -55,6 +58,19 @@
  			    this becomes a per vserver limit)
  		     private: No other process can join this security context.
  		            Even root
@@ -34,6 +34,7 @@ diff -ur util-vserver-0.30.209/scripts/vserver-setup.functions util-vserver-0.30
 +		     using those memory pools
 +    --cpusetvirt
 +		...  virtualize cpuset (guest will see only CPUs defined in cpuset)
++		     Requires kernel patch from http://www.bullopensource.org/cpuset/
      --initstyle <style>
                  ...  configures the initstyle (e.g. minit,sysv,plain)
  "
