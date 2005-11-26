@@ -79,7 +79,7 @@ diff -ur util-vserver-0.30.209/scripts/vserver-setup.functions util-vserver-0.30
 +    _setup_writeSingleOption "$SETUP_CPUSETCPUSEXCL" "$cfgdir"/cpuset/cpus_exclusive
 +    _setup_writeSingleOption "$SETUP_CPUSETMEMS"     "$cfgdir"/cpuset/mems
 +    _setup_writeSingleOption "$SETUP_CPUSETMEMSEXCL" "$cfgdir"/cpuset/mem_exclusive
-+    _setup_writeSingleOption "$SETUP_CPUSETVIRT"     "$cfgdir"/cpuset/virtualized
++    _setup_writeSingleOption "$SETUP_CPUSETVIRT"     "$cfgdir"/cpuset/virtualize
  
      local idx=0
      for i in "${SETUP_INTERFACES[@]}"; do
@@ -104,7 +104,7 @@ diff -ur util-vserver-0.30.209/scripts/vserver.functions util-vserver-0.30.209.c
 +    read cpuset < "$f"/name
 +    test -e "$f"/nocreate || {
 +	test -d /dev/cpuset/"$cpuset" || mkdir /dev/cpuset/"$cpuset" || configured=1
-+	for i in cpus mems cpu_exclusive mem_exclusive virtualized; do
++	for i in cpus mems cpu_exclusive mem_exclusive virtualize; do
 +	    if test -e "$f"/"$i"; then
 +		cat "$f"/"$i" >/dev/cpuset/"$cpuset"/"$i" 2>/dev/null || {
 +		    configured=1
