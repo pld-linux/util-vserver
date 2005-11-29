@@ -23,7 +23,6 @@ fi
 
 [ -f /etc/sysconfig/vservers ] && . /etc/sysconfig/vservers
 
-[ -n "$MARKS" ] || MARKS="default"
 [ -n "$NUMPARALLEL" ] || NUMPARALLEL=1
 [ -n "$LOCKDIR" ] || LOCKDIR="/var/lock/vservers"
 
