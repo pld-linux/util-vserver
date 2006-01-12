@@ -26,6 +26,7 @@ Source8:	vrootdevices.sysconfig
 # A bit of documentation explaining package menagement
 # http://www.paul.sladen.org/vserver/archives/200505/0078.html
 Source9:	%{name}-pkgmgmt.txt
+Source10:	%{name}-initpost.sh
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
 Patch2:		%{name}-build-poldek.patch
@@ -330,7 +331,7 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 %patch6 -p1
 %patch7 -p1
 
-install %{SOURCE9} package-menagament.txt
+install %{SOURCE9} package-managament.txt
 
 cp -a compat.h vserver-compat.h
 
@@ -401,6 +402,7 @@ install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 
 install %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/vrootdevices
+install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld2.0/initpost
 
 ln -sf null $RPM_BUILD_ROOT/dev/initctl
 
@@ -577,7 +579,7 @@ fi
 
 %files build
 %defattr(644,root,root,755)
-%doc contrib/yum*.patch package-menagament.txt
+%doc contrib/yum*.patch package-managament.txt
 %dir %{_sysconfdir}/vservers/.defaults/apps/vunify
 %dir %{_sysconfdir}/vservers/.defaults/apps/vunify/hash
 %dir %{_sysconfdir}/vservers/.distributions
