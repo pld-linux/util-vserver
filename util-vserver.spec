@@ -59,6 +59,7 @@ BuildRequires:	ghostscript
 BuildRequires:	ghostscript-fonts-std
 %{?with_xalan:BuildRequires:	xalan-j}
 %endif
+Requires:	issue
 Requires:	rc-scripts
 Requires:	util-linux
 Requires(post,preun):	/sbin/chkconfig
