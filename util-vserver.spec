@@ -23,7 +23,7 @@ Source5:	vservers.sysconfig
 Source6:	vservers-legacy.sysconfig
 Source7:	vrootdevices.init
 Source8:	vrootdevices.sysconfig
-# A bit of documentation explaining package menagement
+# A bit of documentation explaining package management
 # http://www.paul.sladen.org/vserver/archives/200505/0078.html
 Source9:	%{name}-pkgmgmt.txt
 Source10:	%{name}-initpost.sh
