@@ -403,13 +403,13 @@ install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 
 install %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/vrootdevices
-install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld2.0/initpost
+install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/initpost
 
 ln -sf null $RPM_BUILD_ROOT/dev/initctl
 
 %ifarch %{x8664}
-sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld2.0/pkgs/01
-sed -i 's/glibc\-\[0\-9\]\*\.rpm/glibc64\-\[0\-9\]\*\.rpm/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld2.0/rpmlist.d/00.lst
+sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pkgs/01
+sed -i 's/glibc\-\[0\-9\]\*\.rpm/glibc64\-\[0\-9\]\*\.rpm/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpmlist.d/00.lst
 %endif
 
 %clean
@@ -471,6 +471,11 @@ if [ "$1" = "0" ]; then
 	fi
 	/sbin/chkconfig --del rebootmgr
 	/sbin/chkconfig --del vservers-legacy
+fi
+
+%triggerpostun build -- %{name}-build < 0.30.209-2.1
+if [ -f /etc/vservers/.distributions/pld2.0/poldek/poldek.conf.rpmsave ]; then
+	mv -f /etc/vservers/.distributions/{pld2.0/poldek/poldek.conf.rpmsave,pld-ac/poldek/poldek.conf}
 fi
 
 %files
@@ -586,10 +591,10 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions
 %dir %{_sysconfdir}/vservers/.distributions/.common
 %dir %{_sysconfdir}/vservers/.distributions/.common/pubkeys
-%dir %{_sysconfdir}/vservers/.distributions/pld2.0
-%dir %{_sysconfdir}/vservers/.distributions/pld2.0/poldek
+%dir %{_sysconfdir}/vservers/.distributions/pld-ac
+%dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
 %{_sysconfdir}/vservers/.distributions/pld1.99
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld2.0/poldek/poldek.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/poldek.conf
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %dir %{_libdir}/%{name}/distributions
 %attr(-, root, root) %{_libdir}/%{name}/distributions/defaults
