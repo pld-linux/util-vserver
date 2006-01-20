@@ -1085,8 +1085,8 @@ diff -urN -x '*~' -x '*.orig' util-vserver-0.30.209-clean/scripts/vserver-build.
 +	"$__DISTRIBDIR/$DISTRIBUTION/poldek" \
 +	"$__CONFDIR/.distributions/$DISTRIBUTION/poldek"
 +
-+    test -z "$POLDEKCONFDEFAULT" || \
-+	$_LN_S "$(dirname $POLDEKCONFDEFAULT)/*"   "$PKGCFGDIR"/poldek/etc/
++#    test -z "$POLDEKCONFDEFAULT" || \
++#	$_LN_S "$POLDEKCONFDEFAULT" "$PKGCFGDIR"/poldek/etc/
 +}
 diff -urN -x '*~' -x '*.orig' util-vserver-0.30.209-clean/scripts/vserver-build.poldek util-vserver-0.30.209-poldek2/scripts/vserver-build.poldek
 --- util-vserver-0.30.209-clean/scripts/vserver-build.poldek	1970-01-01 01:00:00.000000000 +0100
