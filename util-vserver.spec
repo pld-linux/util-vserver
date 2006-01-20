@@ -10,7 +10,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.209
-Release:	2
+Release:	2.1
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -29,7 +29,7 @@ Source9:	%{name}-pkgmgmt.txt
 Source10:	%{name}-initpost.sh
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
-Patch2:		%{name}-build-poldek.patch
+Patch2:		%{name}-vrpm.patch
 Patch3:		%{name}-include.patch
 Patch4:		%{name}-m4-diet.patch
 Patch5:		%{name}-cpuset.patch
@@ -593,8 +593,7 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/.common/pubkeys
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
-%{_sysconfdir}/vservers/.distributions/pld1.99
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/poldek.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/*.conf
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %dir %{_libdir}/%{name}/distributions
 %attr(-, root, root) %{_libdir}/%{name}/distributions/defaults
