@@ -20,7 +20,7 @@ diff -urN -x '*~' -x '*.orig' util-vserver-0.30.209-clean/distrib/Makefile.am ut
 +			   pld-ac/poldek/fetch.conf \
 +			   pld-ac/poldek/pld-source.conf \
 +			   pld-ac/poldek/poldek.conf \
-+			   pld-ac/poldek/source.conf \
++			   pld-ac/poldek/source.conf
  
  AM_INSTALLCHECK_STD_OPTIONS_EXEMPT \
  			=  $(nobase_distrib_SCRIPTS)
