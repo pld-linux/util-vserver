@@ -475,7 +475,7 @@ fi
 
 %triggerpostun build -- %{name}-build < 0.30.209-2.1
 if [ -f /etc/vservers/.distributions/pld2.0/poldek/poldek.conf.rpmsave ]; then
-	mv -f /etc/vservers/.distributions/{pld2.0/poldek/poldek.conf.rpmsave,pld-ac/poldek/poldek.conf}
+	mv -f /etc/vservers/.distributions/{pld2.0,pld-ac}/poldek/poldek.conf.rpmsave
 fi
 
 %files
