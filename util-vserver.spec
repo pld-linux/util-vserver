@@ -9,12 +9,12 @@
 Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30.209
-Release:	3
+Version:	0.30.210
+Release:	0.1
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
-# Source0-md5:	674b122824292c20d3c53245b91f6088
+# Source0-md5:	1e8fff7cb6246d21ed029f082123019b
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
