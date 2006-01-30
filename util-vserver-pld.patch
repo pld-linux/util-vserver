@@ -735,7 +735,7 @@ diff -urN -x '*~' -x '*.orig' util-vserver-0.30.209-clean/scripts/pkgmgmt util-v
 +    if test -n "$is_internalize"; then
 +	:
 +    else
-+	tmpdir=$($_MKTEMPDIR /var/tmp/pgmgmt.XXXXXX)
++	tmpdir=$($_MKTEMPDIR -p /var/tmp pgmgmt.XXXXXX)
 +	trap "$_RM -rf $tmpdir" EXIT
 +	pushd "$vdir" >/dev/null
 +	$_EXEC_CD /var/lib $_MV rpm $tmpdir/
