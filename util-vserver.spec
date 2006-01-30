@@ -10,7 +10,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.210
-Release:	0.1
+Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -346,6 +346,7 @@ CFLAGS="%{rpmcflags} -D__GLIBC__"
 %configure \
 	--with-initrddir=/etc/rc.d/init.d \
 	--enable-release \
+	--enable-apis=NOLEGACY \
 	%{?with_dietlibc:--enable-dietlibc} \
 	%{!?with_dietlibc:--disable-dietlibc} \
 	MKTEMP=/bin/mktemp \
