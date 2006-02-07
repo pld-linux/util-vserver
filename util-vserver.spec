@@ -10,7 +10,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.210
-Release:	3
+Release:	4
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -332,7 +332,7 @@ NIE INSTALUJ tego pakietu na zwyk³ym systemie!
 %patch6 -p1
 %patch7 -p1
 
-install %{SOURCE9} package-managament.txt
+install %{SOURCE9} package-management.txt
 
 cp -a compat.h vserver-compat.h
 
@@ -586,7 +586,7 @@ fi
 
 %files build
 %defattr(644,root,root,755)
-%doc contrib/yum*.patch package-managament.txt
+%doc contrib/yum*.patch package-management.txt
 %dir %{_sysconfdir}/vservers/.defaults/apps/vunify
 %dir %{_sysconfdir}/vservers/.defaults/apps/vunify/hash
 %dir %{_sysconfdir}/vservers/.distributions
