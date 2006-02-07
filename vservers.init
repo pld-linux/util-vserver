@@ -86,7 +86,11 @@ start)
 	touch /var/lock/subsys/vservers
 	;;
 stop)
-	for VSERVER in $START_VSERVERS; do
+	__STOP_VSERVERS=
+	for __V in $START_VSERVERS; do
+		__STOP_VSERVERS="$__V $__STOP_VSERVERS"
+	done
+	for VSERVER in $__STOP_VSERVERS; do
 		if [ ! -f /var/lock/subsys/vserver-$VSERVER ]; then
 			echo "Vserver '$VSERVER' is not running"
 			continue
@@ -111,7 +115,11 @@ stop)
 			echo "All types of vservers are not running"
 		fi
 	else
-		for MARK in $MARKS; do
+		__STOP_MARKS=
+		for __V in $MARKS; do
+			__STOP_MARKS="$__V $__STOP_MARKS"
+		done
+		for MARK in $__STOP_MARKS; do
 			if [ ! -f /var/lock/subsys/vservers-$MARK ]; then
 				echo "Vservers of type '$MARK' are not running"
 				continue
