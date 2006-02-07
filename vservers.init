@@ -83,6 +83,7 @@ start)
 		rc=$?
 		[ $rc -eq 0 ] && touch /var/lock/subsys/vserver-$VSERVER
 	done
+	[ $rc -eq 0 ] && touch /var/lock/subsys/vservers-all
 	;;
 stop)
 	for VSERVER in $START_VSERVERS; do
@@ -123,6 +124,7 @@ stop)
 			rm -f /var/lock/subsys/vservers-$MARK
 		done
 	fi
+	rm -f /var/lock/subsys/vservers
 	;;
 status)
 	echo "The following types of vservers are running:"
