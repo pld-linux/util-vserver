@@ -83,7 +83,7 @@ start)
 		rc=$?
 		[ $rc -eq 0 ] && touch /var/lock/subsys/vserver-$VSERVER
 	done
-	[ $rc -eq 0 ] && touch /var/lock/subsys/vservers-all
+	touch /var/lock/subsys/vservers
 	;;
 stop)
 	for VSERVER in $START_VSERVERS; do
