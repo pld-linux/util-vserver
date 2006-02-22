@@ -1,3 +1,5 @@
+# TODO
+# - somewhy empty /var/cache/vservers is needed when building pld vserver
 #
 # m68k and mips are the only not supported archs
 #
