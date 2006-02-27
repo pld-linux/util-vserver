@@ -55,17 +55,17 @@ BuildRequires:	tetex-format-pdflatex
 BuildRequires:	tetex-makeindex
 # To be removed when tetex-format-pdflatex, tetex-pdftex...
 # ...and graphviz packages get fixed
-BuildRequires:	tetex-fonts-jknappen
-BuildRequires:	tetex-metafont
 BuildRequires:	ghostscript
 BuildRequires:	ghostscript-fonts-std
+BuildRequires:	tetex-fonts-jknappen
+BuildRequires:	tetex-metafont
 %{?with_xalan:BuildRequires:	xalan-j}
 %endif
+Requires(post,preun):	/sbin/chkconfig
+Requires:	%{name}-lib = %{version}-%{release}
 Requires:	issue
 Requires:	rc-scripts
 Requires:	util-linux
-Requires(post,preun):	/sbin/chkconfig
-Requires:	%{name}-lib = %{version}-%{release}
 Obsoletes:	util-vserver-core
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -135,7 +135,7 @@ Group:		Libraries
 util-vserver provides the components and a framework to setup virtual
 servers. A virtual server runs inside a linux server. It is
 nevertheless highly independent. As such, you can run various services
-with normal configuration. The various vservers can't interact with
+pith normal configuration. The various vservers can't interact with
 each other and can't interact with services in the main server.
 
 This package contains the shared libraries needed by all other
@@ -155,8 +155,9 @@ podpakiety util-vserver.
 Summary:	Tools which can be used to build vservers
 Summary(pl):	Narzêdzia do budowania vserverów
 Group:		Applications/System
-Conflicts:	poldek < 0.18.8-10
 Requires:	%{name} = %{version}-%{release}
+Requires:	e2fsprogs
+Conflicts:	poldek < 0.18.8-10
 
 %description build
 util-vserver provides the components and a framework to setup virtual
@@ -415,6 +416,9 @@ sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-
 sed -i 's/glibc\-\[0\-9\]\*\.rpm/glibc64\-\[0\-9\]\*\.rpm/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpmlist.d/00.lst
 %endif
 
+# baggins check this: needed but seems unused
+install -d $RPM_BUILD_ROOT/var/cache/vservers
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -560,6 +564,7 @@ fi
 %dir %{_localstatedir}/run/vservers
 %dir %{_localstatedir}/run/vservers.rev
 %dir %{_localstatedir}/run/vshelper
+%dir /var/cache/vservers
 
 %files devel
 %defattr(644,root,root,755)
