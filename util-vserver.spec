@@ -12,7 +12,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.210
-Release:	4
+Release:	4.1
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -305,7 +305,6 @@ Summary(pl):	Pliki specjalne /dev/* dla systemów w Vserwerach
 Group:		Base
 Requires:	setup >= 2.4.1-2
 Provides:	dev = 2.9.0-19
-Provides:	devfs
 AutoReqProv:	no
 
 %description -n vserver-dev
