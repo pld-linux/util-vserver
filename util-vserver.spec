@@ -47,6 +47,7 @@ BuildRequires:	libtool >= 1.5.14
 %ifarch %{x8664}
 BuildRequires:	sed >= 4.0
 %endif
+BuildRequires:	rpmbuild(macros) >= 1.268
 %if %{with doc}
 BuildRequires:	doxygen
 BuildRequires:	graphviz
@@ -408,26 +409,20 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/chkconfig --add vprocunhide
 /sbin/chkconfig --add vservers
 if [ ! -f /var/lock/subsys/vrootdevices ]; then
-	echo "Type \"/etc/rc.d/init.d/vrootdevices start\" to assign virtual root devices" 1>&2
+	echo "Type \"/sbin/service vrootdevices start\" to assign virtual root devices" 1>&2
 fi
 if [ ! -f /var/lock/subsys/vprocunhide ]; then
-	echo "Type \"/etc/rc.d/init.d/vprocunhide start\" to set /proc visibility for vservers" 1>&2
+	echo "Type \"/sbin/service vprocunhide start\" to set /proc visibility for vservers" 1>&2
 fi
 if [ ! -f /var/lock/subsys/vservers ]; then
-	echo "Type \"/etc/rc.d/init.d/vservers start\" to start vservers" 1>&2
+	echo "Type \"/sbin/service vservers start\" to start vservers" 1>&2
 fi
 
 %preun init
 if [ "$1" = "0" ]; then
-	if [ -r /var/lock/subsys/vservers ]; then
-		/etc/rc.d/init.d/vservers stop >&2
-	fi
-	if [ -r /var/lock/subsys/vprocunhide ]; then
-		/etc/rc.d/init.d/vprocunhide stop >&2
-	fi
-	if [ -r /var/lock/subsys/vrootdevices ]; then
-		/etc/rc.d/init.d/vrootdevices stop >&2
-	fi
+	%service vservers stop
+	%service vprocunhide stop
+	%service vrootdevices stop
 	/sbin/chkconfig --del vservers
 	/sbin/chkconfig --del vprocunhide
 	/sbin/chkconfig --del vrootdevices
@@ -437,20 +432,16 @@ fi
 /sbin/chkconfig --add rebootmgr
 /sbin/chkconfig --add vservers-legacy
 if [ ! -f /var/lock/subsys/rebootmgr ] ; then
-	echo "Type \"/etc/rc.d/init.d/rebootmgr start\" to start reboot manager for legacy vservers" 1>&2
+	echo "Type \"/sbin/service rebootmgr start\" to start reboot manager for legacy vservers" 1>&2
 fi
 if [ ! -f /var/lock/subsys/vservers-legacy ] ; then
-	echo "Type \"/etc/rc.d/init.d/vservers-legacy start\" to start legacy vservers" 1>&2
+	echo "Type \"/sbin/service vservers-legacy start\" to start legacy vservers" 1>&2
 fi
 
 %preun legacy
 if [ "$1" = "0" ]; then
-	if [ -r /var/lock/subsys/rebootmgr ] ; then
-		/etc/rc.d/init.d/rebootmgr stop >&2
-	fi
-	if [ -r /var/lock/subsys/vservers-legacy ] ; then
-		/etc/rc.d/init.d/vservers-legacy stop >&2
-	fi
+	%service rebootmgr stop
+	%service vservers-legacy stop
 	/sbin/chkconfig --del rebootmgr
 	/sbin/chkconfig --del vservers-legacy
 fi
