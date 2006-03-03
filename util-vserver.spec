@@ -1,5 +1,6 @@
 # TODO
 # - somewhy empty /var/cache/vservers is needed when building pld vserver
+# - make build create /dev/std{in,out,err} links
 #
 # m68k and mips are the only not supported archs
 #
@@ -8,11 +9,15 @@
 %bcond_without	doc		# don't build documentation which needed LaTeX
 %bcond_with	xalan		# use the xalan xslt processor
 #
+%define	_vproc_version 0.01
+# fails with ccache in %{__cc}
+%undefine	with_ccache
+#
 Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.210
-Release:	5
+Release:	5.2
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -29,6 +34,8 @@ Source8:	vrootdevices.sysconfig
 # http://www.paul.sladen.org/vserver/archives/200505/0078.html
 Source9:	%{name}-pkgmgmt.txt
 Source10:	%{name}-initpost.sh
+Source11:	http://www.13thfloor.at/vserver/s_release/v1.2.10/vproc-%{_vproc_version}.tar.bz2
+# Source11-md5:	1d030717bdbc958ea4b35fd2410dad85
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
 Patch2:		%{name}-vrpm.patch
@@ -301,7 +308,7 @@ Ten pakiet zawiera narzêdzia potrzebne do pracy z Vserwerami maj±cymi
 konfiguracjê w starym stylu.
 
 %prep
-%setup -q
+%setup -q -a11
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -342,6 +349,10 @@ CFLAGS="%{rpmcflags} -D__GLIBC__"
 
 %{__make} all
 %{?with_doc:%{__make} doc}
+
+%{__make} -C vproc-%{_vproc_version} \
+	CC="%{__cc}" \
+	CFLAGS="%{rpmcflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -384,6 +395,7 @@ install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 install %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/vrootdevices
 install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/initpost
+install vproc-%{_vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
 
 ln -sf null $RPM_BUILD_ROOT/dev/initctl
 
@@ -446,9 +458,15 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del vservers-legacy
 fi
 
-%triggerpostun build -- %{name}-build < 0.30.209-2.1
+%triggerpostun build -- %{name}-build < 0.30.210-5.2
 if [ -f /etc/vservers/.distributions/pld2.0/poldek/poldek.conf.rpmsave ]; then
 	mv -f /etc/vservers/.distributions/{pld2.0,pld-ac}/poldek/poldek.conf.rpmsave
+fi
+
+# kill old vserver specific package ignores which are no longer needed
+l=`egrep '^ignore.*(basesystem|SysVinit|rc-scripts)' /etc/vservers/*/apps/pkgmgmt/base/poldek/etc/poldek.conf -l 2>/dev/null`
+if [ "$l" ]; then
+	%{__sed} -i -e '/^ignore/s, \(basesystem\|SysVinit\|rc-scripts\),,g' $l
 fi
 
 %files
@@ -479,6 +497,7 @@ fi
 %attr(755,root,root) %{_sbindir}/vkill
 %attr(755,root,root) %{_sbindir}/vlimit
 %attr(755,root,root) %{_sbindir}/vdu
+%attr(755,root,root) %{_sbindir}/vproc
 %attr(755,root,root) %{_sbindir}/vps
 %attr(755,root,root) %{_sbindir}/vpstree
 %attr(755,root,root) %{_sbindir}/vrsetup
