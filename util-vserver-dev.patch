@@ -1,0 +1,7 @@
+--- ./distrib/defaults/devs~	2006-03-03 23:33:43.000000000 +0200
++++ ./distrib/defaults/devs	2006-03-06 13:11:37.374244805 +0200
+@@ -5,3 +5,4 @@
+ urandom c 1 9 644
+ tty     c 5 0 666
+ ptmx    c 5 2 666
++tty0	c 4 0 660
