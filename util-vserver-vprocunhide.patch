@@ -1,0 +1,7 @@
+--- util-vserver-0.30.210/distrib/misc/vprocunhide-files~	2006-01-04 14:58:13.000000000 +0200
++++ util-vserver-0.30.210/distrib/misc/vprocunhide-files	2006-03-03 23:16:17.000000000 +0200
+@@ -28,3 +28,4 @@
+ /proc/uptime
+ -/proc/cmdline
+ /proc/version
++/proc/mounts
