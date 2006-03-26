@@ -360,7 +360,8 @@ CFLAGS="%{rpmcflags} -D__GLIBC__"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d},/dev/pts}
+install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d},/dev/pts} \
+	$RPM_BUILD_ROOT{%{_sysconfdir}/vservices,/vservers/.pkg}
 
 %{__make} install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -369,8 +370,6 @@ cp -a vserver-compat.h $RPM_BUILD_ROOT%{_includedir}
 
 chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
 
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/vservices
-install -d $RPM_BUILD_ROOT/vservers/.pkg
 ln -s /vservers $RPM_BUILD_ROOT%{_sysconfdir}/vservers/vdirbase
 ln -s %{_localstatedir}/run/vservers.rev $RPM_BUILD_ROOT%{_sysconfdir}/vservers/run.rev
 
