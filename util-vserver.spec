@@ -17,7 +17,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.210
-Release:	6
+Release:	7
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -46,6 +46,7 @@ Patch6:		%{name}-build-umask.patch
 Patch7:		%{name}-utmpx.patch
 Patch8:		%{name}-vprocunhide.patch
 Patch9:		%{name}-dev.patch
+Patch10:	%{name}-no-dynamic-ctx.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -167,6 +168,7 @@ Summary(pl):	Narzêdzia do budowania vserverów
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	e2fsprogs
+Requires:	/etc/pld-release
 Conflicts:	poldek < 0.18.8-10
 
 %description build
@@ -321,6 +323,7 @@ konfiguracjê w starym stylu.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
 
 install %{SOURCE9} package-management.txt
 
