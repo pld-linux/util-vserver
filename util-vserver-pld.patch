@@ -38,11 +38,12 @@ diff -urN -x '*~' -x '*.orig' util-vserver-0.30.209-clean/distrib/Makefile.am ut
 diff -urN -x '*~' -x '*.orig' util-vserver-0.30.209-clean/distrib/pld-ac/pkgs/01 util-vserver-0.30.209-poldek2/distrib/pld-ac/pkgs/01
 --- util-vserver-0.30.209-clean/distrib/pld-ac/pkgs/01	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.209-poldek2/distrib/pld-ac/pkgs/01	2006-01-20 13:45:53.000000000 +0100
-@@ -0,0 +1,4 @@
+@@ -0,0 +1,5 @@
 +basesystem
 +glibc
 +issue
 +rpm-base
++vserver-packages
 diff -urN -x '*~' -x '*.orig' util-vserver-0.30.209-clean/distrib/pld-ac/poldek/aliases.conf util-vserver-0.30.209-poldek2/distrib/pld-ac/poldek/aliases.conf
 --- util-vserver-0.30.209-clean/distrib/pld-ac/poldek/aliases.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.209-poldek2/distrib/pld-ac/poldek/aliases.conf	2006-01-20 13:42:33.000000000 +0100
@@ -480,7 +481,7 @@ diff -urN -x '*~' -x '*.orig' util-vserver-0.30.209-clean/distrib/pld-ac/rpm/mac
 diff -urN -x '*~' -x '*.orig' util-vserver-0.30.209-clean/distrib/pld-ac/rpmlist.d/00.lst util-vserver-0.30.209-poldek2/distrib/pld-ac/rpmlist.d/00.lst
 --- util-vserver-0.30.209-clean/distrib/pld-ac/rpmlist.d/00.lst	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.209-poldek2/distrib/pld-ac/rpmlist.d/00.lst	2006-01-20 13:45:53.000000000 +0100
-@@ -0,0 +1,9 @@
+@@ -0,0 +1,10 @@
 +basesystem-*.rpm
 +dev-*.rpm
 +FHS-*.rpm
@@ -490,6 +491,7 @@ diff -urN -x '*~' -x '*.orig' util-vserver-0.30.209-clean/distrib/pld-ac/rpmlist
 +setup-*.rpm
 +issue-[0-9]*.rpm
 +rpm-base-*.rpm
++vserver-packages-*.rpm
 diff -urN -x '*~' -x '*.orig' util-vserver-0.30.209-clean/scripts/Makefile-files util-vserver-0.30.209-poldek2/scripts/Makefile-files
 --- util-vserver-0.30.209-clean/scripts/Makefile-files	2005-04-28 19:45:34.000000000 +0200
 +++ util-vserver-0.30.209-poldek2/scripts/Makefile-files	2006-01-20 13:45:53.000000000 +0100
