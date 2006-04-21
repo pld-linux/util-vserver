@@ -7,6 +7,7 @@
 # Conditional build:
 %bcond_without	dietlibc	# don't use dietlibc (ask for troubles)
 %bcond_without	doc		# don't build documentation which needed LaTeX
+%bcond_without	no_dynamic_context	# disable enforcement of disabled dynamic context
 %bcond_with	xalan		# use the xalan xslt processor
 #
 %define	_vproc_version 0.01
@@ -17,7 +18,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.210
-Release:	7
+Release:	7.1
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -323,7 +324,7 @@ konfiguracjê w starym stylu.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
-%patch10 -p1
+%{?with_no_dynamic_context:%patch10 -p1}
 
 install %{SOURCE9} package-management.txt
 
