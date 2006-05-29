@@ -11,14 +11,14 @@
 %bcond_with	xalan		# use the xalan xslt processor
 #
 %define	_vproc_version 0.01
-# fails with ccache in %{__cc}
+# diet compile fails with ccache in %{__cc}
 %undefine	with_ccache
 #
 Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.210
-Release:	7.2
+Release:	7.6
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
@@ -49,6 +49,8 @@ Patch8:		%{name}-vprocunhide.patch
 Patch9:		%{name}-dev.patch
 Patch10:	%{name}-no-dynamic-ctx.patch
 Patch11:	%{name}-more-ip.patch
+Patch12:	http://daniel.hozac.com/vserver/util-vserver/util-vserver-0.30.210-namespace-cleanup.patch
+Patch13:	http://daniel.hozac.com/vserver/util-vserver/util-vserver-0.30.210-delete.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -327,6 +329,8 @@ konfiguracjê w starym stylu.
 %patch9 -p1
 %{?with_no_dynamic_context:%patch10 -p1}
 %patch11 -p1
+%patch12 -p1
+%patch13 -p1
 
 install %{SOURCE9} package-management.txt
 
