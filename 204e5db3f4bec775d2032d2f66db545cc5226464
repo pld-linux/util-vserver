@@ -1,0 +1,2 @@
+- allow disabling enforcement of no dynamic context (dynamic contexts
+  work fine for me. and reconfiguring all vservers is PITA)
