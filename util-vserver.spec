@@ -172,6 +172,7 @@ Summary(pl):	Narzêdzia do budowania vserverów
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	e2fsprogs
+Requires:	which
 Requires:	/etc/pld-release
 Conflicts:	poldek < 0.18.8-10
 
