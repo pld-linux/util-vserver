@@ -54,12 +54,12 @@ diff -urNad trunk~/scripts/functions trunk/scripts/functions
 +{
 +    local cfgdir
 +
-+    $_VSERVER_INFO - FEATURE namespace   || return 0
-+    cfgdir=$($_VSERVER_INFO "$1" CFGDIR) || return 0
-+    test -e "$cfgdir"/nonamespace-cleanup && return 0
++    $_VSERVER_INFO - FEATURE namespace   || return 1
++    cfgdir=$($_VSERVER_INFO "$1" CFGDIR) || return 1
++    test -e "$cfgdir"/nonamespace-cleanup && return 1
 +    test -e "$__CONFDIR"/.defaults/namespace-cleanup -o \
-+         -e "$cfgdir"/namespace-cleanup && return 1
-+    return 0
++         -e "$cfgdir"/namespace-cleanup && return 0
++    return 1
 +}
 +
  ## Usage: getAllVservers <var> [<KIND>*]
@@ -79,7 +79,7 @@ diff -urNad trunk~/scripts/vserver.functions trunk/scripts/vserver.functions
      _mountVserverInternal "$cfgdir"/fstab.local
      _mountVserverInternal "$cfgdir"/fstab.remote $_CHBIND "${CHBIND_OPTS[@]}"
  
-+    isNamespaceCleanup "$cfgdir" || \
++    isNamespaceCleanup "$cfgdir" && \
 +        _namespaceCleanup
 +
      isAvoidNamespace "$cfgdir" || \
@@ -94,24 +94,24 @@ diff -urNad trunk~/scripts/vserver.functions trunk/scripts/vserver.functions
 +{
 +    local root=$(readlink -f "$vdir")
 +    local tmp="$root"
-+    local list=""
++    local -a list
 +    while [ "$tmp" ]; do
-+	list="$list $tmp"
++	list=( "${list[@]}" "$tmp" )
 +	tmp="${tmp%/*}"
 +    done
-+    local list_umount=""
++    local -a list_umount
 +    while read dev path opts; do
 +        [ "$path" ] || continue
-+        for i in $root /dev /proc; do
++        for i in "$root" /dev /proc; do
 +            [ "${path#$i}" != "$path" ] && continue 2
 +        done
-+        for i in $list /; do
++        for i in "${list[@]}" /; do
 +            [ "$path" = "$i" ] && continue 2
 +        done
-+        list_umount="$path $list_umount"
++        list_umount=( "${list_umount[@]}" "$path" )
 +    done < /proc/mounts
-+    for i in $list_umount; do
-+        umount $i
++    for i in "${list_umount[@]}"; do
++        umount -l -n "$i"
 +    done
 +}
 +
