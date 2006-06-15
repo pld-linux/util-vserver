@@ -328,7 +328,7 @@ diff -urN -x '*~' -x '*.orig' util-vserver-0.30.209-clean/distrib/pld-ac/poldek/
 +#confirm removal = yes
 +
 +# Let the user select package among equivalents.
-+#choose equivalents manually = no
++choose equivalents manually = yes
 +
 +# Prevent package listed from being upgraded if they are already installed.
 +# hold = kernel* dev
