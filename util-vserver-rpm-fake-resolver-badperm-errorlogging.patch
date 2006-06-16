@@ -17,11 +17,12 @@ real fix would be 'chmod 755 /vservers/test' if you just knew that is the proble
 
 --- util-vserver-0.30.210/src/rpm-fake-resolver.c~	2006-06-16 03:22:36.000000000 +0300
 +++ util-vserver-0.30.210/src/rpm-fake-resolver.c	2006-06-16 03:22:40.000000000 +0300
-@@ -161,6 +161,12 @@
+@@ -161,6 +161,13 @@
      if (EreadAll(0, buf, len)) {
        buf[len] = '\0';
++      errno = 0;
        res = getpwnam(buf);
-+      if (!res) {
++      if (errno) {
 +        WRITE_MSG(2, ENSC_WRAPPERS_PREFIX "getpwnam(): ");
 +        WRITE_STR(2, strerror(errno));
 +        WRITE_MSG(2, "\n");
@@ -30,11 +31,12 @@ real fix would be 'chmod 755 /vservers/test' if you just knew that is the proble
      }
      
      if (res!=0) sendResult(true,  res->pw_uid);
-@@ -182,6 +188,12 @@
+@@ -182,6 +189,13 @@
      if (EreadAll(0, buf, len)) {
        buf[len] = '\0';
++      errno = 0;
        res = getgrnam(buf);
-+      if (!res) {
++      if (errno) {
 +        WRITE_MSG(2, ENSC_WRAPPERS_PREFIX "getgrnam(): ");
 +        WRITE_STR(2, strerror(errno));
 +        WRITE_MSG(2, "\n");
