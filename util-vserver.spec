@@ -49,8 +49,10 @@ Patch8:		%{name}-vprocunhide.patch
 Patch9:		%{name}-dev.patch
 Patch10:	%{name}-no-dynamic-ctx.patch
 Patch11:	%{name}-more-ip.patch
-Patch12:	http://daniel.hozac.com/vserver/util-vserver/util-vserver-0.30.210-namespace-cleanup.patch
-Patch13:	http://daniel.hozac.com/vserver/util-vserver/util-vserver-0.30.210-delete.patch
+Patch12:	http://daniel.hozac.com/vserver/util-vserver/%{name}-0.30.210-namespace-cleanup.patch
+Patch13:	http://daniel.hozac.com/vserver/util-vserver/%{name}-0.30.210-delete.patch
+Patch14:	http://daniel.hozac.com/vserver/util-vserver/%{name}-0.30.210-shiny10.patch
+Patch15:	%{name}-rpm-fake-resolver-badperm-errorlogging.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -171,9 +173,9 @@ Summary:	Tools which can be used to build vservers
 Summary(pl):	Narzêdzia do budowania vserverów
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
+Requires:	/etc/pld-release
 Requires:	e2fsprogs
 Requires:	which
-Requires:	/etc/pld-release
 Conflicts:	poldek < 0.18.8-10
 
 %description build
@@ -332,6 +334,8 @@ konfiguracjê w starym stylu.
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
+%patch15 -p1
 
 install %{SOURCE9} package-management.txt
 
