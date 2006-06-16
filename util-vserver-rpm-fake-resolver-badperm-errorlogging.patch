@@ -1,0 +1,45 @@
+saves your day if you get unexplainable errors from rpm install because /vservers/test has bad permissions:
+
+# la -d /vservers/test/
+drwx------  23 root root 4096 Jun 16 02:01 /vservers/test/
+
+# vrpm test -- -Uhv masqmail-0.2.20-5.amd64.rpm
+Preparing...                ########################################### [100%]
+rpm-fake-resolver: getpwnam(): Invalid argument
+   1:masqmail               ########################################### [100%]
+warning: user mail does not exist - using root
+warning: user mail does not exist - using root
+warning: user mail does not exist - using root
+warning: user mail does not exist - using root
+#
+
+real fix would be 'chmod 755 /vservers/test' if you just knew that is the problem!
+
+--- util-vserver-0.30.210/src/rpm-fake-resolver.c~	2006-06-16 03:22:36.000000000 +0300
++++ util-vserver-0.30.210/src/rpm-fake-resolver.c	2006-06-16 03:22:40.000000000 +0300
+@@ -161,6 +161,12 @@
+     if (EreadAll(0, buf, len)) {
+       buf[len] = '\0';
+       res = getpwnam(buf);
++      if (!res) {
++        WRITE_MSG(2, ENSC_WRAPPERS_PREFIX "getpwnam(): ");
++        WRITE_STR(2, strerror(errno));
++        WRITE_MSG(2, "\n");
++        exit(1);
++      }
+     }
+     
+     if (res!=0) sendResult(true,  res->pw_uid);
+@@ -182,6 +188,12 @@
+     if (EreadAll(0, buf, len)) {
+       buf[len] = '\0';
+       res = getgrnam(buf);
++      if (!res) {
++        WRITE_MSG(2, ENSC_WRAPPERS_PREFIX "getgrnam(): ");
++        WRITE_STR(2, strerror(errno));
++        WRITE_MSG(2, "\n");
++        exit(1);
++      }
+     }
+     
+     if (res!=0) sendResult(true,  res->gr_gid);
