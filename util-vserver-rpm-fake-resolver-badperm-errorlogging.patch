@@ -17,20 +17,17 @@ real fix would be 'chmod 755 /vservers/test' if you just knew that is the proble
 
 --- util-vserver-0.30.210/src/rpm-fake-resolver.c~	2006-06-16 03:22:36.000000000 +0300
 +++ util-vserver-0.30.210/src/rpm-fake-resolver.c	2006-06-16 03:22:40.000000000 +0300
-@@ -301,10 +301,16 @@
+@@ -300,6 +300,10 @@
+   if (args.chroot) Echroot(args.chroot);
    Echdir("/");
  
++  if (access("/", X_OK) == -1) {
++	  WRITE_MSG(2, "***  root directory is not accessible for specified uid. rpm-fake-resolver will most likely fail.\n");
++  }
++	  
    activateContext(args.ctx, args.in_ctx, args.caps, args.flags);
    Esetgroups(0, &args.gid);
    Esetgid(args.gid);
-   Esetuid(args.uid);
+   Echdir("/");
  
-+  if (access("/", X_OK) == -1) {
-+    WRITE_MSG(2,
-+    "***  root directory is not accessible for specified uid. rpm-fake-resolver will most likely fail.\n"
-+    );
-+  }
-+
-   if (args.do_fork) daemonize(&args, pid_fd);
-   if (pid_fd!=-1)   close(pid_fd);
-   run();
+
