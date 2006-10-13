@@ -37,6 +37,7 @@ Source9:	%{name}-pkgmgmt.txt
 Source10:	%{name}-initpost.sh
 Source11:	http://www.13thfloor.at/vserver/s_release/v1.2.10/vproc-%{_vproc_version}.tar.bz2
 # Source11-md5:	1d030717bdbc958ea4b35fd2410dad85
+Source12:	%{name}-vhashify.cron
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
 Patch2:		%{name}-vrpm.patch
@@ -375,7 +376,7 @@ CFLAGS="%{rpmcflags} -D__GLIBC__"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d},/dev/pts} \
+install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d,cron.d},/dev/pts} \
 	$RPM_BUILD_ROOT{%{_sysconfdir}/vservices,/vservers/.pkg}
 
 %{__make} install install-distribution \
@@ -414,6 +415,11 @@ install %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/vrootdevices
 install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/initpost
 install vproc-%{_vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
+install %{SOURCE12} $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
+
+cat > $RPM_BUILD_ROOT/etc/cron.d/vservers << EOF
+02 2 * * 0      root    %{_libdir}/%{name}/vhashify.cron
+EOF
 
 ln -sf null $RPM_BUILD_ROOT/dev/initctl
 
@@ -552,6 +558,8 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/vprocunhide
 %{_libdir}/%{name}/vserver.*
 %attr(755,root,root) %{_libdir}/%{name}/vservers.grabinfo.sh
+%attr(755,root,root) %{_libdir}/%{name}/vhashify
+%attr(755,root,root) %{_libdir}/%{name}/vhashify.cron
 %attr(755,root,root) %{_libdir}/%{name}/vshelper
 %attr(755,root,root) %{_libdir}/%{name}/vshelper-sync
 %{_mandir}/man8/chbind.8*
@@ -590,6 +598,7 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/vsysvwrapper
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vrootdevices
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers
+%config(noreplace) %verify(not md5 mtime size) /etc/cron.d/vservers
 %attr(754,root,root) /etc/rc.d/init.d/vprocunhide
 %attr(754,root,root) /etc/rc.d/init.d/vrootdevices
 %attr(754,root,root) /etc/rc.d/init.d/vservers
@@ -620,7 +629,6 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/pkgmgmt
 %attr(755,root,root) %{_libdir}/%{name}/vapt-get-worker
 %attr(755,root,root) %{_libdir}/%{name}/vcopy
-%attr(755,root,root) %{_libdir}/%{name}/vhashify
 %attr(755,root,root) %{_libdir}/%{name}/vpkg
 %attr(755,root,root) %{_libdir}/%{name}/vpoldek-worker
 %attr(755,root,root) %{_libdir}/%{name}/vrpm-*
