@@ -19,6 +19,10 @@ MARKS="default"
 # Note: on stop the init script will stop ALL running vservers
 #STARTALL=yes
 
+# Which vservers you want to vhashify?
+# # Remember - vhashify must be configured first!
+#VHASHIFY_VSERVERS=""
+
 # Number of vservers which shall be started in parallel; since most
 # initmethods are spending much time in sleeps, it is safe to
 # use a high number here, though you should pay attention if you make

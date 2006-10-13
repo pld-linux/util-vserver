@@ -1,0 +1,11 @@
+#!/bin/sh
+#########
+
+. /etc/sysconfig/vservers
+
+if [ "${VHASHIFY_VSERVERS}" ]; then
+	for vserver in ${VHASHIFY_VSERVERS}; do
+		/usr/lib/util-vserver/vhashify --refresh ${vserver}
+	done
+fi
+
