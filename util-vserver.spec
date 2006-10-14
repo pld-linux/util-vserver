@@ -558,6 +558,7 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/vprocunhide
 %{_libdir}/%{name}/vserver.*
 %{_libdir}/%{name}/vserver-setup.*
+%attr(755,root,root) %{_libdir}/%{name}/vserver-build
 %{_libdir}/%{name}/vserver-build.*
 %attr(755,root,root) %{_libdir}/%{name}/vservers.grabinfo.sh
 %attr(755,root,root) %{_libdir}/%{name}/vhashify
