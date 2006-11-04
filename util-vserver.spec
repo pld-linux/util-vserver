@@ -5,10 +5,10 @@
 # m68k and mips are the only not supported archs
 #
 # Conditional build:
-%bcond_without	dietlibc	# don't use dietlibc (ask for troubles)
-%bcond_without	doc		# don't build documentation which needed LaTeX
+%bcond_without	dietlibc		# don't use dietlibc (ask for troubles)
+%bcond_without	doc			# don't build documentation which needed LaTeX
 %bcond_without	no_dynamic_context	# disable enforcement of disabled dynamic context
-%bcond_with	xalan		# use the xalan xslt processor
+%bcond_with	xalan			# use the xalan xslt processor
 #
 %define	_vproc_version 0.01
 # diet compile fails with ccache in %{__cc}
@@ -59,12 +59,12 @@ BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
 BuildRequires:	beecrypt-devel
 %{?with_dietlibc:BuildRequires:	dietlibc-static >= 2:0.29}
+BuildRequires:	e2fsprogs-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 1.5.14
 %ifarch %{x8664}
 BuildRequires:	sed >= 4.0
 %endif
-BuildRequires:  e2fsprogs-devel
 BuildRequires:	rpmbuild(macros) >= 1.268
 %if %{with doc}
 BuildRequires:	doxygen
