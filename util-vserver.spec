@@ -83,9 +83,9 @@ BuildRequires:	tetex-metafont
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-lib = %{version}-%{release}
 Requires:	issue
+Requires:	mktemp >= 1.5-18
 Requires:	rc-scripts
 Requires:	util-linux
-Requires:   mktemp >= 1.5-18
 Obsoletes:	util-vserver-core
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
