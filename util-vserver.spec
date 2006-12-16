@@ -17,12 +17,12 @@
 Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30.210
-Release:	11
+Version:	0.30.212
+Release:	1
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
-# Source0-md5:	1e8fff7cb6246d21ed029f082123019b
+Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
+# Source0-md5:	386b91732b7f0f132b4e9d978389dcc2
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -39,21 +39,17 @@ Source11:	http://www.13thfloor.at/vserver/s_release/v1.2.10/vproc-%{_vproc_versi
 # Source11-md5:	1d030717bdbc958ea4b35fd2410dad85
 Source12:	%{name}-vhashify.cron
 Patch0:		%{name}-vsysvwrapper.patch
-Patch1:		%{name}-pld.patch
+Patch1:		%{name}-pld.patch2
 Patch2:		%{name}-vrpm.patch
 Patch3:		%{name}-include.patch
 Patch4:		%{name}-m4-diet.patch
-Patch5:		%{name}-cpuset.patch
 Patch6:		%{name}-build-umask.patch
 Patch7:		%{name}-utmpx.patch
 Patch8:		%{name}-vprocunhide.patch
 Patch9:		%{name}-dev.patch
 Patch10:	%{name}-no-dynamic-ctx.patch
 Patch11:	%{name}-more-ip.patch
-Patch12:	http://daniel.hozac.com/vserver/util-vserver/%{name}-0.30.210-namespace-cleanup.patch
-Patch13:	http://daniel.hozac.com/vserver/util-vserver/%{name}-0.30.210-delete.patch
-Patch14:	http://daniel.hozac.com/vserver/util-vserver/%{name}-0.30.210-shiny10.patch
-Patch15:	%{name}-rpm-fake-resolver-badperm-errorlogging.patch
+Patch12:	%{name}-rpm-fake-resolver-badperm-errorlogging.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -258,10 +254,10 @@ Requires:	util-vserver-build
 Requires:	yum
 
 %description -n vserver-distro-centos
-VServer build template for CentOS 4.2.
+VServer build template for CentOS 4.
 
 %description -n vserver-distro-centos -l pl
-Szablon budowania VServera dla CentOS 4.2.
+Szablon budowania VServera dla CentOS 4.
 
 %package init
 Summary:	initscripts for vserver
@@ -328,7 +324,6 @@ konfiguracjê w starym stylu.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
@@ -336,9 +331,6 @@ konfiguracjê w starym stylu.
 %{?with_no_dynamic_context:%patch10 -p1}
 %patch11 -p1
 %patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
 
 install %{SOURCE9} package-management.txt
 
@@ -668,7 +660,7 @@ fi
 
 %files -n vserver-distro-centos
 %defattr(644,root,root,755)
-%{_libdir}/util-vserver/distributions/centos42
+%{_libdir}/util-vserver/distributions/centos4
 
 %files legacy
 %defattr(644,root,root,755)
