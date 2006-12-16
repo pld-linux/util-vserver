@@ -39,7 +39,7 @@ Source11:	http://www.13thfloor.at/vserver/s_release/v1.2.10/vproc-%{_vproc_versi
 # Source11-md5:	1d030717bdbc958ea4b35fd2410dad85
 Source12:	%{name}-vhashify.cron
 Patch0:		%{name}-vsysvwrapper.patch
-Patch1:		%{name}-pld.patch2
+Patch1:		%{name}-pld.patch
 Patch2:		%{name}-vrpm.patch
 Patch3:		%{name}-include.patch
 Patch4:		%{name}-m4-diet.patch
