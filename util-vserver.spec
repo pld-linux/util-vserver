@@ -505,6 +505,9 @@ fi
 %attr(755,root,root) %{_sbindir}/chxid
 %attr(755,root,root) %{_sbindir}/exec-cd
 %attr(755,root,root) %{_sbindir}/lsxid
+%attr(755,root,root) %{_sbindir}/naddress
+%attr(755,root,root) %{_sbindir}/nattribute
+%attr(755,root,root) %{_sbindir}/ncontext
 %attr(755,root,root) %{_sbindir}/reducecap
 %attr(755,root,root) %{_sbindir}/setattr
 %attr(755,root,root) %{_sbindir}/showattr
@@ -534,6 +537,7 @@ fi
 %{_libdir}/%{name}/defaults/*
 %attr(755,root,root) %{_libdir}/%{name}/capchroot
 %attr(755,root,root) %{_libdir}/%{name}/chain-echo
+%attr(755,root,root) %{_libdir}/%{name}/chbind-compat
 %attr(755,root,root) %{_libdir}/%{name}/check-unixfile
 %attr(755,root,root) %{_libdir}/%{name}/chcontext-compat
 %attr(755,root,root) %{_libdir}/%{name}/chroot-sh
