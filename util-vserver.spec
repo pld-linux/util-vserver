@@ -259,6 +259,19 @@ VServer build template for CentOS 4.
 %description -n vserver-distro-centos -l pl
 Szablon budowania VServera dla CentOS 4.
 
+%package -n vserver-distro-gentoo
+Summary:	VServer build template for Gentoo
+Summary(pl):	Szablon budowania VServera dla Gentoo
+Group:		Applications/System
+Requires:	util-vserver-build
+
+%description -n vserver-distro-gentoo
+VServer build template for Gentoo.
+
+%description -n vserver-distro-gentoo -l pl
+Szablon budowania VServera dla Gentoo.
+
+%
 %package init
 Summary:	initscripts for vserver
 Summary(pl):	Skrypty inicjalizuj±ce dla vserwera
@@ -622,6 +635,7 @@ fi
 %dir %{_libdir}/%{name}/distributions/template
 %attr(755,root,root) %{_libdir}/%{name}/distributions/template/init*
 %attr(-,root,root) %{_libdir}/%{name}/distributions/redhat
+%{_libdir}/%{name}/magic.mime
 %{_libdir}/%{name}/vserver-build.*
 %{_libdir}/%{name}/vserver-setup.functions
 %{_libdir}/%{name}/defaults/fstab
@@ -665,6 +679,15 @@ fi
 %files -n vserver-distro-centos
 %defattr(644,root,root,755)
 %{_libdir}/util-vserver/distributions/centos4
+
+%files -n vserver-distro-gentoo
+%defattr(644,root,root,755)
+%dir %{_libdir}/util-vserver/distributions/gentoo
+%attr(755,root,root) %{_libdir}/util-vserver/distributions/gentoo/*
+%attr(755,root,root) %{_sbindir}/vdispatch-conf
+%attr(755,root,root) %{_sbindir}/vemerge
+%attr(755,root,root) %{_sbindir}/vesync
+%attr(755,root,root) %{_sbindir}/vupdateworld
 
 %files legacy
 %defattr(644,root,root,755)
