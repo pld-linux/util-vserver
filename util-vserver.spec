@@ -271,7 +271,6 @@ VServer build template for Gentoo.
 %description -n vserver-distro-gentoo -l pl
 Szablon budowania VServera dla Gentoo.
 
-%
 %package init
 Summary:	initscripts for vserver
 Summary(pl):	Skrypty inicjalizuj±ce dla vserwera
