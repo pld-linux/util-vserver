@@ -1,17 +1,18 @@
-diff -uNrp util-vserver-0.30.212/distrib/Makefile.am util-vserver-0.30.212./distrib/Makefile.am
---- util-vserver-0.30.212/distrib/Makefile.am	2006-12-09 17:15:33.000000000 +0100
-+++ util-vserver-0.30.212./distrib/Makefile.am	2006-12-16 19:50:22.755681000 +0100
-@@ -58,7 +58,8 @@ nobase_distrib_DATA	=  defaults/devs \
+diff -urN util-vserver-0.30.212.org/distrib/Makefile.am util-vserver-0.30.212/distrib/Makefile.am
+--- util-vserver-0.30.212.org/distrib/Makefile.am	2006-12-09 17:15:33.000000000 +0100
++++ util-vserver-0.30.212/distrib/Makefile.am	2007-02-04 18:22:46.969264000 +0100
+@@ -58,7 +58,9 @@
  			   centos4/pkgs/01 centos4/pkgs/02 centos4/pkgs/03 \
  			   centos4/yum/yum.conf $(wildcard centos4/yum.repos.d/*.repo) \
  			   suse91/apt/rpmpriorities suse91/pkgs/01 suse91/pkgs/02 \
 -			   suse91/rpm/macros
 +			   suse91/rpm/macros pld-ac/pkgs/01 pld-ac/rpm/macros \
-+			   pld-ac/rpmlist.d/00.lst
++			   pld-ac/rpmlist.d/00.lst \
++			   pld-th/pkgs/01 pld-th/rpm/macros pld-th/rpmlist.d/00.lst
  
  nobase_confdistrib_DATA	=  rh9/apt/sources.list \
  			   fc1/apt/sources.list \
-@@ -67,7 +68,13 @@ nobase_confdistrib_DATA	=  rh9/apt/sourc
+@@ -67,7 +69,18 @@
  			   fc4/apt/sources.list \
  			   fc5/apt/sources.list \
  			   fc6/apt/sources.list \
@@ -21,34 +22,41 @@ diff -uNrp util-vserver-0.30.212/distrib/Makefile.am util-vserver-0.30.212./dist
 +			   pld-ac/poldek/fetch.conf \
 +			   pld-ac/poldek/pld-source.conf \
 +			   pld-ac/poldek/poldek.conf \
-+			   pld-ac/poldek/source.conf
++			   pld-ac/poldek/source.conf \
++			   pld-th/poldek/aliases.conf \
++			   pld-th/poldek/fetch.conf \
++			   pld-th/poldek/pld-source.conf \
++			   pld-th/poldek/poldek.conf \
++			   pld-th/poldek/source.conf
 +
  
  AM_INSTALLCHECK_STD_OPTIONS_EXEMPT \
  			=  $(nobase_distrib_SCRIPTS)
-@@ -87,6 +94,10 @@ install-data-xtras:
+@@ -87,6 +100,12 @@
  				ln -sf ../redhat/initpost $(DESTDIR)$(distribdir)/$$i/ && \
  				ln -sf ../redhat/initpre  $(DESTDIR)$(distribdir)/$$i/; \
  			done
 +			POLDEKARCH=$(shell rpm -E '%{_target_cpu}' 2>/dev/null); \
 +			if [ -z "$$POLDEKARCH" ] ; then POLDEKARCH=$(shell uname -m) ; fi ; \
 +			sed "s|%ARCH%|$$POLDEKARCH|g" $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf > $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf.tmp ; \
++			mv $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf.tmp $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf ; \
++			sed "s|%ARCH%|$$POLDEKARCH|g" $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf > $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf.tmp ; \
 +			mv $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf.tmp $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf
  			$(mkinstalldirs) $(DESTDIR)$(confdir) \
  				$(DESTDIR)$(confdistribdir)/.common/pubkeys \
  				$(DESTDIR)$(confdefaultsdir) \
-diff -uNrp util-vserver-0.30.212/distrib/pld-ac/pkgs/01 util-vserver-0.30.212./distrib/pld-ac/pkgs/01
---- util-vserver-0.30.212/distrib/pld-ac/pkgs/01	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.212./distrib/pld-ac/pkgs/01	2006-12-16 19:47:02.225681000 +0100
+diff -urN util-vserver-0.30.212.org/distrib/pld-ac/pkgs/01 util-vserver-0.30.212/distrib/pld-ac/pkgs/01
+--- util-vserver-0.30.212.org/distrib/pld-ac/pkgs/01	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-ac/pkgs/01	2007-02-04 18:20:38.633243500 +0100
 @@ -0,0 +1,5 @@
 +basesystem
 +glibc
 +issue
 +rpm-base
 +vserver-packages
-diff -uNrp util-vserver-0.30.212/distrib/pld-ac/poldek/aliases.conf util-vserver-0.30.212./distrib/pld-ac/poldek/aliases.conf
---- util-vserver-0.30.212/distrib/pld-ac/poldek/aliases.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.212./distrib/pld-ac/poldek/aliases.conf	2006-12-16 19:47:02.225681000 +0100
+diff -urN util-vserver-0.30.212.org/distrib/pld-ac/poldek/aliases.conf util-vserver-0.30.212/distrib/pld-ac/poldek/aliases.conf
+--- util-vserver-0.30.212.org/distrib/pld-ac/poldek/aliases.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-ac/poldek/aliases.conf	2007-02-04 18:20:38.637243750 +0100
 @@ -0,0 +1,30 @@
 +# System wide aliases
 +# ls
@@ -80,9 +88,9 @@ diff -uNrp util-vserver-0.30.212/distrib/pld-ac/poldek/aliases.conf util-vserver
 +grep = !grep
 +awk  = !awk
 +
-diff -uNrp util-vserver-0.30.212/distrib/pld-ac/poldek/fetch.conf util-vserver-0.30.212./distrib/pld-ac/poldek/fetch.conf
---- util-vserver-0.30.212/distrib/pld-ac/poldek/fetch.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.212./distrib/pld-ac/poldek/fetch.conf	2006-12-16 19:47:02.225681000 +0100
+diff -urN util-vserver-0.30.212.org/distrib/pld-ac/poldek/fetch.conf util-vserver-0.30.212/distrib/pld-ac/poldek/fetch.conf
+--- util-vserver-0.30.212.org/distrib/pld-ac/poldek/fetch.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-ac/poldek/fetch.conf	2007-02-04 18:20:38.637243750 +0100
 @@ -0,0 +1,62 @@
 +# Configuration of poldek external file getters. Each [fetcher] section 
 +# declares one external downloader. The syntax is:
@@ -146,9 +154,9 @@ diff -uNrp util-vserver-0.30.212/distrib/pld-ac/poldek/fetch.conf util-vserver-0
 +#cmd   = foo.sh %d %Pn
 + 
 +  
-diff -uNrp util-vserver-0.30.212/distrib/pld-ac/poldek/pld-source.conf util-vserver-0.30.212./distrib/pld-ac/poldek/pld-source.conf
---- util-vserver-0.30.212/distrib/pld-ac/poldek/pld-source.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.212./distrib/pld-ac/poldek/pld-source.conf	2006-12-16 19:47:02.225681000 +0100
+diff -urN util-vserver-0.30.212.org/distrib/pld-ac/poldek/pld-source.conf util-vserver-0.30.212/distrib/pld-ac/poldek/pld-source.conf
+--- util-vserver-0.30.212.org/distrib/pld-ac/poldek/pld-source.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-ac/poldek/pld-source.conf	2007-02-04 18:20:38.637243750 +0100
 @@ -0,0 +1,47 @@
 +# $Id$
 +# PLD <http://www.pld-linux.org/>
@@ -197,9 +205,9 @@ diff -uNrp util-vserver-0.30.212/distrib/pld-ac/poldek/pld-source.conf util-vser
 +name  = ac-test
 +path  = %{_pld_prefix}/test/%{_pld_arch}/
 +noauto	= yes
-diff -uNrp util-vserver-0.30.212/distrib/pld-ac/poldek/poldek.conf util-vserver-0.30.212./distrib/pld-ac/poldek/poldek.conf
---- util-vserver-0.30.212/distrib/pld-ac/poldek/poldek.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.212./distrib/pld-ac/poldek/poldek.conf	2006-12-16 19:47:02.225681000 +0100
+diff -urN util-vserver-0.30.212.org/distrib/pld-ac/poldek/poldek.conf util-vserver-0.30.212/distrib/pld-ac/poldek/poldek.conf
+--- util-vserver-0.30.212.org/distrib/pld-ac/poldek/poldek.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-ac/poldek/poldek.conf	2007-02-04 18:20:38.637243750 +0100
 @@ -0,0 +1,182 @@
 +# poldek main configuration file.
 +
@@ -383,9 +391,9 @@ diff -uNrp util-vserver-0.30.212/distrib/pld-ac/poldek/poldek.conf util-vserver-
 +
 +# Taking into account package Conflicts.
 +#conflicts = yes
-diff -uNrp util-vserver-0.30.212/distrib/pld-ac/poldek/source.conf util-vserver-0.30.212./distrib/pld-ac/poldek/source.conf
---- util-vserver-0.30.212/distrib/pld-ac/poldek/source.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.212./distrib/pld-ac/poldek/source.conf	2006-12-16 19:47:02.225681000 +0100
+diff -urN util-vserver-0.30.212.org/distrib/pld-ac/poldek/source.conf util-vserver-0.30.212/distrib/pld-ac/poldek/source.conf
+--- util-vserver-0.30.212.org/distrib/pld-ac/poldek/source.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-ac/poldek/source.conf	2007-02-04 18:20:38.637243750 +0100
 @@ -0,0 +1,85 @@
 +# Sample poldek sources configuration
 +# Every source is configured in his own [source] section.
@@ -472,17 +480,17 @@ diff -uNrp util-vserver-0.30.212/distrib/pld-ac/poldek/source.conf util-vserver-
 +#ignore = kernel*-smp-*
 +#dscr   = pl_PL
 +  
-diff -uNrp util-vserver-0.30.212/distrib/pld-ac/rpm/macros util-vserver-0.30.212./distrib/pld-ac/rpm/macros
---- util-vserver-0.30.212/distrib/pld-ac/rpm/macros	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.212./distrib/pld-ac/rpm/macros	2006-12-16 19:47:02.225681000 +0100
+diff -urN util-vserver-0.30.212.org/distrib/pld-ac/rpm/macros util-vserver-0.30.212/distrib/pld-ac/rpm/macros
+--- util-vserver-0.30.212.org/distrib/pld-ac/rpm/macros	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-ac/rpm/macros	2007-02-04 18:20:38.637243750 +0100
 @@ -0,0 +1,4 @@
 +# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
 +%_netsharedpath		/dev
-diff -uNrp util-vserver-0.30.212/distrib/pld-ac/rpmlist.d/00.lst util-vserver-0.30.212./distrib/pld-ac/rpmlist.d/00.lst
---- util-vserver-0.30.212/distrib/pld-ac/rpmlist.d/00.lst	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.212./distrib/pld-ac/rpmlist.d/00.lst	2006-12-16 19:47:02.225681000 +0100
+diff -urN util-vserver-0.30.212.org/distrib/pld-ac/rpmlist.d/00.lst util-vserver-0.30.212/distrib/pld-ac/rpmlist.d/00.lst
+--- util-vserver-0.30.212.org/distrib/pld-ac/rpmlist.d/00.lst	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-ac/rpmlist.d/00.lst	2007-02-04 18:20:38.637243750 +0100
 @@ -0,0 +1,10 @@
 +basesystem-*.rpm
 +dev-*.rpm
@@ -494,10 +502,471 @@ diff -uNrp util-vserver-0.30.212/distrib/pld-ac/rpmlist.d/00.lst util-vserver-0.
 +issue-[0-9]*.rpm
 +rpm-base-*.rpm
 +vserver-packages-*.rpm
-diff -uNrp util-vserver-0.30.212/scripts/functions util-vserver-0.30.212./scripts/functions
---- util-vserver-0.30.212/scripts/functions	2006-12-09 17:15:24.000000000 +0100
-+++ util-vserver-0.30.212./scripts/functions	2006-12-16 19:47:02.225681000 +0100
-@@ -394,6 +394,20 @@ function _pkgSetVarsYum
+diff -urN util-vserver-0.30.212.org/distrib/pld-th/pkgs/01 util-vserver-0.30.212/distrib/pld-th/pkgs/01
+--- util-vserver-0.30.212.org/distrib/pld-th/pkgs/01	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-th/pkgs/01	2007-02-04 18:20:38.633243000 +0100
+@@ -0,0 +1,5 @@
++basesystem
++glibc
++issue
++rpm-base
++vserver-packages
+diff -urN util-vserver-0.30.212.org/distrib/pld-th/poldek/aliases.conf util-vserver-0.30.212/distrib/pld-th/poldek/aliases.conf
+--- util-vserver-0.30.212.org/distrib/pld-th/poldek/aliases.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-th/poldek/aliases.conf	2007-02-04 18:20:38.637243000 +0100
+@@ -0,0 +1,30 @@
++# System wide aliases
++# ls
++ll = ls -l
++llu = ls -lu
++llU = ls -lU
++lli = ls -lI
++
++# install
++freshen = install -FN
++upgrade = install -F
++
++# for backward compatybility, greedy is on by default now
++greedy-upgrade = install -FG
++
++just-install = install -IN
++
++# search
++what-requires = search -r
++what-provides = search -p
++rsearch = search --perlre
++
++exit = quit
++
++# for fun
++#ls = uninstall kernel
++
++less = !less
++grep = !grep
++awk  = !awk
++
+diff -urN util-vserver-0.30.212.org/distrib/pld-th/poldek/fetch.conf util-vserver-0.30.212/distrib/pld-th/poldek/fetch.conf
+--- util-vserver-0.30.212.org/distrib/pld-th/poldek/fetch.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-th/poldek/fetch.conf	2007-02-04 18:20:38.637243000 +0100
+@@ -0,0 +1,62 @@
++# Configuration of poldek external file getters. Each [fetcher] section 
++# declares one external downloader. The syntax is:
++# [fetcher]
++# name  = NAME
++# proto = PROTOCOL[ ,PROTOCOL... ]
++# cmd   = CMD [OPTION...] DESTINATION-MACRO URL-MACRO
++# Possible parameters are:
++#
++#[fetcher]
++# Unique name of the fetcher. This is an optional parameter, if not set then 
++# name is taken from the "cmd" parameter value as "$(basename $cmd)". 
++#name = foo
++
++# Protocol or protocols supported by fetcher. Name of the protocol can be 
++# completely arbitrary, i.e. if you can handle protocol "foo" by writing
++# a script which takes URLs in form 'foo://'. 
++#proto = foo,bar
++
++# Parameter specifies an external command and its invoking syntax.
++# The syntax of "cmd" is:
++# cmd = COMMAND [ OPTION... ] {%d,%D}  {%p,%P}[n]
++# Where COMMAND is the name or full path of command, OPTION is command specific 
++# options. Macro '%d' is replaced with cache directory, '%D' is replaced with 
++# 'cache directory/file basename', and '%p' with file basename, %P with file full 
++# path (URL).  Optional suffix 'n' with %p and %P means that command can be 
++# invoked with multiple files at once.
++#cmd = foogetter.sh -N %D %Pn
++
++##Configured fetchers
++[fetcher]
++proto = cdrom 
++cmd   = vfjuggle %d %Pn
++
++[fetcher]
++proto = http,ftp,https
++cmd   = wget -N --dot-style=binary -P %d %Pn
++
++[fetcher]
++proto = http,ftp 
++cmd   = snarf %P %D
++
++[fetcher]
++proto = https 
++cmd   = curl %P -o %D
++
++[fetcher]
++proto = rsync
++cmd   = rsync -v %P %d
++
++[fetcher]
++proto = smb
++cmd   = vfsmb -v %P %d
++
++#[fetcher]
++#proto = ssh 
++#cmd   = vfssh.sh %d %Pn
++
++#[fetcher]
++#proto = foo 
++#cmd   = foo.sh %d %Pn
++ 
++  
+diff -urN util-vserver-0.30.212.org/distrib/pld-th/poldek/pld-source.conf util-vserver-0.30.212/distrib/pld-th/poldek/pld-source.conf
+--- util-vserver-0.30.212.org/distrib/pld-th/poldek/pld-source.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-th/poldek/pld-source.conf	2007-02-04 18:25:33.175651250 +0100
+@@ -0,0 +1,51 @@
++# PLD <http://www.pld-linux.org/>
++
++_pld_arch   = %ARCH%
++_pld_prefix = ftp://ftp.th.pld-linux.org/dists/th
++## Some mirrors
++## You can use them if you have better connection there
++# CI TASK:
++#_pld_prefix = ftp://ftp.task.pld-linux.org/dists/th
++
++
++_th_idxtype = pndir
++
++# PLD 3.0 (Th)
++[source]
++type  = %{_th_idxtype}
++name  = th
++path  = %{_pld_prefix}/PLD/%{_pld_arch}/RPMS/
++
++[source]
++type  = %{_th_idxtype}
++name  = th
++path  = %{_pld_prefix}/PLD/noarch/RPMS/
++
++[source]
++type  = %{_th_idxtype}
++name  = th-updates-security
++path  = %{_pld_prefix}/updates-security/%{_pld_arch}/RPMS/
++
++[source]
++type  = %{_th_idxtype}
++name  = th-updates-general
++path  = %{_pld_prefix}/updates-general/%{_pld_arch}/RPMS/
++noauto	= yes
++
++#[source]
++#type  = %{_th_idxtype}
++#name  = th-supported
++#path  = %{_pld_prefix}/supported/%{_pld_arch}/RPMS/
++#noauto	= yes
++
++[source]
++type  = %{_th_idxtype}
++name  = th-ready
++path  = %{_pld_prefix}/ready/%{_pld_arch}/RPMS/
++noauto	= yes
++
++[source]
++type  = %{_th_idxtype}
++name  = th-test
++path  = %{_pld_prefix}/test/%{_pld_arch}/RPMS/
++noauto	= yes
+diff -urN util-vserver-0.30.212.org/distrib/pld-th/poldek/poldek.conf util-vserver-0.30.212/distrib/pld-th/poldek/poldek.conf
+--- util-vserver-0.30.212.org/distrib/pld-th/poldek/poldek.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-th/poldek/poldek.conf	2007-02-04 18:20:38.637243000 +0100
+@@ -0,0 +1,182 @@
++# poldek main configuration file.
++
++# Some macros. Macros are local, they are not visible in included files
++# and macros declared in them are not visible to includer.
++# Macros names starts with underscore '_'.
++#
++_distro  = pld
++
++# Both local and remote files may be included. Included files may not contain
++# [global] section, it will be ignored anyway. 
++%include %{_distro}-source.conf
++
++# local sources
++%include source.conf
++
++# External downloaders configuration, not necessary in most cases, cause
++# to internal HTTP and FTP client.
++#%include fetch.conf
++
++[global]
++
++
++# This parameter allows to configure the default repository index type.
++#default index type = pndir
++
++# Cache directory for downloaded files. NOTE: that parent directory of cachedir 
++# must exists.
++#cachedir = $HOME/.poldek-cache
++
++# Switch to ordinary user at startup when executed by root
++#runas = poldek
++
++# Permits using root privileges for installation only. Automatically turned
++# on when poldek executed as ordinary user.
++#use sudo = no
++
++# Load /etc/apt/sources.list. 
++#load apt sources list = no
++
++# Handle gzipped indexes externally (needed on RedHat 9 and Fedora Core 1 and 2).
++# This option is a workaround for broken zlib linked into librpm; with enabled 
++# 'auto zlib in rpm' poldek tries to detect such case and then enables external
++# *.gz handling automatically.
++#vfile external compress = no
++
++# Auto detection of zlib linked into librpm. See 'vfile external compress' 
++# description.
++#auto zlib in rpm = yes
++
++# Automatically download whole index if incremental update fails.
++#autoupa = yes
++
++# Do not save given paths into created indexes. This option may significantly
++# reduce index size. Example (notice missing starting '/'):
++# exclude path = usr/share/doc:usr/share/man:usr/src
++#exclude path = 
++
++# Full path name to a PM (rpm for now) binary. 
++#pm command = /bin/rpm
++
++# Full path name to sudo binary. 
++#sudo command = /usr/bin/sudo
++
++
++### File downloaders configuration
++
++# Send ${USER}@${HOSTNAME} as anonymous FTP password (by default 
++# 'poldek@znienacka.net' is sent) 
++#vfile ftp sysuser as anon passwd = no
++
++# File getters configuration parameter. By this option URL handlers may be configured.
++# To get file from HTTP and FTP servers poldek uses its internal client (what is 
++# recommended), although it can be changedby this option. Others protocols handled 
++# by external utilities can be configured also. The syntax is:
++# default fetcher = PROTOCOL[,PROTOCOL...]:FETCHER_NAME
++
++# where FETCHER_NAME is a name of one of the fetcher preconfigured in [fetch]
++# sections (placed in fetch.conf in default configuration).
++# Examples:
++# default fetcher = ftp,http:internal
++# default fetcher = https:wget
++# default fetcher = cdrom:vfjuggle
++# vfjuggle is a cdrom getter supplied with poldek.
++#default fetcher = http,ftp: internal
++
++# Proxies for internal FTP and HTTP client may be configured in usual
++# way, by environment variables ftp_proxy and http_proxy, or by this option.
++# Its syntax is similar to "default fetcher" one:
++# proxy = PROTOCOL[,PROTOCOL...]:PROXY_URL
++# Example:
++# proxy = http: http://w3cache.foo.org:8080
++#proxy = 
++
++# Comma separated list of hosts or domains which will not be accessed via proxy.
++# Option overrides no_proxy environment variable.
++# Example:
++# noproxy = localhost, .pl, ftp.foo.bar.org
++#noproxy = 
++
++# Internal HTTP and FTP client is stubborn, it retries to retrive 
++# file if connection breaks. This option tells it how many times
++# it should try.
++#vfile retries = 128
++
++
++### Installation options
++
++# Install packages in small groups instead of doing all-or-nothing 
++# installations.
++particle install = no
++
++# Do not remove downloaded packages after its successful installation.
++#keep downloads = no
++
++# Controls visibility of multiple package instances with different EVR.
++# If on, only one, highest version will be visible.
++#unique package names = no
++
++# Epoch autopromotion during dependency comparision. RPM specific.
++# Set it up if you are using system with rpm prior to 4.2.1 version.
++#promoteepoch = no
++
++# Confirm packages installation.
++#confirm installation = no
++
++# Confirm packages removal.
++#confirm removal = yes
++
++# Let the user select package among equivalents.
++choose equivalents manually = yes
++
++# Prevent package listed from being upgraded if they are already installed.
++# hold = kernel* dev
++#hold = 
++
++# Ignore package list - packages fits given mask will be invisible.
++# ignore   = *-smp-* foo*
++ignore = kernel* udev devfs
++
++# Conflicts with already installed packages are treated as resolved 
++# if at least one of multiple-installed package satisfies conflict. 
++# rpm doesn't support such cases, so --pm-nodeps is needed (use with
++# care).
++#allow duplicates = yes
++
++
++### RPM specific options
++
++# rpm macros can be set by this option. Examples:
++# rpmdef   = _install_langs pl:pl_PL:lt:lt_LT
++# Do not install any documentation:
++# rpmdef  = _netsharedpath /usr/share/info:/usr/share/man
++# rpmdef  = _excludedocs 1
++#rpmdef = 
++
++
++### Dependency processing settings
++# Subtle dependency processing options, they should not be changed 
++# unless you know what you are doing
++
++# Automatically install packages required by installed ones.
++#follow = yes
++
++# Greedy upgrades, i.e. upgrade packages which dependencies are broken
++# by being uninstalled ones.
++#greedy = yes
++
++# Be yet more greedy; if successor of orphaned package found, and this 
++# successor drags no packages then upgrade the package instead of process
++# its dependencies. Option value is implied by 'greedy' one by defalut.
++#aggressive greedy = yes
++
++# Be tolerant for unmatched versioned dependencies which rpm tolerates, e.g.
++# package A requires capability foo &gt;= 1.0 while package B provides "foo"
++# without any version. Use with care, it may cause weird dependency errors.
++#mercy = no
++
++# Taking into account package Obsoletes.
++#obsoletes = yes
++
++# Taking into account package Conflicts.
++#conflicts = yes
+diff -urN util-vserver-0.30.212.org/distrib/pld-th/poldek/source.conf util-vserver-0.30.212/distrib/pld-th/poldek/source.conf
+--- util-vserver-0.30.212.org/distrib/pld-th/poldek/source.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-th/poldek/source.conf	2007-02-04 18:20:38.637243000 +0100
+@@ -0,0 +1,85 @@
++# Sample poldek sources configuration
++# Every source is configured in his own [source] section.
++# Possible parameters are:
++# 
++#[source]
++# Unique name of the repository. 
++#name = foo
++
++# Type of repository index. Permitted values are 'pndir', 'pdir', 'apt', 'yum' 
++# and 'dir' as listed by --stl switch.
++#type = pndir
++
++# This parameter sets index original type i.e type of repository
++# from what this repository is created. Default is 'dir' - means
++# that directory of packages is scanned. 
++#original type = dir
++
++# Unique name of the repository. May be either path or URL.
++#path = /some/url/or/dir
++
++# If package index and packages are stored in different locations then 
++# prefix stands for packages path.
++#prefix = /some/url/or/dir
++
++# Controls visibility of multiple package instances with different EVR.
++# If on, only one, highest version will be visible.
++#douniq = no
++
++# Repository priority. If the same packages (equal names and EVR)
++# are available in more than one source then package from highest 
++# prioritized source are taken. Priority is numeric value. Lower number
++# means higher priority, and negative priorities are allowed. 
++# Priority is numeric value.
++#pri = 0
++
++# Controling if repository index will be implicit loaded. Set it off if 
++# the index should be loaded on demand only, i.e. if specified directly 
++# by --sn option.
++#auto = yes
++
++# Controls if repository index will be implicit updated. Set it off if 
++# the index should be updated on demand only, i.e. if specified directly 
++# by --sn option.
++#autoup = yes
++
++# Packages PGP/GPG signatures (if any) will be verified before their 
++# installation.
++#signed = no
++
++# Have the same meaning as [global] parameter. Example:
++# hold = kernel* dev
++#hold = 
++
++# Have the same meaning as [global] parameter. Example:
++# ignore = kernel*smp* dev
++#ignore = 
++
++# Parameter have the same meaning as [global] parameter.
++# exclude path = usr/share/doc:usr/share/man:usr/src
++#exclude path = 
++
++# Preferred language of package descriptions. If not set, taken from locale 
++# settings. Example:
++# lang = pl_PL:lt_LT
++#lang = 
++
++[source]
++name   = home
++type   = dir
++path   = $HOME/rpm/RPMS
++auto   = no 
++autoup = no
++
++#[source]
++#type   = pndir
++#name   = foo
++#path   = ftp://ftp.foo.bar.org/RPMS/
++#pri    =  -10  
++#auto   = no 
++#autoup = no
++#signed = yes
++#hold   = kernel*
++#ignore = kernel*-smp-*
++#dscr   = pl_PL
++  
+diff -urN util-vserver-0.30.212.org/distrib/pld-th/rpm/macros util-vserver-0.30.212/distrib/pld-th/rpm/macros
+--- util-vserver-0.30.212.org/distrib/pld-th/rpm/macros	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-th/rpm/macros	2007-02-04 18:20:38.637243000 +0100
+@@ -0,0 +1,4 @@
++# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
++# you have to use at least one language beside 'C'
++%_install_langs		C:en:pl
++%_netsharedpath		/dev
+diff -urN util-vserver-0.30.212.org/distrib/pld-th/rpmlist.d/00.lst util-vserver-0.30.212/distrib/pld-th/rpmlist.d/00.lst
+--- util-vserver-0.30.212.org/distrib/pld-th/rpmlist.d/00.lst	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/distrib/pld-th/rpmlist.d/00.lst	2007-02-04 18:20:38.637243000 +0100
+@@ -0,0 +1,10 @@
++basesystem-*.rpm
++dev-*.rpm
++FHS-*.rpm
++glibc-misc-*.rpm
++glibc-[0-9]*.rpm
++libgcc-[0-9]*.rpm
++setup-*.rpm
++issue-[0-9]*.rpm
++rpm-base-*.rpm
++vserver-packages-*.rpm
+diff -urN util-vserver-0.30.212.org/scripts/functions util-vserver-0.30.212/scripts/functions
+--- util-vserver-0.30.212.org/scripts/functions	2006-12-09 17:15:24.000000000 +0100
++++ util-vserver-0.30.212/scripts/functions	2007-02-04 18:20:38.637243750 +0100
+@@ -394,6 +394,20 @@
      fi
  }
  
@@ -518,7 +987,7 @@ diff -uNrp util-vserver-0.30.212/scripts/functions util-vserver-0.30.212./script
  
  function _pkgMountBase
  {
-@@ -467,6 +481,7 @@ function pkgInit
+@@ -467,6 +481,7 @@
  	    rpm)	_pkgSetVarsRPM;;
  	    apt)	_pkgSetVarsApt;;
  	    yum)	_pkgSetVarsYum;;
@@ -526,7 +995,7 @@ diff -uNrp util-vserver-0.30.212/scripts/functions util-vserver-0.30.212./script
  	    *)		echo "Unknown packaging flavor" >&2; exit 1;;
  	esac
      done
-@@ -750,6 +765,8 @@ function pkgmgmt.guessStyle()
+@@ -750,6 +765,8 @@
  	style=redhat
      elif test -e "$_pgs_vdir"/etc/mandrake-release; then
  	style=mandrake
@@ -535,7 +1004,7 @@ diff -uNrp util-vserver-0.30.212/scripts/functions util-vserver-0.30.212./script
      elif test -e "$_pgs_vdir"/etc/debian_version; then
  	style=debian
      elif test -e "$_pgs_vdir"/etc/SuSE-release; then
-@@ -817,6 +834,27 @@ function pkgmgmt.isYumAvailable
+@@ -817,6 +834,27 @@
      test -n "$have_yum" && return 0 || return 1
  }
  
@@ -563,10 +1032,10 @@ diff -uNrp util-vserver-0.30.212/scripts/functions util-vserver-0.30.212./script
  
  function vshelper.doSanityCheck
  {
-diff -uNrp util-vserver-0.30.212/scripts/Makefile-files util-vserver-0.30.212./scripts/Makefile-files
---- util-vserver-0.30.212/scripts/Makefile-files	2006-12-09 17:15:24.000000000 +0100
-+++ util-vserver-0.30.212./scripts/Makefile-files	2006-12-16 19:53:19.455681000 +0100
-@@ -21,6 +21,7 @@ AM_INSTALLCHECK_STD_OPTIONS_EXEMPT += \
+diff -urN util-vserver-0.30.212.org/scripts/Makefile-files util-vserver-0.30.212/scripts/Makefile-files
+--- util-vserver-0.30.212.org/scripts/Makefile-files	2006-12-09 17:15:24.000000000 +0100
++++ util-vserver-0.30.212/scripts/Makefile-files	2007-02-04 18:20:38.669245750 +0100
+@@ -21,6 +21,7 @@
  				scripts/vapt-get-worker \
  				scripts/vrpm-worker \
  				scripts/vyum-worker \
@@ -574,7 +1043,7 @@ diff -uNrp util-vserver-0.30.212/scripts/Makefile-files util-vserver-0.30.212./s
  				scripts/vrpm-preload \
  				scripts/save_s_context \
  				scripts/vservers.grabinfo.sh \
-@@ -47,11 +48,13 @@ scripts_pkglib_src_DTA =	scripts/functio
+@@ -47,11 +48,13 @@
  				scripts/vserver-build.yum \
  				scripts/vserver-build.template \
  				scripts/vserver-build.rsync \
@@ -588,7 +1057,7 @@ diff -uNrp util-vserver-0.30.212/scripts/Makefile-files util-vserver-0.30.212./s
  				scripts/vserver-setup.functions \
  				scripts/vserver.functions \
  				scripts/vserver.start \
-@@ -64,6 +67,7 @@ scripts_pkglib_gen_DTA =	scripts/util-vs
+@@ -64,6 +67,7 @@
  scripts_pkglib_src_SCRPTS =	scripts/pkgmgmt \
  				scripts/vapt-get-worker \
  				scripts/vpkg \
@@ -596,7 +1065,7 @@ diff -uNrp util-vserver-0.30.212/scripts/Makefile-files util-vserver-0.30.212./s
  				scripts/vrpm-worker \
  				scripts/vrpm-preload \
  				scripts/start-vservers \
-@@ -86,6 +90,7 @@ scripts_legacy_src_PRGS =	scripts/legacy
+@@ -86,6 +90,7 @@
  scripts_sbin_src_PRGS =		scripts/chbind \
  				scripts/chcontext \
  				scripts/vapt-get \
@@ -604,10 +1073,10 @@ diff -uNrp util-vserver-0.30.212/scripts/Makefile-files util-vserver-0.30.212./s
  				scripts/vdispatch-conf \
  				scripts/vemerge \
  				scripts/vesync \
-diff -uNrp util-vserver-0.30.212/scripts/pkgmgmt util-vserver-0.30.212./scripts/pkgmgmt
---- util-vserver-0.30.212/scripts/pkgmgmt	2006-12-09 17:15:24.000000000 +0100
-+++ util-vserver-0.30.212./scripts/pkgmgmt	2006-12-16 19:47:02.225681000 +0100
-@@ -195,7 +195,7 @@ packagemanagement:
+diff -urN util-vserver-0.30.212.org/scripts/pkgmgmt util-vserver-0.30.212/scripts/pkgmgmt
+--- util-vserver-0.30.212.org/scripts/pkgmgmt	2006-12-09 17:15:24.000000000 +0100
++++ util-vserver-0.30.212/scripts/pkgmgmt	2007-02-04 18:20:38.673246000 +0100
+@@ -195,7 +195,7 @@
  "
      
      case $2 in
@@ -616,7 +1085,7 @@ diff -uNrp util-vserver-0.30.212/scripts/pkgmgmt util-vserver-0.30.212./scripts/
  		hasSubstring "$pkgs" ---rpm--- || {
  		    warning "$ERR
  * The vserver does not seem to have the 'rpm' package which is required
-@@ -205,9 +205,9 @@ packagemanagement:
+@@ -205,9 +205,9 @@
  		    ERR=
  		}
  		
@@ -628,7 +1097,7 @@ diff -uNrp util-vserver-0.30.212/scripts/pkgmgmt util-vserver-0.30.212./scripts/
    installed. It is suggested to install such a program before setting
    up internal package management."
  		    res=1
-@@ -368,6 +368,131 @@ Can not continue; use '--force' to overr
+@@ -368,6 +368,131 @@
      fi
  }
  
@@ -760,7 +1229,7 @@ diff -uNrp util-vserver-0.30.212/scripts/pkgmgmt util-vserver-0.30.212./scripts/
  function processVserver_Debian()
  {
      local vserver=$1
-@@ -417,6 +542,7 @@ function processVserver()
+@@ -417,6 +542,7 @@
  
      case "$style" in
  	(redhat|mandrake)	processVserver_RH     "$vserver" "$IS_INTERNALIZE";;
@@ -768,10 +1237,10 @@ diff -uNrp util-vserver-0.30.212/scripts/pkgmgmt util-vserver-0.30.212./scripts/
  	(debian)		processVserver_Debian "$vserver" "$IS_INTERNALIZE";;
  	(*)
  	    echo $"Vserver style '$style' is not supported for packagemanagment" >&2
-diff -uNrp util-vserver-0.30.212/scripts/util-vserver-vars.pathsubst util-vserver-0.30.212./scripts/util-vserver-vars.pathsubst
---- util-vserver-0.30.212/scripts/util-vserver-vars.pathsubst	2006-12-09 17:15:24.000000000 +0100
-+++ util-vserver-0.30.212./scripts/util-vserver-vars.pathsubst	2006-12-16 19:47:02.225681000 +0100
-@@ -51,6 +51,7 @@ _LIB_VSERVER_BUILD_FUNCTIONS_APT="$__PKG
+diff -urN util-vserver-0.30.212.org/scripts/util-vserver-vars.pathsubst util-vserver-0.30.212/scripts/util-vserver-vars.pathsubst
+--- util-vserver-0.30.212.org/scripts/util-vserver-vars.pathsubst	2006-12-09 17:15:24.000000000 +0100
++++ util-vserver-0.30.212/scripts/util-vserver-vars.pathsubst	2007-02-04 18:20:38.673246000 +0100
+@@ -51,6 +51,7 @@
  _LIB_VSERVER_BUILD_FUNCTIONS_RPM="$__PKGLIBDIR/vserver-build.functions.rpm"
  _LIB_VSERVER_BUILD_FUNCTIONS_YUM="$__PKGLIBDIR/vserver-build.functions.yum"
  _LIB_VSERVER_BUILD_FUNCTIONS_PKGMGMT="$__PKGLIBDIR/vserver-build.functions.pkgmgmt"
@@ -779,7 +1248,7 @@ diff -uNrp util-vserver-0.30.212/scripts/util-vserver-vars.pathsubst util-vserve
  _LISTDEVIP="$__LEGACYDIR/listdevip"
  _LOCKFILE="$__PKGLIBDIR/lockfile"
  _MASK2PREFIX="$__PKGLIBDIR/mask2prefix"
-@@ -99,6 +100,8 @@ _VUNAME="$__SBINDIR/vuname"
+@@ -99,6 +100,8 @@
  _VUNIFY="$__PKGLIBDIR/vunify"
  _VYUM="$__SBINDIR/vyum"
  _VYUM_WORKER="$__PKGLIBDIR/vyum-worker"
@@ -788,10 +1257,10 @@ diff -uNrp util-vserver-0.30.212/scripts/util-vserver-vars.pathsubst util-vserve
  
  _AWK="@AWK@"
  _BZIP2="@BZIP2@"
-diff -uNrp util-vserver-0.30.212/scripts/vpkg util-vserver-0.30.212./scripts/vpkg
---- util-vserver-0.30.212/scripts/vpkg	2006-12-09 17:15:24.000000000 +0100
-+++ util-vserver-0.30.212./scripts/vpkg	2006-12-16 19:47:02.225681000 +0100
-@@ -115,6 +115,44 @@ case "$style" in
+diff -urN util-vserver-0.30.212.org/scripts/vpkg util-vserver-0.30.212/scripts/vpkg
+--- util-vserver-0.30.212.org/scripts/vpkg	2006-12-09 17:15:24.000000000 +0100
++++ util-vserver-0.30.212/scripts/vpkg	2007-02-04 18:20:38.673246000 +0100
+@@ -115,6 +115,44 @@
  	    fi
  	fi
  	;;
@@ -836,9 +1305,9 @@ diff -uNrp util-vserver-0.30.212/scripts/vpkg util-vserver-0.30.212./scripts/vpk
      (debian)
  	case "$tag" in
  	    (get-conffiles)
-diff -uNrp util-vserver-0.30.212/scripts/vpoldek util-vserver-0.30.212./scripts/vpoldek
---- util-vserver-0.30.212/scripts/vpoldek	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.212./scripts/vpoldek	2006-12-16 19:47:02.225681000 +0100
+diff -urN util-vserver-0.30.212.org/scripts/vpoldek util-vserver-0.30.212/scripts/vpoldek
+--- util-vserver-0.30.212.org/scripts/vpoldek	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/scripts/vpoldek	2007-02-04 18:20:38.673246000 +0100
 @@ -0,0 +1,96 @@
 +#! /bin/bash
 +# $Id$
@@ -936,9 +1405,9 @@ diff -uNrp util-vserver-0.30.212/scripts/vpoldek util-vserver-0.30.212./scripts/
 +
 +test "$cnt" -ge 0 || echo "No vservers specified" >&2
 +exit $res
-diff -uNrp util-vserver-0.30.212/scripts/vpoldek-worker util-vserver-0.30.212./scripts/vpoldek-worker
---- util-vserver-0.30.212/scripts/vpoldek-worker	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.212./scripts/vpoldek-worker	2006-12-16 19:47:02.225681000 +0100
+diff -urN util-vserver-0.30.212.org/scripts/vpoldek-worker util-vserver-0.30.212/scripts/vpoldek-worker
+--- util-vserver-0.30.212.org/scripts/vpoldek-worker	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/scripts/vpoldek-worker	2007-02-04 18:20:38.673246000 +0100
 @@ -0,0 +1,45 @@
 +#! /bin/bash
 +# $Id$
@@ -985,10 +1454,10 @@ diff -uNrp util-vserver-0.30.212/scripts/vpoldek-worker util-vserver-0.30.212./s
 +	--conf=$POLDEK_CONFIG \
 +	--pmcmd=$RPM_BINARY \
 +	"$@"
-diff -uNrp util-vserver-0.30.212/scripts/vserver-build util-vserver-0.30.212./scripts/vserver-build
---- util-vserver-0.30.212/scripts/vserver-build	2006-12-09 17:15:24.000000000 +0100
-+++ util-vserver-0.30.212./scripts/vserver-build	2006-12-16 19:54:59.855681000 +0100
-@@ -57,6 +57,9 @@ Possible methods are:
+diff -urN util-vserver-0.30.212.org/scripts/vserver-build util-vserver-0.30.212/scripts/vserver-build
+--- util-vserver-0.30.212.org/scripts/vserver-build	2006-12-09 17:15:24.000000000 +0100
++++ util-vserver-0.30.212/scripts/vserver-build	2007-02-04 18:20:38.673246000 +0100
+@@ -57,6 +57,9 @@
      yum         ... -- -d <distribution>
                  ...  installs the base-packages of the given distribution with
  		     help of 'vyum'
@@ -998,7 +1467,7 @@ diff -uNrp util-vserver-0.30.212/scripts/vserver-build util-vserver-0.30.212./sc
      rpm         ... -- [-d <distribution>] --empty|([--force] [--nodeps] <manifest>)+
                  ...  installs lists of rpm-packages
      skeleton    ... -- [<cmd> <args>*]
-@@ -134,7 +137,7 @@ setup_setDefaults "$VSERVER_NAME"
+@@ -134,7 +137,7 @@
  
  case x"$method" in
      (xlegacy)	exec $_VSERVER_LEGACY "$VSERVER_NAME" build "$@" ;;
@@ -1007,10 +1476,10 @@ diff -uNrp util-vserver-0.30.212/scripts/vserver-build util-vserver-0.30.212./sc
  		. $__PKGLIBDIR/vserver-build.$method
  		;;
      (x)		panic $"No build-method specified";;
-diff -uNrp util-vserver-0.30.212/scripts/vserver-build.functions util-vserver-0.30.212./scripts/vserver-build.functions
---- util-vserver-0.30.212/scripts/vserver-build.functions	2006-12-09 17:15:24.000000000 +0100
-+++ util-vserver-0.30.212./scripts/vserver-build.functions	2006-12-16 19:47:02.225681000 +0100
-@@ -167,6 +167,12 @@ function getDistribution
+diff -urN util-vserver-0.30.212.org/scripts/vserver-build.functions util-vserver-0.30.212/scripts/vserver-build.functions
+--- util-vserver-0.30.212.org/scripts/vserver-build.functions	2006-12-09 17:15:24.000000000 +0100
++++ util-vserver-0.30.212/scripts/vserver-build.functions	2007-02-04 18:20:38.673246000 +0100
+@@ -167,6 +167,12 @@
  	elif test -e /etc/slackware-version; then
  	    set -- $(cat /etc/slackware-version)
  	    DISTRIBUTION=slackware$2
@@ -1023,9 +1492,9 @@ diff -uNrp util-vserver-0.30.212/scripts/vserver-build.functions util-vserver-0.
  	elif test -n "$1"; then
  	    DISTRIBUTION=$1
  	else
-diff -uNrp util-vserver-0.30.212/scripts/vserver-build.functions.poldek util-vserver-0.30.212./scripts/vserver-build.functions.poldek
---- util-vserver-0.30.212/scripts/vserver-build.functions.poldek	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.212./scripts/vserver-build.functions.poldek	2006-12-16 19:47:02.225681000 +0100
+diff -urN util-vserver-0.30.212.org/scripts/vserver-build.functions.poldek util-vserver-0.30.212/scripts/vserver-build.functions.poldek
+--- util-vserver-0.30.212.org/scripts/vserver-build.functions.poldek	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/scripts/vserver-build.functions.poldek	2007-02-04 18:20:38.673246000 +0100
 @@ -0,0 +1,67 @@
 +# $Id$	--*- sh -*--
 +
@@ -1094,9 +1563,9 @@ diff -uNrp util-vserver-0.30.212/scripts/vserver-build.functions.poldek util-vse
 +#    test -z "$POLDEKCONFDEFAULT" || \
 +#	$_LN_S "$POLDEKCONFDEFAULT" "$PKGCFGDIR"/poldek/etc/
 +}
-diff -uNrp util-vserver-0.30.212/scripts/vserver-build.poldek util-vserver-0.30.212./scripts/vserver-build.poldek
---- util-vserver-0.30.212/scripts/vserver-build.poldek	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.212./scripts/vserver-build.poldek	2006-12-16 19:47:02.225681000 +0100
+diff -urN util-vserver-0.30.212.org/scripts/vserver-build.poldek util-vserver-0.30.212/scripts/vserver-build.poldek
+--- util-vserver-0.30.212.org/scripts/vserver-build.poldek	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.212/scripts/vserver-build.poldek	2007-02-04 18:20:38.701247750 +0100
 @@ -0,0 +1,64 @@
 +# $Id$	--*- sh -*--
 +
