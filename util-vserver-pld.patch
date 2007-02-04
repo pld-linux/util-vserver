@@ -1,6 +1,6 @@
 diff -urN util-vserver-0.30.212.org/distrib/Makefile.am util-vserver-0.30.212/distrib/Makefile.am
 --- util-vserver-0.30.212.org/distrib/Makefile.am	2006-12-09 17:15:33.000000000 +0100
-+++ util-vserver-0.30.212/distrib/Makefile.am	2007-02-04 18:22:46.969264000 +0100
++++ util-vserver-0.30.212/distrib/Makefile.am	2007-02-04 19:00:38.703238500 +0100
 @@ -58,7 +58,9 @@
  			   centos4/pkgs/01 centos4/pkgs/02 centos4/pkgs/03 \
  			   centos4/yum/yum.conf $(wildcard centos4/yum.repos.d/*.repo) \
@@ -32,16 +32,13 @@ diff -urN util-vserver-0.30.212.org/distrib/Makefile.am util-vserver-0.30.212/di
  
  AM_INSTALLCHECK_STD_OPTIONS_EXEMPT \
  			=  $(nobase_distrib_SCRIPTS)
-@@ -87,6 +100,12 @@
+@@ -87,6 +100,9 @@
  				ln -sf ../redhat/initpost $(DESTDIR)$(distribdir)/$$i/ && \
  				ln -sf ../redhat/initpre  $(DESTDIR)$(distribdir)/$$i/; \
  			done
 +			POLDEKARCH=$(shell rpm -E '%{_target_cpu}' 2>/dev/null); \
 +			if [ -z "$$POLDEKARCH" ] ; then POLDEKARCH=$(shell uname -m) ; fi ; \
-+			sed "s|%ARCH%|$$POLDEKARCH|g" $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf > $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf.tmp ; \
-+			mv $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf.tmp $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf ; \
-+			sed "s|%ARCH%|$$POLDEKARCH|g" $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf > $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf.tmp ; \
-+			mv $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf.tmp $(DESTDIR)$(confdistribdir)/pld-ac/poldek/pld-source.conf
++				sed -i -e "s|%ARCH%|$$POLDEKARCH|g" $(DESTDIR)$(confdistribdir)/pld-*/poldek/pld-source.conf
  			$(mkinstalldirs) $(DESTDIR)$(confdir) \
  				$(DESTDIR)$(confdistribdir)/.common/pubkeys \
  				$(DESTDIR)$(confdefaultsdir) \
