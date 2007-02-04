@@ -18,7 +18,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.212
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -420,6 +420,7 @@ install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 install %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/vrootdevices
 install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/initpost
+install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/initpost
 install vproc-%{_vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE12} $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 
@@ -430,9 +431,10 @@ EOF
 ln -sf null $RPM_BUILD_ROOT/dev/initctl
 
 %ifarch %{x8664}
-sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pkgs/01
-sed -i 's/glibc\-\[0\-9\]\*\.rpm/glibc64\-\[0\-9\]\*\.rpm/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpmlist.d/00.lst
+sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-*/pkgs/01
+sed -i 's/glibc\-\[0\-9\]\*\.rpm/glibc64\-\[0\-9\]\*\.rpm/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-*/rpmlist.d/00.lst
 %endif
+
 
 # baggins check this: needed but seems unused
 install -d $RPM_BUILD_ROOT/var/cache/vservers
@@ -627,6 +629,9 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/*.conf
+%dir %{_sysconfdir}/vservers/.distributions/pld-th
+%dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/*.conf
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %dir %{_libdir}/%{name}/distributions
 %attr(-,root,root) %{_libdir}/%{name}/distributions/defaults
