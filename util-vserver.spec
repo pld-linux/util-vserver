@@ -18,7 +18,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.212
-Release:	4
+Release:	5
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -349,6 +349,8 @@ install %{SOURCE9} package-management.txt
 cp -a compat.h vserver-compat.h
 
 %build
+unset LD_SYMBOLIC_FUNCTIONS || :
+
 %if %{with dietlibc}
 CFLAGS="%{rpmcflags} -D__GLIBC__"
 %endif
