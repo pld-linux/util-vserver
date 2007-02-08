@@ -1,4 +1,0 @@
-# vroot device bindings
-# format:  <vroot number> <blockdev>
-# example: 0 /dev/sda1
-#          2 /dev/hda4
