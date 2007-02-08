@@ -1,6 +1,7 @@
 # TODO
 # - somewhy empty /var/cache/vservers is needed when building pld vserver
 # - make build create /dev/std{in,out,err} links
+# - reject install in %pre if /proc/virtual/info has incompatible version
 #
 # m68k and mips are the only not supported archs
 #
