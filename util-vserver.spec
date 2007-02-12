@@ -16,7 +16,7 @@
 %undefine	with_ccache
 #
 Summary:	Linux virtual server utilities
-Summary(pl.UTF-8):   Narzędzia dla linuksowych serwerów wirtualnych
+Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.212
 Release:	6
@@ -119,7 +119,7 @@ włączonym mechanizmem Linux-Vserver.
 
 %package devel
 Summary:	Development files for Linux vserver libraries
-Summary(pl.UTF-8):   Pliki programistyczne dla bibliotek linuksowego vserwera
+Summary(pl.UTF-8):	Pliki programistyczne dla bibliotek linuksowego vserwera
 Group:		Development/Libraries
 Requires:	%{name}-lib = %{version}-%{release}
 
@@ -133,7 +133,7 @@ programów używających biblioteki vserver.
 
 %package static
 Summary:	Static vserver library
-Summary(pl.UTF-8):   Biblioteka statyczna vservera
+Summary(pl.UTF-8):	Biblioteka statyczna vservera
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
@@ -145,7 +145,7 @@ Ten pakiet zawiera statyczną wersję biblioteki vservera.
 
 %package lib
 Summary:	Dynamic libraries for util-vserver
-Summary(pl.UTF-8):   Biblioteki dynamiczne dla pakietu util-vserver
+Summary(pl.UTF-8):	Biblioteki dynamiczne dla pakietu util-vserver
 Group:		Libraries
 
 %description lib
@@ -170,7 +170,7 @@ podpakiety util-vserver.
 
 %package build
 Summary:	Tools which can be used to build vservers
-Summary(pl.UTF-8):   Narzędzia do budowania vserverów
+Summary(pl.UTF-8):	Narzędzia do budowania vserverów
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	/etc/pld-release
@@ -198,7 +198,7 @@ Ten pakiet zawiera narzędzia pomagające przy budowaniu Vserwerów.
 
 %package -n vserver-distro-fedora
 Summary:	VServer build templates for Fedora Core
-Summary(pl.UTF-8):   Szablony do tworzenia VServerów dla dystrybucji Fedora Core
+Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Fedora Core
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	binutils
@@ -215,7 +215,7 @@ Szablony do tworzenia VServerów dla dystrybucji Fedora Core 1,2,3,4.
 
 %package -n vserver-distro-redhat
 Summary:	VServer build template for Red Hat Linux 9
-Summary(pl.UTF-8):   Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
+Summary(pl.UTF-8):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	binutils
@@ -232,7 +232,7 @@ Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
 
 %package -n vserver-distro-suse
 Summary:	VServer build template for SuSE 9.1
-Summary(pl.UTF-8):   Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1
+Summary(pl.UTF-8):	Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	binutils
@@ -249,7 +249,7 @@ Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 
 %package -n vserver-distro-centos
 Summary:	VServer build template for CentOS 4.2
-Summary(pl.UTF-8):   Szablon budowania VServera dla CentOS 4.2
+Summary(pl.UTF-8):	Szablon budowania VServera dla CentOS 4.2
 Group:		Applications/System
 Requires:	util-vserver-build
 Requires:	yum
@@ -262,7 +262,7 @@ Szablon budowania VServera dla CentOS 4.
 
 %package -n vserver-distro-gentoo
 Summary:	VServer build template for Gentoo
-Summary(pl.UTF-8):   Szablon budowania VServera dla Gentoo
+Summary(pl.UTF-8):	Szablon budowania VServera dla Gentoo
 Group:		Applications/System
 Requires:	util-vserver-build
 
@@ -274,7 +274,7 @@ Szablon budowania VServera dla Gentoo.
 
 %package init
 Summary:	initscripts for vserver
-Summary(pl.UTF-8):   Skrypty inicjalizujące dla vserwera
+Summary(pl.UTF-8):	Skrypty inicjalizujące dla vserwera
 Group:		Applications/System
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
@@ -304,7 +304,7 @@ zatrzymujące Vserwery oraz powiązane narzędzia.
 
 %package legacy
 Summary:	Legacy utilities for util-vserver
-Summary(pl.UTF-8):   Stare narzędzia dla util-vserver
+Summary(pl.UTF-8):	Stare narzędzia dla util-vserver
 Group:		Applications/System
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
