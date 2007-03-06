@@ -19,7 +19,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.212
-Release:	6
+Release:	7
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -200,7 +200,7 @@ Ten pakiet zawiera narzêdzia pomagaj±ce przy budowaniu Vserwerów.
 Summary:	VServer build templates for Fedora Core
 Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Fedora Core
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -217,7 +217,7 @@ Szablony do tworzenia VServerów dla dystrybucji Fedora Core 1,2,3,4.
 Summary:	VServer build template for Red Hat Linux 9
 Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -234,7 +234,7 @@ Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
 Summary:	VServer build template for SuSE 9.1
 Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -251,7 +251,7 @@ Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 Summary:	VServer build template for CentOS 4.2
 Summary(pl):	Szablon budowania VServera dla CentOS 4.2
 Group:		Applications/System
-Requires:	util-vserver-build
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	yum
 
 %description -n vserver-distro-centos
@@ -264,7 +264,7 @@ Szablon budowania VServera dla CentOS 4.
 Summary:	VServer build template for Gentoo
 Summary(pl):	Szablon budowania VServera dla Gentoo
 Group:		Applications/System
-Requires:	util-vserver-build
+Requires:	%{name}-build = %{version}-%{release}
 
 %description -n vserver-distro-gentoo
 VServer build template for Gentoo.
@@ -589,7 +589,7 @@ fi
 %{_mandir}/man8/vserver.8*
 %{_mandir}/man8/vtop.8*
 %attr(000,root,root) %dir /vservers
-%attr(755,root,root) %dir /vservers/.pkg
+%dir /vservers/.pkg
 %dir %{_localstatedir}/run/vservers
 %dir %{_localstatedir}/run/vservers.rev
 %dir %{_localstatedir}/run/vshelper
