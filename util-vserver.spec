@@ -1,6 +1,7 @@
 # TODO
 # - somewhy empty /var/cache/vservers is needed when building pld vserver
 # - make build create /dev/std{in,out,err} links
+# - reject install in %pre if /proc/virtual/info has incompatible version
 #
 # m68k and mips are the only not supported archs
 #
@@ -18,7 +19,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.212
-Release:	1
+Release:	8
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -39,7 +40,7 @@ Source11:	http://www.13thfloor.at/vserver/s_release/v1.2.10/vproc-%{_vproc_versi
 # Source11-md5:	1d030717bdbc958ea4b35fd2410dad85
 Source12:	%{name}-vhashify.cron
 Patch0:		%{name}-vsysvwrapper.patch
-Patch1:		%{name}-pld.patch2
+Patch1:		%{name}-pld.patch
 Patch2:		%{name}-vrpm.patch
 Patch3:		%{name}-include.patch
 Patch4:		%{name}-m4-diet.patch
@@ -199,7 +200,7 @@ Ten pakiet zawiera narzêdzia pomagaj±ce przy budowaniu Vserwerów.
 Summary:	VServer build templates for Fedora Core
 Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Fedora Core
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -216,7 +217,7 @@ Szablony do tworzenia VServerów dla dystrybucji Fedora Core 1,2,3,4.
 Summary:	VServer build template for Red Hat Linux 9
 Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -233,7 +234,7 @@ Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
 Summary:	VServer build template for SuSE 9.1
 Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -250,7 +251,7 @@ Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 Summary:	VServer build template for CentOS 4.2
 Summary(pl):	Szablon budowania VServera dla CentOS 4.2
 Group:		Applications/System
-Requires:	util-vserver-build
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	yum
 
 %description -n vserver-distro-centos
@@ -258,6 +259,18 @@ VServer build template for CentOS 4.
 
 %description -n vserver-distro-centos -l pl
 Szablon budowania VServera dla CentOS 4.
+
+%package -n vserver-distro-gentoo
+Summary:	VServer build template for Gentoo
+Summary(pl):	Szablon budowania VServera dla Gentoo
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+
+%description -n vserver-distro-gentoo
+VServer build template for Gentoo.
+
+%description -n vserver-distro-gentoo -l pl
+Szablon budowania VServera dla Gentoo.
 
 %package init
 Summary:	initscripts for vserver
@@ -337,6 +350,8 @@ install %{SOURCE9} package-management.txt
 cp -a compat.h vserver-compat.h
 
 %build
+unset LD_SYMBOLIC_FUNCTIONS || :
+
 %if %{with dietlibc}
 CFLAGS="%{rpmcflags} -D__GLIBC__"
 %endif
@@ -408,6 +423,7 @@ install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 install %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/vrootdevices
 install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/initpost
+install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/initpost
 install vproc-%{_vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE12} $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 
@@ -422,8 +438,14 @@ sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-
 sed -i 's/glibc\-\[0\-9\]\*\.rpm/glibc64\-\[0\-9\]\*\.rpm/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpmlist.d/00.lst
 %endif
 
-# baggins check this: needed but seems unused
+# XXX baggins check this: needed but seems unused
 install -d $RPM_BUILD_ROOT/var/cache/vservers
+
+# we have our own initscript which does the same
+rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
+rm -f $RPM_BUILD_ROOT/usr/lib/util-vserver/vserver-wrapper
+# probaly the part of them
+rm -f $RPM_BUILD_ROOT/etc/vservers.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -505,6 +527,9 @@ fi
 %attr(755,root,root) %{_sbindir}/chxid
 %attr(755,root,root) %{_sbindir}/exec-cd
 %attr(755,root,root) %{_sbindir}/lsxid
+%attr(755,root,root) %{_sbindir}/naddress
+%attr(755,root,root) %{_sbindir}/nattribute
+%attr(755,root,root) %{_sbindir}/ncontext
 %attr(755,root,root) %{_sbindir}/reducecap
 %attr(755,root,root) %{_sbindir}/setattr
 %attr(755,root,root) %{_sbindir}/showattr
@@ -534,6 +559,7 @@ fi
 %{_libdir}/%{name}/defaults/*
 %attr(755,root,root) %{_libdir}/%{name}/capchroot
 %attr(755,root,root) %{_libdir}/%{name}/chain-echo
+%attr(755,root,root) %{_libdir}/%{name}/chbind-compat
 %attr(755,root,root) %{_libdir}/%{name}/check-unixfile
 %attr(755,root,root) %{_libdir}/%{name}/chcontext-compat
 %attr(755,root,root) %{_libdir}/%{name}/chroot-sh
@@ -568,7 +594,7 @@ fi
 %{_mandir}/man8/vserver.8*
 %{_mandir}/man8/vtop.8*
 %attr(000,root,root) %dir /vservers
-%attr(755,root,root) %dir /vservers/.pkg
+%dir /vservers/.pkg
 %dir %{_localstatedir}/run/vservers
 %dir %{_localstatedir}/run/vservers.rev
 %dir %{_localstatedir}/run/vshelper
@@ -611,6 +637,9 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/*.conf
+%dir %{_sysconfdir}/vservers/.distributions/pld-th
+%dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/*.conf
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %dir %{_libdir}/%{name}/distributions
 %attr(-,root,root) %{_libdir}/%{name}/distributions/defaults
@@ -618,6 +647,7 @@ fi
 %dir %{_libdir}/%{name}/distributions/template
 %attr(755,root,root) %{_libdir}/%{name}/distributions/template/init*
 %attr(-,root,root) %{_libdir}/%{name}/distributions/redhat
+%{_libdir}/%{name}/magic.mime
 %{_libdir}/%{name}/vserver-build.*
 %{_libdir}/%{name}/vserver-setup.functions
 %{_libdir}/%{name}/defaults/fstab
@@ -661,6 +691,15 @@ fi
 %files -n vserver-distro-centos
 %defattr(644,root,root,755)
 %{_libdir}/util-vserver/distributions/centos4
+
+%files -n vserver-distro-gentoo
+%defattr(644,root,root,755)
+%dir %{_libdir}/util-vserver/distributions/gentoo
+%attr(755,root,root) %{_libdir}/util-vserver/distributions/gentoo/*
+%attr(755,root,root) %{_sbindir}/vdispatch-conf
+%attr(755,root,root) %{_sbindir}/vemerge
+%attr(755,root,root) %{_sbindir}/vesync
+%attr(755,root,root) %{_sbindir}/vupdateworld
 
 %files legacy
 %defattr(644,root,root,755)
