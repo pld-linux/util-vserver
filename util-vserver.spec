@@ -1,6 +1,7 @@
 # TODO
 # - somewhy empty /var/cache/vservers is needed when building pld vserver
 # - make build create /dev/std{in,out,err} links
+# - reject install in %pre if /proc/virtual/info has incompatible version
 #
 # m68k and mips are the only not supported archs
 #
@@ -18,7 +19,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.212
-Release:	2
+Release:	9
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -199,7 +200,7 @@ Ten pakiet zawiera narzêdzia pomagaj±ce przy budowaniu Vserwerów.
 Summary:	VServer build templates for Fedora Core
 Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Fedora Core
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -216,7 +217,7 @@ Szablony do tworzenia VServerów dla dystrybucji Fedora Core 1,2,3,4.
 Summary:	VServer build template for Red Hat Linux 9
 Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -233,7 +234,7 @@ Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
 Summary:	VServer build template for SuSE 9.1
 Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -250,7 +251,7 @@ Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 Summary:	VServer build template for CentOS 4.2
 Summary(pl):	Szablon budowania VServera dla CentOS 4.2
 Group:		Applications/System
-Requires:	util-vserver-build
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	yum
 
 %description -n vserver-distro-centos
@@ -263,7 +264,7 @@ Szablon budowania VServera dla CentOS 4.
 Summary:	VServer build template for Gentoo
 Summary(pl):	Szablon budowania VServera dla Gentoo
 Group:		Applications/System
-Requires:	util-vserver-build
+Requires:	%{name}-build = %{version}-%{release}
 
 %description -n vserver-distro-gentoo
 VServer build template for Gentoo.
@@ -349,6 +350,8 @@ install %{SOURCE9} package-management.txt
 cp -a compat.h vserver-compat.h
 
 %build
+unset LD_SYMBOLIC_FUNCTIONS || :
+
 %if %{with dietlibc}
 CFLAGS="%{rpmcflags} -D__GLIBC__"
 %endif
@@ -431,13 +434,18 @@ EOF
 ln -sf null $RPM_BUILD_ROOT/dev/initctl
 
 %ifarch %{x8664}
-sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-*/pkgs/01
-sed -i 's/glibc\-\[0\-9\]\*\.rpm/glibc64\-\[0\-9\]\*\.rpm/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-*/rpmlist.d/00.lst
+sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pkgs/01
+sed -i 's/glibc\-\[0\-9\]\*\.rpm/glibc64\-\[0\-9\]\*\.rpm/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpmlist.d/00.lst
 %endif
 
-
-# baggins check this: needed but seems unused
+# XXX baggins check this: needed but seems unused
 install -d $RPM_BUILD_ROOT/var/cache/vservers
+
+# we have our own initscript which does the same
+rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
+rm -f $RPM_BUILD_ROOT/usr/lib/util-vserver/vserver-wrapper
+# probaly the part of them
+rm -f $RPM_BUILD_ROOT/etc/vservers.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -586,7 +594,7 @@ fi
 %{_mandir}/man8/vserver.8*
 %{_mandir}/man8/vtop.8*
 %attr(000,root,root) %dir /vservers
-%attr(755,root,root) %dir /vservers/.pkg
+%dir /vservers/.pkg
 %dir %{_localstatedir}/run/vservers
 %dir %{_localstatedir}/run/vservers.rev
 %dir %{_localstatedir}/run/vshelper
