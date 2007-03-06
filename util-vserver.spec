@@ -19,7 +19,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.212
-Release:	7
+Release:	8
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -438,9 +438,14 @@ sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-
 sed -i 's/glibc\-\[0\-9\]\*\.rpm/glibc64\-\[0\-9\]\*\.rpm/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpmlist.d/00.lst
 %endif
 
-
-# baggins check this: needed but seems unused
+# XXX baggins check this: needed but seems unused
 install -d $RPM_BUILD_ROOT/var/cache/vservers
+
+# we have our own initscript which does the same
+rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
+rm -f $RPM_BUILD_ROOT/usr/lib/util-vserver/vserver-wrapper
+# probaly the part of them
+rm -f $RPM_BUILD_ROOT/etc/vservers.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
