@@ -353,7 +353,7 @@ cp -a compat.h vserver-compat.h
 unset LD_SYMBOLIC_FUNCTIONS || :
 
 %if %{with dietlibc}
-CFLAGS="%{rpmcflags} -D__GLIBC__"
+CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1"
 %endif
 %{__aclocal} -I m4
 %{__automake}
@@ -388,7 +388,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d,cron.d},/dev/pts} \
 	$RPM_BUILD_ROOT{%{_sysconfdir}/vservices,/vservers/.pkg}
 
-%{__make} install install-distribution \
+%{__make} -j1 install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
 
 cp -a vserver-compat.h $RPM_BUILD_ROOT%{_includedir}
