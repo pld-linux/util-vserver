@@ -18,12 +18,12 @@
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30.212
-Release:	8
+Version:	0.30.213
+Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
-# Source0-md5:	386b91732b7f0f132b4e9d978389dcc2
+# Source0-md5:	2a444e725f7789f751ade259a38553ed
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -362,8 +362,8 @@ CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1"
 	--with-initrddir=/etc/rc.d/init.d \
 	--enable-release \
 	--enable-apis=NOLEGACY \
-	%{?with_dietlibc:--enable-dietlibc} \
-	%{!?with_dietlibc:--disable-dietlibc} \
+	--with-initscripts=sysv \
+	--%{?with_dietlibc:en}%{!?with_dietlibc:dis}able-dietlibc \
 	MKTEMP=/bin/mktemp \
 	MOUNT=/bin/mount \
 	PS=/bin/ps \
@@ -543,6 +543,7 @@ fi
 %attr(755,root,root) %{_sbindir}/vnamespace
 %attr(755,root,root) %{_sbindir}/vkill
 %attr(755,root,root) %{_sbindir}/vlimit
+%attr(755,root,root) %{_sbindir}/vdevmap
 %attr(755,root,root) %{_sbindir}/vdu
 %attr(755,root,root) %{_sbindir}/vproc
 %attr(755,root,root) %{_sbindir}/vps
@@ -589,6 +590,7 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/vhashify.cron
 %attr(755,root,root) %{_libdir}/%{name}/vshelper
 %attr(755,root,root) %{_libdir}/%{name}/vshelper-sync
+%attr(755,root,root) %{_libdir}/%{name}/vsysctl
 %{_mandir}/man8/chbind.8*
 %{_mandir}/man8/chcontext.8*
 %{_mandir}/man8/reducecap.8*
@@ -659,6 +661,7 @@ fi
 %{_libdir}/%{name}/defaults/vunify-exclude
 %attr(755,root,root) %{_libdir}/%{name}/pkgmgmt
 %attr(755,root,root) %{_libdir}/%{name}/vapt-get-worker
+%attr(755,root,root) %{_libdir}/%{name}/vclone
 %attr(755,root,root) %{_libdir}/%{name}/vcopy
 %attr(755,root,root) %{_libdir}/%{name}/vpkg
 %attr(755,root,root) %{_libdir}/%{name}/vpoldek-worker
