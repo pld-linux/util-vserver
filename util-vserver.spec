@@ -19,7 +19,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.213
-Release:	1
+Release:	1.1
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -434,6 +434,21 @@ EOF
 ln -sf null $RPM_BUILD_ROOT/dev/initctl
 
 %ifarch %{x8664}
+# ac i686
+cp -a $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac \
+	$RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac-i686
+cp -a $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac \
+        $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac-i686
+sed -i 's/x86_64/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac-i686/poldek/*.conf
+
+# th i686
+cp -a $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th \
+        $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th-i686
+cp -a $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th \
+	$RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th-i686
+sed -i 's/x86_64/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th-i686/poldek/*.conf
+
+# ac x86_64
 sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pkgs/01
 sed -i 's/glibc\-\[0\-9\]\*\.rpm/glibc64\-\[0\-9\]\*\.rpm/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpmlist.d/00.lst
 sed -i 's/x86_64/amd64/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/*.conf
@@ -643,9 +658,15 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/*.conf
+%dir %{_sysconfdir}/vservers/.distributions/pld-ac-i686
+%dir %{_sysconfdir}/vservers/.distributions/pld-ac-i686/poldek
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac-i686/poldek/*.conf
 %dir %{_sysconfdir}/vservers/.distributions/pld-th
 %dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/*.conf
+%dir %{_sysconfdir}/vservers/.distributions/pld-th-i686
+%dir %{_sysconfdir}/vservers/.distributions/pld-th-i686/poldek
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th-i686/poldek/*.conf
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %dir %{_libdir}/%{name}/distributions
 %attr(-,root,root) %{_libdir}/%{name}/distributions/defaults
