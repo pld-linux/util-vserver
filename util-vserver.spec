@@ -19,7 +19,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.213
-Release:	1.1
+Release:	2
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -658,15 +658,17 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/*.conf
+%ifarch %{x8664}
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac-i686
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac-i686/poldek
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac-i686/poldek/*.conf
-%dir %{_sysconfdir}/vservers/.distributions/pld-th
-%dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/*.conf
 %dir %{_sysconfdir}/vservers/.distributions/pld-th-i686
 %dir %{_sysconfdir}/vservers/.distributions/pld-th-i686/poldek
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th-i686/poldek/*.conf
+%endif
+%dir %{_sysconfdir}/vservers/.distributions/pld-th
+%dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/*.conf
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %dir %{_libdir}/%{name}/distributions
 %attr(-,root,root) %{_libdir}/%{name}/distributions/defaults
@@ -718,7 +720,7 @@ fi
 
 %files -n vserver-distro-centos
 %defattr(644,root,root,755)
-%{_libdir}/util-vserver/distributions/centos4
+%{_libdir}/util-vserver/distributions/centos*
 
 %files -n vserver-distro-gentoo
 %defattr(644,root,root,755)
