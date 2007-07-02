@@ -1,14 +1,15 @@
 # TODO
 # - somewhy empty /var/cache/vservers is needed when building pld vserver
 # - make build create /dev/std{in,out,err} links
+# - reject install in %pre if /proc/virtual/info has incompatible version
 #
 # m68k and mips are the only not supported archs
 #
 # Conditional build:
-%bcond_without	dietlibc	# don't use dietlibc (ask for troubles)
-%bcond_without	doc		# don't build documentation which needed LaTeX
+%bcond_without	dietlibc		# don't use dietlibc (ask for troubles)
+%bcond_without	doc			# don't build documentation which needed LaTeX
 %bcond_without	no_dynamic_context	# disable enforcement of disabled dynamic context
-%bcond_with	xalan		# use the xalan xslt processor
+%bcond_with	xalan			# use the xalan xslt processor
 #
 %define	_vproc_version 0.01
 # diet compile fails with ccache in %{__cc}
@@ -17,12 +18,12 @@
 Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30.210
-Release:	8
+Version:	0.30.212
+Release:	10
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.13thfloor.at/~ensc/util-vserver/files/alpha/%{name}-%{version}.tar.bz2
-# Source0-md5:	1e8fff7cb6246d21ed029f082123019b
+Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
+# Source0-md5:	386b91732b7f0f132b4e9d978389dcc2
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -37,27 +38,25 @@ Source9:	%{name}-pkgmgmt.txt
 Source10:	%{name}-initpost.sh
 Source11:	http://www.13thfloor.at/vserver/s_release/v1.2.10/vproc-%{_vproc_version}.tar.bz2
 # Source11-md5:	1d030717bdbc958ea4b35fd2410dad85
+Source12:	%{name}-vhashify.cron
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
 Patch2:		%{name}-vrpm.patch
 Patch3:		%{name}-include.patch
 Patch4:		%{name}-m4-diet.patch
-Patch5:		%{name}-cpuset.patch
 Patch6:		%{name}-build-umask.patch
 Patch7:		%{name}-utmpx.patch
 Patch8:		%{name}-vprocunhide.patch
 Patch9:		%{name}-dev.patch
 Patch10:	%{name}-no-dynamic-ctx.patch
 Patch11:	%{name}-more-ip.patch
-Patch12:	http://daniel.hozac.com/vserver/util-vserver/%{name}-0.30.210-namespace-cleanup.patch
-Patch13:	http://daniel.hozac.com/vserver/util-vserver/%{name}-0.30.210-delete.patch
-Patch14:	http://daniel.hozac.com/vserver/util-vserver/%{name}-0.30.210-shiny10.patch
-Patch15:	%{name}-rpm-fake-resolver-badperm-errorlogging.patch
+Patch12:	%{name}-rpm-fake-resolver-badperm-errorlogging.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
 BuildRequires:	beecrypt-devel
 %{?with_dietlibc:BuildRequires:	dietlibc-static >= 2:0.29}
+BuildRequires:	e2fsprogs-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 1.5.14
 %ifarch %{x8664}
@@ -81,6 +80,7 @@ BuildRequires:	tetex-metafont
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-lib = %{version}-%{release}
 Requires:	issue
+Requires:	mktemp >= 1.5-18
 Requires:	rc-scripts
 Requires:	util-linux
 Obsoletes:	util-vserver-core
@@ -200,7 +200,7 @@ Ten pakiet zawiera narzêdzia pomagaj±ce przy budowaniu Vserwerów.
 Summary:	VServer build templates for Fedora Core
 Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Fedora Core
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -217,7 +217,7 @@ Szablony do tworzenia VServerów dla dystrybucji Fedora Core 1,2,3,4.
 Summary:	VServer build template for Red Hat Linux 9
 Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -234,7 +234,7 @@ Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
 Summary:	VServer build template for SuSE 9.1
 Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -251,14 +251,26 @@ Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 Summary:	VServer build template for CentOS 4.2
 Summary(pl):	Szablon budowania VServera dla CentOS 4.2
 Group:		Applications/System
-Requires:	util-vserver-build
+Requires:	%{name}-build = %{version}-%{release}
 Requires:	yum
 
 %description -n vserver-distro-centos
-VServer build template for CentOS 4.2.
+VServer build template for CentOS 4.
 
 %description -n vserver-distro-centos -l pl
-Szablon budowania VServera dla CentOS 4.2.
+Szablon budowania VServera dla CentOS 4.
+
+%package -n vserver-distro-gentoo
+Summary:	VServer build template for Gentoo
+Summary(pl):	Szablon budowania VServera dla Gentoo
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+
+%description -n vserver-distro-gentoo
+VServer build template for Gentoo.
+
+%description -n vserver-distro-gentoo -l pl
+Szablon budowania VServera dla Gentoo.
 
 %package init
 Summary:	initscripts for vserver
@@ -325,7 +337,6 @@ konfiguracjê w starym stylu.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
@@ -333,15 +344,14 @@ konfiguracjê w starym stylu.
 %{?with_no_dynamic_context:%patch10 -p1}
 %patch11 -p1
 %patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
 
 install %{SOURCE9} package-management.txt
 
 cp -a compat.h vserver-compat.h
 
 %build
+unset LD_SYMBOLIC_FUNCTIONS || :
+
 %if %{with dietlibc}
 CFLAGS="%{rpmcflags} -D__GLIBC__"
 %endif
@@ -375,7 +385,7 @@ CFLAGS="%{rpmcflags} -D__GLIBC__"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d},/dev/pts} \
+install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d,cron.d},/dev/pts} \
 	$RPM_BUILD_ROOT{%{_sysconfdir}/vservices,/vservers/.pkg}
 
 %{__make} install install-distribution \
@@ -413,7 +423,13 @@ install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 install %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/vrootdevices
 install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/initpost
+install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/initpost
 install vproc-%{_vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
+install %{SOURCE12} $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
+
+cat > $RPM_BUILD_ROOT/etc/cron.d/vservers << EOF
+02 2 * * 0      root    %{_libdir}/%{name}/vhashify.cron
+EOF
 
 ln -sf null $RPM_BUILD_ROOT/dev/initctl
 
@@ -422,8 +438,14 @@ sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-
 sed -i 's/glibc\-\[0\-9\]\*\.rpm/glibc64\-\[0\-9\]\*\.rpm/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpmlist.d/00.lst
 %endif
 
-# baggins check this: needed but seems unused
+# XXX baggins check this: needed but seems unused
 install -d $RPM_BUILD_ROOT/var/cache/vservers
+
+# we have our own initscript which does the same
+rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
+rm -f $RPM_BUILD_ROOT/usr/lib/util-vserver/vserver-wrapper
+# probaly the part of them
+rm -f $RPM_BUILD_ROOT/etc/vservers.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -505,6 +527,9 @@ fi
 %attr(755,root,root) %{_sbindir}/chxid
 %attr(755,root,root) %{_sbindir}/exec-cd
 %attr(755,root,root) %{_sbindir}/lsxid
+%attr(755,root,root) %{_sbindir}/naddress
+%attr(755,root,root) %{_sbindir}/nattribute
+%attr(755,root,root) %{_sbindir}/ncontext
 %attr(755,root,root) %{_sbindir}/reducecap
 %attr(755,root,root) %{_sbindir}/setattr
 %attr(755,root,root) %{_sbindir}/showattr
@@ -534,6 +559,7 @@ fi
 %{_libdir}/%{name}/defaults/*
 %attr(755,root,root) %{_libdir}/%{name}/capchroot
 %attr(755,root,root) %{_libdir}/%{name}/chain-echo
+%attr(755,root,root) %{_libdir}/%{name}/chbind-compat
 %attr(755,root,root) %{_libdir}/%{name}/check-unixfile
 %attr(755,root,root) %{_libdir}/%{name}/chcontext-compat
 %attr(755,root,root) %{_libdir}/%{name}/chroot-sh
@@ -551,7 +577,12 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/start-vservers
 %attr(755,root,root) %{_libdir}/%{name}/vprocunhide
 %{_libdir}/%{name}/vserver.*
+%{_libdir}/%{name}/vserver-setup.*
+%attr(755,root,root) %{_libdir}/%{name}/vserver-build
+%{_libdir}/%{name}/vserver-build.*
 %attr(755,root,root) %{_libdir}/%{name}/vservers.grabinfo.sh
+%attr(755,root,root) %{_libdir}/%{name}/vhashify
+%attr(755,root,root) %{_libdir}/%{name}/vhashify.cron
 %attr(755,root,root) %{_libdir}/%{name}/vshelper
 %attr(755,root,root) %{_libdir}/%{name}/vshelper-sync
 %{_mandir}/man8/chbind.8*
@@ -563,7 +594,7 @@ fi
 %{_mandir}/man8/vserver.8*
 %{_mandir}/man8/vtop.8*
 %attr(000,root,root) %dir /vservers
-%attr(755,root,root) %dir /vservers/.pkg
+%dir /vservers/.pkg
 %dir %{_localstatedir}/run/vservers
 %dir %{_localstatedir}/run/vservers.rev
 %dir %{_localstatedir}/run/vshelper
@@ -590,6 +621,7 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/vsysvwrapper
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vrootdevices
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers
+%config(noreplace) %verify(not md5 mtime size) /etc/cron.d/vservers
 %attr(754,root,root) /etc/rc.d/init.d/vprocunhide
 %attr(754,root,root) /etc/rc.d/init.d/vrootdevices
 %attr(754,root,root) /etc/rc.d/init.d/vservers
@@ -605,6 +637,9 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/*.conf
+%dir %{_sysconfdir}/vservers/.distributions/pld-th
+%dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/*.conf
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %dir %{_libdir}/%{name}/distributions
 %attr(-,root,root) %{_libdir}/%{name}/distributions/defaults
@@ -612,6 +647,7 @@ fi
 %dir %{_libdir}/%{name}/distributions/template
 %attr(755,root,root) %{_libdir}/%{name}/distributions/template/init*
 %attr(-,root,root) %{_libdir}/%{name}/distributions/redhat
+%{_libdir}/%{name}/magic.mime
 %{_libdir}/%{name}/vserver-build.*
 %{_libdir}/%{name}/vserver-setup.functions
 %{_libdir}/%{name}/defaults/fstab
@@ -620,7 +656,6 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/pkgmgmt
 %attr(755,root,root) %{_libdir}/%{name}/vapt-get-worker
 %attr(755,root,root) %{_libdir}/%{name}/vcopy
-%attr(755,root,root) %{_libdir}/%{name}/vhashify
 %attr(755,root,root) %{_libdir}/%{name}/vpkg
 %attr(755,root,root) %{_libdir}/%{name}/vpoldek-worker
 %attr(755,root,root) %{_libdir}/%{name}/vrpm-*
@@ -655,7 +690,16 @@ fi
 
 %files -n vserver-distro-centos
 %defattr(644,root,root,755)
-%{_libdir}/util-vserver/distributions/centos42
+%{_libdir}/util-vserver/distributions/centos4
+
+%files -n vserver-distro-gentoo
+%defattr(644,root,root,755)
+%dir %{_libdir}/util-vserver/distributions/gentoo
+%attr(755,root,root) %{_libdir}/util-vserver/distributions/gentoo/*
+%attr(755,root,root) %{_sbindir}/vdispatch-conf
+%attr(755,root,root) %{_sbindir}/vemerge
+%attr(755,root,root) %{_sbindir}/vesync
+%attr(755,root,root) %{_sbindir}/vupdateworld
 
 %files legacy
 %defattr(644,root,root,755)
