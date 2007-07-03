@@ -41,7 +41,7 @@ _tellResult()
 case "$1" in
 start)
 	if [ ! -f /var/lock/subsys/vprocunhide ]; then
-		echo "Run \"/etc/rc.d/init.d/vprocunhide start\" first"
+		echo "Run \"/sbin/service vprocunhide start\" first"
 		exit 1
 	fi
 
@@ -161,8 +161,8 @@ status)
 	/usr/sbin/vserver-stat
 	;;
 *)
-	echo "Usage: $0 {start|stop|status}"
-	exit 1
+	msg_usage "$0 {start|stop|status}"
+	exit 3
 	;;
 esac
 
