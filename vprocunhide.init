@@ -15,8 +15,7 @@ if [ ! -e "$UTIL_VSERVER_VARS" ] ; then
 fi
 . "$UTIL_VSERVER_VARS"
 
-case "$1" in
-start)
+start() {
 	if [ ! -d /proc/virtual ]; then
 		show "Fixing vservers /proc entries visibility. kernel not capable"
 		fail
@@ -35,17 +34,26 @@ start)
 		*)	fail;;
 	esac
 	[ "$RETVAL" -eq 0 ] && touch /var/lock/subsys/vprocunhide
-	;;
-stop)
+}
+
+stop() {
 	show "Stopping vservers /proc entries visibility"
 	busy
 	${_SETATTR} -Rx --hide /proc
 	rm -f /var/lock/subsys/vprocunhide
 	ok
+}
+
+case "$1" in
+start)
+	start
+	;;
+stop)
+	stop
 	;;
 restart|reload)
-	$0 stop
-	$0 start
+	stop
+	start
 	;;
 status)
 	if [ -f /var/lock/subsys/vprocunhide ] ; then
@@ -55,12 +63,9 @@ status)
 	fi
 	;;
 *)
-	echo "Usage: $0 {start|stop|reload|restart|status}"
-	exit 1
+	msg_usage "$0 {start|stop|reload|restart|status}"
+	exit 3
 	;;
 esac
 
 exit $RETVAL
-
-# This must be last line !
-# vi:syntax=sh:tw=78:ts=4:sw=4
