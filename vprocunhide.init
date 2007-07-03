@@ -8,7 +8,7 @@
 # if kernel not capable, exit early
 if [ ! -d /proc/virtual ]; then
 	case "$1" in
-		start|stop|restart|force-reload)
+	start|stop|reload|restart)
 		exit 0
 		;;
 	esac
