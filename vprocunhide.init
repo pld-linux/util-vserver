@@ -48,15 +48,11 @@ stop() {
 }
 
 case "$1" in
-start)
+start|restart|reload)
 	start
 	;;
 stop)
 	stop
-	;;
-restart|reload)
-	stop
-	start
 	;;
 status)
 	if [ -f /var/lock/subsys/vprocunhide ] ; then
