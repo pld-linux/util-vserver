@@ -42,8 +42,7 @@ remove_vroot()
 	done
 }
 
-case "$1" in
-  start|reload)
+start() {
 	if [ ! -f /var/lock/subsys/vrootdevices ]; then
 		msg_starting vrootdevices
 		ok
@@ -52,9 +51,9 @@ case "$1" in
 	else
 		msg_already_running vrootdevices
 	fi
+}
 
-	;;
-  stop)
+stop() {
 	if [ -f /var/lock/subsys/vrootdevices ]; then
 		msg_stopping vrootdevices
 		ok
@@ -63,6 +62,14 @@ case "$1" in
 	else
 		msg_not_running vrootdevices
 	fi
+}
+
+case "$1" in
+  start|reload)
+  	start
+	;;
+  stop)
+  	stop
 	;;
   status)
 	ID=`id -u`
@@ -74,16 +81,13 @@ case "$1" in
 	fi
 	;;
   restart|force-reload)
-	$0 stop
-	$0 start
+	stop
+	start
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart|reload|force-reload|status}"
+	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
 	exit 3
 	;;
 esac
 
 exit $RETVAL
-
-# This must be last line !
-# vi:syntax=sh
