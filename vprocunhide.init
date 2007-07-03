@@ -5,6 +5,15 @@
 # chkconfig: 2345 26 74
 # description: Makes some /proc entries visibly for vservers
 
+# if kernel not capable, exit early
+if [ ! -d /proc/virtual ]; then
+	case "$1" in
+		start|stop|restart|force-reload)
+		exit 0
+		;;
+	esac
+fi
+
 # Source function library.
 . /etc/rc.d/init.d/functions
 
@@ -16,12 +25,6 @@ fi
 . "$UTIL_VSERVER_VARS"
 
 start() {
-	if [ ! -d /proc/virtual ]; then
-		show "Fixing vservers /proc entries visibility. kernel not capable"
-		fail
-		exit 1
-	fi
-
 	show "Fixing vservers /proc entries visibility"
 	busy
 	${_SETATTR} -Rx --hide /proc
