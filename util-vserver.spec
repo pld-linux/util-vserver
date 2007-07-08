@@ -19,7 +19,7 @@ Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.212
-Release:	10
+Release:	11
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -82,6 +82,7 @@ Requires:	%{name}-lib = %{version}-%{release}
 Requires:	issue
 Requires:	mktemp >= 1.5-18
 Requires:	rc-scripts
+Requires:	tar
 Requires:	util-linux
 Obsoletes:	util-vserver-core
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
