@@ -1,11 +1,11 @@
 --- util-vserver-0.30.212.org/distrib/Makefile.am	2006-12-09 17:15:33.000000000 +0100
 +++ util-vserver-0.30.212/distrib/Makefile.am	2007-02-04 19:00:38.703238500 +0100
-@@ -65,7 +65,9 @@
- 			   suse91/rpm/macros \
- 			   gentoo/init-vserver.sh gentoo/net.vserver \
- 			   gentoo/reboot.sh gentoo/shutdown.sh \
--			   etch/vserver-config.sh
-+			   etch/vserver-config.sh pld-ac/pkgs/01 pld-ac/rpm/macros \
+@@ -58,7 +58,9 @@
+ 			   centos4/pkgs/01 centos4/pkgs/02 centos4/pkgs/03 \
+ 			   centos4/yum/yum.conf $(wildcard centos4/yum.repos.d/*.repo) \
+ 			   suse91/apt/rpmpriorities suse91/pkgs/01 suse91/pkgs/02 \
+-			   suse91/rpm/macros
++			   suse91/rpm/macros pld-ac/pkgs/01 pld-ac/rpm/macros \
 +			   pld-ac/rpmlist.d/00.lst \
 +			   pld-th/pkgs/01 pld-th/rpm/macros pld-th/rpmlist.d/00.lst
  
@@ -149,7 +149,7 @@
 +  
 --- util-vserver-0.30.212.org/distrib/pld-ac/poldek/pld-source.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.212/distrib/pld-ac/poldek/pld-source.conf	2007-02-04 18:20:38.637243750 +0100
-@@ -0,0 +1,44 @@
+@@ -0,0 +1,46 @@
 +# $Id$
 +# PLD <http://www.pld-linux.org/>
 +
@@ -169,6 +169,8 @@
 +name  = ac
 +path  = %{_pld_prefix}/PLD/%{_pld_arch}/PLD/RPMS/
 +#signed = yes
++# buggy deps -- use one from updates instead
++ignore = msmtp-sendmail
 +
 +[source]
 +type  = %{_ac_idxtype}
@@ -1019,9 +1021,9 @@
  				scripts/save_s_context \
  				scripts/vservers.grabinfo.sh \
 @@ -47,11 +48,13 @@
+ 				scripts/vserver-build.yum \
  				scripts/vserver-build.template \
  				scripts/vserver-build.rsync \
- 				scripts/vserver-build.clone \
 +				scripts/vserver-build.poldek \
  				scripts/vserver-build.functions \
  				scripts/vserver-build.functions.apt \
@@ -1440,8 +1442,8 @@
  
  case x"$method" in
      (xlegacy)	exec $_VSERVER_LEGACY "$VSERVER_NAME" build "$@" ;;
--    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xtemplate|xfai|xrsync|xclone)
-+    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xtemplate|xfai|xrsync|xclone|xpoldek)
+-    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xtemplate|xfai|xrsync)
++    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xtemplate|xfai|xrsync|xpoldek)
  		. $__PKGLIBDIR/vserver-build.$method
  		;;
      (x)		panic $"No build-method specified";;
