@@ -19,7 +19,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.213
-Release:	3
+Release:	4
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -438,6 +438,8 @@ ln -sf null $RPM_BUILD_ROOT/dev/initctl
 # ac i686
 cp -a $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac \
 	$RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac-i686
+echo "%{_target_cpu}-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+echo "i686-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac-i686/rpm/platform
 cp -a $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac \
         $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac-i686
 sed -i 's/x86_64/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac-i686/poldek/*.conf
@@ -445,6 +447,8 @@ sed -i 's/x86_64/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/p
 # th i686
 cp -a $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th \
         $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th-i686
+echo "%{_target_cpu}-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/rpm/platform
+echo "i686-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th-i686/rpm/platform
 cp -a $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th \
 	$RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th-i686
 sed -i 's/x86_64/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th-i686/poldek/*.conf
