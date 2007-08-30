@@ -1,0 +1,19 @@
+- address issue that TMPDIR is not accessible for nobody user (that util-vserver switches for few commands)
+
+# vserver test stop
+mktemp: cannot create temp file /home/glen/tmp/vserver-lock.S8Bua1: No such file or directory
+/usr/bin/mkfifo: missing operand
+Try `/usr/bin/mkfifo --help' for more information.
+Not enough parameters; use '--help' for more information
+
+--- util-vserver-0.30.213/scripts/util-vserver-vars.pathsubst~	2007-08-30 11:48:13.000000000 +0300
++++ util-vserver-0.30.213/scripts/util-vserver-vars.pathsubst	2007-08-30 11:49:11.992851194 +0300
+@@ -126,7 +126,7 @@
+ _LN_S="$_LN -s"
+ _MKDIR="@MKDIR@"
+ _MKFIFO="@MKFIFO@"
+-_MKTEMP="@MKTEMP@ -t"
++_MKTEMP="@ENV@ -u TMPDIR @MKTEMP@ -t"
+ _MKTEMPDIR="$_MKTEMP -d"
+ _MODPROBE="@MODPROBE@"
+ _MOUNT="@MOUNT@"
