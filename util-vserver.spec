@@ -16,14 +16,14 @@
 %undefine	with_ccache
 #
 Summary:	Linux virtual server utilities
-Summary(pl.UTF-8):	NarzÄ™dzia dla linuksowych serwerÃ³w wirtualnych
+Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30.213
-Release:	6
+Version:	0.30.212
+Release:	13
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
-# Source0-md5:	2a444e725f7789f751ade259a38553ed
+# Source0-md5:	386b91732b7f0f132b4e9d978389dcc2
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -51,6 +51,7 @@ Patch9:		%{name}-dev.patch
 Patch10:	%{name}-no-dynamic-ctx.patch
 Patch11:	%{name}-more-ip.patch
 Patch12:	%{name}-rpm-fake-resolver-badperm-errorlogging.patch
+Patch13:	%{name}-tmpdir.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -105,22 +106,22 @@ set_ipv4root system call.
 This package contains utilities which are required to communicate with
 the Linux-Vserver enabled kernel.
 
-%description -l pl.UTF-8
-Ten pakiet dostarcza skÅ‚adniki i szkielet do tworzenia wirtualnych
-serwerÃ³w. Wirtualny serwer dziaÅ‚a wewnÄ…trz serwera linuksowego, lecz
-jest od niego w duÅ¼ym stopniu niezaleÅ¼ny. Jako taki moÅ¼e uruchamiaÄ‡
-rÃ³Å¼ne usÅ‚ugi z normalnÄ… konfiguracjÄ…. RÃ³Å¼ne vserwery nie mogÄ… wchodziÄ‡
-w interakcjÄ™ z innymi ani z usÅ‚ugami na gÅ‚Ã³wnym serwerze.
+%description -l pl
+Ten pakiet dostarcza sk³adniki i szkielet do tworzenia wirtualnych
+serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
+jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
+ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
+w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
 
-Wymaga to specjalnego jÄ…dra obsÅ‚ugujÄ…cego nowe wywoÅ‚ania systemowe
+Wymaga to specjalnego j±dra obs³uguj±cego nowe wywo³ania systemowe
 new_s_context i set_ipv4root.
 
-Ten pakiet zawiera narzÄ™dzia wymagane do komunikacji z jÄ…drem z
-wÅ‚Ä…czonym mechanizmem Linux-Vserver.
+Ten pakiet zawiera narzêdzia wymagane do komunikacji z j±drem z
+w³±czonym mechanizmem Linux-Vserver.
 
 %package devel
 Summary:	Development files for Linux vserver libraries
-Summary(pl.UTF-8):	Pliki programistyczne dla bibliotek linuksowego vserwera
+Summary(pl):	Pliki programistyczne dla bibliotek linuksowego vserwera
 Group:		Development/Libraries
 Requires:	%{name}-lib = %{version}-%{release}
 
@@ -128,25 +129,25 @@ Requires:	%{name}-lib = %{version}-%{release}
 This package contains the development files necessary for developing
 programs which use vserver library.
 
-%description devel -l pl.UTF-8
+%description devel -l pl
 Ten pakiet zawiera pliki programistyczne konieczne do rozwijania
-programÃ³w uÅ¼ywajÄ…cych biblioteki vserver.
+programów u¿ywaj±cych biblioteki vserver.
 
 %package static
 Summary:	Static vserver library
-Summary(pl.UTF-8):	Biblioteka statyczna vservera
+Summary(pl):	Biblioteka statyczna vservera
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 This package contains the static version of vserver library.
 
-%description static -l pl.UTF-8
-Ten pakiet zawiera statycznÄ… wersjÄ™ biblioteki vservera.
+%description static -l pl
+Ten pakiet zawiera statyczn± wersjê biblioteki vservera.
 
 %package lib
 Summary:	Dynamic libraries for util-vserver
-Summary(pl.UTF-8):	Biblioteki dynamiczne dla pakietu util-vserver
+Summary(pl):	Biblioteki dynamiczne dla pakietu util-vserver
 Group:		Libraries
 
 %description lib
@@ -159,19 +160,19 @@ each other and can't interact with services in the main server.
 This package contains the shared libraries needed by all other
 'util-vserver' subpackages.
 
-%description lib -l pl.UTF-8
-util-vserver dostarcza skÅ‚adniki i szkielet do tworzenia wirtualnych
-serwerÃ³w. Wirtualny serwer dziaÅ‚a wewnÄ…trz serwera linuksowego, lecz
-jest od niego w duÅ¼ym stopniu niezaleÅ¼ny. Jako taki moÅ¼e uruchamiaÄ‡
-rÃ³Å¼ne usÅ‚ugi z normalnÄ… konfiguracjÄ…. RÃ³Å¼ne vserwery nie mogÄ… wchodziÄ‡
-w interakcjÄ™ z innymi ani z usÅ‚ugami na gÅ‚Ã³wnym serwerze.
+%description lib -l pl
+util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
+serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
+jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
+ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
+w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
 
-Ten pakiet zawiera biblioteki wspÃ³Å‚dzielone wymagane przez wszystkie
+Ten pakiet zawiera biblioteki wspó³dzielone wymagane przez wszystkie
 podpakiety util-vserver.
 
 %package build
 Summary:	Tools which can be used to build vservers
-Summary(pl.UTF-8):	NarzÄ™dzia do budowania vserverÃ³w
+Summary(pl):	Narzêdzia do budowania vserverów
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	/etc/pld-release
@@ -188,18 +189,18 @@ each other and can't interact with services in the main server.
 
 This package contains utilities which assist in building Vservers.
 
-%description build -l pl.UTF-8
-util-vserver dostarcza skÅ‚adniki i szkielet do tworzenia wirtualnych
-serwerÃ³w. Wirtualny serwer dziaÅ‚a wewnÄ…trz serwera linuksowego, lecz
-jest od niego w duÅ¼ym stopniu niezaleÅ¼ny. Jako taki moÅ¼e uruchamiaÄ‡
-rÃ³Å¼ne usÅ‚ugi z normalnÄ… konfiguracjÄ…. RÃ³Å¼ne vserwery nie mogÄ… wchodziÄ‡
-w interakcjÄ™ z innymi ani z usÅ‚ugami na gÅ‚Ã³wnym serwerze.
+%description build -l pl
+util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
+serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
+jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
+ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
+w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
 
-Ten pakiet zawiera narzÄ™dzia pomagajÄ…ce przy budowaniu VserwerÃ³w.
+Ten pakiet zawiera narzêdzia pomagaj±ce przy budowaniu Vserwerów.
 
 %package -n vserver-distro-fedora
 Summary:	VServer build templates for Fedora Core
-Summary(pl.UTF-8):	Szablony do tworzenia VServerÃ³w dla dystrybucji Fedora Core
+Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Fedora Core
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
@@ -211,12 +212,12 @@ Requires:	wget
 %description -n vserver-distro-fedora
 VServer build templates for Fedora Core 1,2,3,4.
 
-%description -n vserver-distro-fedora -l pl.UTF-8
-Szablony do tworzenia VServerÃ³w dla dystrybucji Fedora Core 1,2,3,4.
+%description -n vserver-distro-fedora -l pl
+Szablony do tworzenia VServerów dla dystrybucji Fedora Core 1,2,3,4.
 
 %package -n vserver-distro-redhat
 Summary:	VServer build template for Red Hat Linux 9
-Summary(pl.UTF-8):	Szablon do tworzenia VServerÃ³w dla dystrybucji Red Hat Linux 9
+Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
@@ -228,12 +229,12 @@ Requires:	wget
 %description -n vserver-distro-redhat
 VServer build template for RedHat Linux 9.
 
-%description -n vserver-distro-redhat -l pl.UTF-8
-Szablon do tworzenia VServerÃ³w dla dystrybucji Red Hat Linux 9.
+%description -n vserver-distro-redhat -l pl
+Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
 
 %package -n vserver-distro-suse
 Summary:	VServer build template for SuSE 9.1
-Summary(pl.UTF-8):	Szablon do tworzenia VServerÃ³w dla dystrybucji SuSE 9.1
+Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
@@ -245,12 +246,12 @@ Requires:	wget
 %description -n vserver-distro-suse
 VServer build template for SuSE Linux 9.1.
 
-%description -n vserver-distro-suse -l pl.UTF-8
-Szablon do tworzenia VServerÃ³w dla dystrybucji SuSE 9.1.
+%description -n vserver-distro-suse -l pl
+Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 
 %package -n vserver-distro-centos
 Summary:	VServer build template for CentOS 4.2
-Summary(pl.UTF-8):	Szablon budowania VServera dla CentOS 4.2
+Summary(pl):	Szablon budowania VServera dla CentOS 4.2
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	yum
@@ -258,24 +259,24 @@ Requires:	yum
 %description -n vserver-distro-centos
 VServer build template for CentOS 4.
 
-%description -n vserver-distro-centos -l pl.UTF-8
+%description -n vserver-distro-centos -l pl
 Szablon budowania VServera dla CentOS 4.
 
 %package -n vserver-distro-gentoo
 Summary:	VServer build template for Gentoo
-Summary(pl.UTF-8):	Szablon budowania VServera dla Gentoo
+Summary(pl):	Szablon budowania VServera dla Gentoo
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 
 %description -n vserver-distro-gentoo
 VServer build template for Gentoo.
 
-%description -n vserver-distro-gentoo -l pl.UTF-8
+%description -n vserver-distro-gentoo -l pl
 Szablon budowania VServera dla Gentoo.
 
 %package init
 Summary:	initscripts for vserver
-Summary(pl.UTF-8):	Skrypty inicjalizujÄ…ce dla vserwera
+Summary(pl):	Skrypty inicjalizuj±ce dla vserwera
 Group:		Applications/System
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
@@ -293,19 +294,19 @@ each other and can't interact with services in the main server.
 This package contains the SysV initscripts which start and stop
 Vservers and related tools.
 
-%description init -l pl.UTF-8
-util-vserver dostarcza skÅ‚adniki i szkielet do tworzenia wirtualnych
-serwerÃ³w. Wirtualny serwer dziaÅ‚a wewnÄ…trz serwera linuksowego, lecz
-jest od niego w duÅ¼ym stopniu niezaleÅ¼ny. Jako taki moÅ¼e uruchamiaÄ‡
-rÃ³Å¼ne usÅ‚ugi z normalnÄ… konfiguracjÄ…. RÃ³Å¼ne vserwery nie mogÄ… wchodziÄ‡
-w interakcjÄ™ z innymi ani z usÅ‚ugami na gÅ‚Ã³wnym serwerze.
+%description init -l pl
+util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
+serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
+jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
+ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
+w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
 
-Ten pakiet zawiera skrypty inicjalizujÄ…ce SysV uruchamiajÄ…ce i
-zatrzymujÄ…ce Vserwery oraz powiÄ…zane narzÄ™dzia.
+Ten pakiet zawiera skrypty inicjalizuj±ce SysV uruchamiaj±ce i
+zatrzymuj±ce Vserwery oraz powi±zane narzêdzia.
 
 %package legacy
 Summary:	Legacy utilities for util-vserver
-Summary(pl.UTF-8):	Stare narzÄ™dzia dla util-vserver
+Summary(pl):	Stare narzêdzia dla util-vserver
 Group:		Applications/System
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
@@ -321,15 +322,15 @@ each other and can't interact with services in the main server.
 This package contains the tools which are needed to work with Vservers
 having an old-style configuration.
 
-%description legacy -l pl.UTF-8
-util-vserver dostarcza skÅ‚adniki i szkielet do tworzenia wirtualnych
-serwerÃ³w. Wirtualny serwer dziaÅ‚a wewnÄ…trz serwera linuksowego, lecz
-jest od niego w duÅ¼ym stopniu niezaleÅ¼ny. Jako taki moÅ¼e uruchamiaÄ‡
-rÃ³Å¼ne usÅ‚ugi z normalnÄ… konfiguracjÄ…. RÃ³Å¼ne vserwery nie mogÄ… wchodziÄ‡
-w interakcjÄ™ z innymi ani z usÅ‚ugami na gÅ‚Ã³wnym serwerze.
+%description legacy -l pl
+util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
+serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
+jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
+ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
+w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
 
-Ten pakiet zawiera narzÄ™dzia potrzebne do pracy z Vserwerami majÄ…cymi
-konfiguracjÄ™ w starym stylu.
+Ten pakiet zawiera narzêdzia potrzebne do pracy z Vserwerami maj±cymi
+konfiguracjê w starym stylu.
 
 %prep
 %setup -q -a11
@@ -345,6 +346,7 @@ konfiguracjÄ™ w starym stylu.
 %{?with_no_dynamic_context:%patch10 -p1}
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
 
 install %{SOURCE9} package-management.txt
 
@@ -354,7 +356,7 @@ cp -a compat.h vserver-compat.h
 unset LD_SYMBOLIC_FUNCTIONS || :
 
 %if %{with dietlibc}
-CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1 -U__STRICT_ANSI__"
+CFLAGS="%{rpmcflags} -D__GLIBC__"
 %endif
 %{__aclocal} -I m4
 %{__automake}
@@ -363,8 +365,8 @@ CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1 -U__STRICT_ANSI__"
 	--with-initrddir=/etc/rc.d/init.d \
 	--enable-release \
 	--enable-apis=NOLEGACY \
-	--with-initscripts=sysv \
-	--%{?with_dietlibc:en}%{!?with_dietlibc:dis}able-dietlibc \
+	%{?with_dietlibc:--enable-dietlibc} \
+	%{!?with_dietlibc:--disable-dietlibc} \
 	MKTEMP=/bin/mktemp \
 	MOUNT=/bin/mount \
 	PS=/bin/ps \
@@ -389,7 +391,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d,cron.d},/dev/pts} \
 	$RPM_BUILD_ROOT{%{_sysconfdir}/vservices,/vservers/.pkg}
 
-%{__make} -j1 install install-distribution \
+%{__make} install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
 
 cp -a vserver-compat.h $RPM_BUILD_ROOT%{_includedir}
@@ -435,31 +437,8 @@ EOF
 ln -sf null $RPM_BUILD_ROOT/dev/initctl
 
 %ifarch %{x8664}
-# ac i686
-cp -a $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac \
-	$RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac-i686
-echo "%{_target_cpu}-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
-echo "i686-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac-i686/rpm/platform
-cp -a $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac \
-        $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac-i686
-sed -i 's/x86_64/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac-i686/poldek/*.conf
-
-# th i686
-cp -a $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th \
-        $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th-i686
-echo "%{_target_cpu}-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/rpm/platform
-echo "i686-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th-i686/rpm/platform
-cp -a $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th \
-	$RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th-i686
-sed -i 's/x86_64/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th-i686/poldek/*.conf
-
-# ac x86_64
 sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pkgs/01
 sed -i 's/glibc\-\[0\-9\]\*\.rpm/glibc64\-\[0\-9\]\*\.rpm/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpmlist.d/00.lst
-sed -i 's/x86_64/amd64/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/*.conf
-%endif
-%ifarch i486
-sed -i 's/i486/i386/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/*.conf
 %endif
 
 # XXX baggins check this: needed but seems unused
@@ -467,9 +446,9 @@ install -d $RPM_BUILD_ROOT/var/cache/vservers
 
 # we have our own initscript which does the same
 rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
-rm -f $RPM_BUILD_ROOT/usr/lib/util-vserver/vserver-wrapper
+rm -f $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-wrapper
 # probaly the part of them
-rm -f $RPM_BUILD_ROOT/etc/vservers.conf
+rm -f $RPM_BUILD_ROOT%{_sysconfdir}/vservers.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -563,7 +542,6 @@ fi
 %attr(755,root,root) %{_sbindir}/vnamespace
 %attr(755,root,root) %{_sbindir}/vkill
 %attr(755,root,root) %{_sbindir}/vlimit
-%attr(755,root,root) %{_sbindir}/vdevmap
 %attr(755,root,root) %{_sbindir}/vdu
 %attr(755,root,root) %{_sbindir}/vproc
 %attr(755,root,root) %{_sbindir}/vps
@@ -610,7 +588,6 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/vhashify.cron
 %attr(755,root,root) %{_libdir}/%{name}/vshelper
 %attr(755,root,root) %{_libdir}/%{name}/vshelper-sync
-%attr(755,root,root) %{_libdir}/%{name}/vsysctl
 %{_mandir}/man8/chbind.8*
 %{_mandir}/man8/chcontext.8*
 %{_mandir}/man8/reducecap.8*
@@ -663,14 +640,6 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/*.conf
-%ifarch %{x8664}
-%dir %{_sysconfdir}/vservers/.distributions/pld-ac-i686
-%dir %{_sysconfdir}/vservers/.distributions/pld-ac-i686/poldek
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac-i686/poldek/*.conf
-%dir %{_sysconfdir}/vservers/.distributions/pld-th-i686
-%dir %{_sysconfdir}/vservers/.distributions/pld-th-i686/poldek
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th-i686/poldek/*.conf
-%endif
 %dir %{_sysconfdir}/vservers/.distributions/pld-th
 %dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/*.conf
@@ -689,7 +658,6 @@ fi
 %{_libdir}/%{name}/defaults/vunify-exclude
 %attr(755,root,root) %{_libdir}/%{name}/pkgmgmt
 %attr(755,root,root) %{_libdir}/%{name}/vapt-get-worker
-%attr(755,root,root) %{_libdir}/%{name}/vclone
 %attr(755,root,root) %{_libdir}/%{name}/vcopy
 %attr(755,root,root) %{_libdir}/%{name}/vpkg
 %attr(755,root,root) %{_libdir}/%{name}/vpoldek-worker
@@ -725,7 +693,7 @@ fi
 
 %files -n vserver-distro-centos
 %defattr(644,root,root,755)
-%{_libdir}/util-vserver/distributions/centos*
+%{_libdir}/util-vserver/distributions/centos4
 
 %files -n vserver-distro-gentoo
 %defattr(644,root,root,755)
