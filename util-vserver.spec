@@ -19,7 +19,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.213
-Release:	6
+Release:	7
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -51,6 +51,7 @@ Patch9:		%{name}-dev.patch
 Patch10:	%{name}-no-dynamic-ctx.patch
 Patch11:	%{name}-more-ip.patch
 Patch12:	%{name}-rpm-fake-resolver-badperm-errorlogging.patch
+Patch13:	%{name}-tmpdir.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -345,6 +346,7 @@ konfigurację w starym stylu.
 %{?with_no_dynamic_context:%patch10 -p1}
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
 
 install %{SOURCE9} package-management.txt
 
@@ -467,9 +469,9 @@ install -d $RPM_BUILD_ROOT/var/cache/vservers
 
 # we have our own initscript which does the same
 rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
-rm -f $RPM_BUILD_ROOT/usr/lib/util-vserver/vserver-wrapper
+rm -f $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-wrapper
 # probaly the part of them
-rm -f $RPM_BUILD_ROOT/etc/vservers.conf
+rm -f $RPM_BUILD_ROOT%{_sysconfdir}/vservers.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
