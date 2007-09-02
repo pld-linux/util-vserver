@@ -18,12 +18,12 @@
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30.213
-Release:	7
+Version:	0.30.214
+Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
-# Source0-md5:	2a444e725f7789f751ade259a38553ed
+# Source0-md5:	8bad879e36a6a1b9b4858d0d6d3c8c76
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -576,6 +576,7 @@ fi
 %attr(755,root,root) %{_sbindir}/vserver-info
 %attr(755,root,root) %{_sbindir}/vserver-stat
 %attr(755,root,root) %{_sbindir}/vsomething
+%attr(755,root,root) %{_sbindir}/vtag
 %attr(755,root,root) %{_sbindir}/vtop
 %attr(755,root,root) %{_sbindir}/vuname
 %attr(755,root,root) %{_sbindir}/vwait
@@ -594,6 +595,8 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/fakerunlevel
 %attr(755,root,root) %{_libdir}/%{name}/filetime
 %{_libdir}/%{name}/functions
+%attr(755,root,root) %{_libdir}/%{name}/h2ext
+%attr(755,root,root) %{_libdir}/%{name}/h2ext-worker
 %attr(755,root,root) %{_libdir}/%{name}/keep-ctx-alive
 %attr(755,root,root) %{_libdir}/%{name}/lockfile
 %attr(755,root,root) %{_libdir}/%{name}/mask2prefix
@@ -683,7 +686,6 @@ fi
 %dir %{_libdir}/%{name}/distributions/template
 %attr(755,root,root) %{_libdir}/%{name}/distributions/template/init*
 %attr(-,root,root) %{_libdir}/%{name}/distributions/redhat
-%{_libdir}/%{name}/magic.mime
 %{_libdir}/%{name}/vserver-build.*
 %{_libdir}/%{name}/vserver-setup.functions
 %{_libdir}/%{name}/defaults/fstab
