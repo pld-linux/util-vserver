@@ -25,7 +25,7 @@ diff -urN -x '*~' -x '*.orig' util-vserver-0.30.209-clean/scripts/functions util
      
      LD_PRELOAD=$_RPM_FAKE_SO${LD_PRELOAD:+:$LD_PRELOAD} \
 -	exec "$@"
-+	exec $_CHBIND "${CHBIND_OPTS[@]}" "$@"
++	exec $_CHBIND --nid $RPM_FAKE_CTX "${CHBIND_OPTS[@]}" "$@"
  }
 diff -urN -x '*~' -x '*.orig' util-vserver-0.30.209-clean/scripts/vrpm-preload util-vserver-0.30.209-poldek2/scripts/vrpm-preload
 --- util-vserver-0.30.209-clean/scripts/vrpm-preload	2005-03-21 21:03:30.000000000 +0100
