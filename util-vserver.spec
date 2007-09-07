@@ -119,6 +119,31 @@ new_s_context i set_ipv4root.
 Ten pakiet zawiera narzędzia wymagane do komunikacji z jądrem z
 włączonym mechanizmem Linux-Vserver.
 
+%package lib
+Summary:	Dynamic libraries for util-vserver
+Summary(pl.UTF-8):	Biblioteki dynamiczne dla pakietu util-vserver
+Group:		Libraries
+
+%description lib
+util-vserver provides the components and a framework to setup virtual
+servers. A virtual server runs inside a linux server. It is
+nevertheless highly independent. As such, you can run various services
+pith normal configuration. The various vservers can't interact with
+each other and can't interact with services in the main server.
+
+This package contains the shared libraries needed by all other
+'util-vserver' subpackages.
+
+%description lib -l pl.UTF-8
+util-vserver dostarcza składniki i szkielet do tworzenia wirtualnych
+serwerów. Wirtualny serwer działa wewnątrz serwera linuksowego, lecz
+jest od niego w dużym stopniu niezależny. Jako taki może uruchamiać
+różne usługi z normalną konfiguracją. Różne vserwery nie mogą wchodzić
+w interakcję z innymi ani z usługami na głównym serwerze.
+
+Ten pakiet zawiera biblioteki współdzielone wymagane przez wszystkie
+podpakiety util-vserver.
+
 %package devel
 Summary:	Development files for Linux vserver libraries
 Summary(pl.UTF-8):	Pliki programistyczne dla bibliotek linuksowego vserwera
@@ -144,31 +169,6 @@ This package contains the static version of vserver library.
 
 %description static -l pl.UTF-8
 Ten pakiet zawiera statyczną wersję biblioteki vservera.
-
-%package lib
-Summary:	Dynamic libraries for util-vserver
-Summary(pl.UTF-8):	Biblioteki dynamiczne dla pakietu util-vserver
-Group:		Libraries
-
-%description lib
-util-vserver provides the components and a framework to setup virtual
-servers. A virtual server runs inside a linux server. It is
-nevertheless highly independent. As such, you can run various services
-pith normal configuration. The various vservers can't interact with
-each other and can't interact with services in the main server.
-
-This package contains the shared libraries needed by all other
-'util-vserver' subpackages.
-
-%description lib -l pl.UTF-8
-util-vserver dostarcza składniki i szkielet do tworzenia wirtualnych
-serwerów. Wirtualny serwer działa wewnątrz serwera linuksowego, lecz
-jest od niego w dużym stopniu niezależny. Jako taki może uruchamiać
-różne usługi z normalną konfiguracją. Różne vserwery nie mogą wchodzić
-w interakcję z innymi ani z usługami na głównym serwerze.
-
-Ten pakiet zawiera biblioteki współdzielone wymagane przez wszystkie
-podpakiety util-vserver.
 
 %package build
 Summary:	Tools which can be used to build vservers
@@ -197,82 +197,6 @@ różne usługi z normalną konfiguracją. Różne vserwery nie mogą wchodzić
 w interakcję z innymi ani z usługami na głównym serwerze.
 
 Ten pakiet zawiera narzędzia pomagające przy budowaniu Vserwerów.
-
-%package -n vserver-distro-fedora
-Summary:	VServer build templates for Fedora Core
-Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Fedora Core
-Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
-Requires:	binutils
-Requires:	e2fsprogs
-Requires:	rpm
-Requires:	tar
-Requires:	wget
-
-%description -n vserver-distro-fedora
-VServer build templates for Fedora Core 1,2,3,4.
-
-%description -n vserver-distro-fedora -l pl.UTF-8
-Szablony do tworzenia VServerów dla dystrybucji Fedora Core 1,2,3,4.
-
-%package -n vserver-distro-redhat
-Summary:	VServer build template for Red Hat Linux 9
-Summary(pl.UTF-8):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
-Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
-Requires:	binutils
-Requires:	e2fsprogs
-Requires:	rpm
-Requires:	tar
-Requires:	wget
-
-%description -n vserver-distro-redhat
-VServer build template for RedHat Linux 9.
-
-%description -n vserver-distro-redhat -l pl.UTF-8
-Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
-
-%package -n vserver-distro-suse
-Summary:	VServer build template for SuSE 9.1
-Summary(pl.UTF-8):	Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1
-Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
-Requires:	binutils
-Requires:	e2fsprogs
-Requires:	rpm
-Requires:	tar
-Requires:	wget
-
-%description -n vserver-distro-suse
-VServer build template for SuSE Linux 9.1.
-
-%description -n vserver-distro-suse -l pl.UTF-8
-Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
-
-%package -n vserver-distro-centos
-Summary:	VServer build template for CentOS 4.2
-Summary(pl.UTF-8):	Szablon budowania VServera dla CentOS 4.2
-Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
-Requires:	yum
-
-%description -n vserver-distro-centos
-VServer build template for CentOS 4.
-
-%description -n vserver-distro-centos -l pl.UTF-8
-Szablon budowania VServera dla CentOS 4.
-
-%package -n vserver-distro-gentoo
-Summary:	VServer build template for Gentoo
-Summary(pl.UTF-8):	Szablon budowania VServera dla Gentoo
-Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
-
-%description -n vserver-distro-gentoo
-VServer build template for Gentoo.
-
-%description -n vserver-distro-gentoo -l pl.UTF-8
-Szablon budowania VServera dla Gentoo.
 
 %package init
 Summary:	initscripts for vserver
@@ -331,6 +255,82 @@ w interakcję z innymi ani z usługami na głównym serwerze.
 
 Ten pakiet zawiera narzędzia potrzebne do pracy z Vserwerami mającymi
 konfigurację w starym stylu.
+
+%package -n vserver-distro-centos
+Summary:	VServer build template for CentOS 4.2
+Summary(pl.UTF-8):	Szablon budowania VServera dla CentOS 4.2
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	yum
+
+%description -n vserver-distro-centos
+VServer build template for CentOS 4.
+
+%description -n vserver-distro-centos -l pl.UTF-8
+Szablon budowania VServera dla CentOS 4.
+
+%package -n vserver-distro-fedora
+Summary:	VServer build templates for Fedora Core
+Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Fedora Core
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	rpm
+Requires:	tar
+Requires:	wget
+
+%description -n vserver-distro-fedora
+VServer build templates for Fedora Core 1,2,3,4.
+
+%description -n vserver-distro-fedora -l pl.UTF-8
+Szablony do tworzenia VServerów dla dystrybucji Fedora Core 1,2,3,4.
+
+%package -n vserver-distro-gentoo
+Summary:	VServer build template for Gentoo
+Summary(pl.UTF-8):	Szablon budowania VServera dla Gentoo
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+
+%description -n vserver-distro-gentoo
+VServer build template for Gentoo.
+
+%description -n vserver-distro-gentoo -l pl.UTF-8
+Szablon budowania VServera dla Gentoo.
+
+%package -n vserver-distro-redhat
+Summary:	VServer build template for Red Hat Linux 9
+Summary(pl.UTF-8):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	rpm
+Requires:	tar
+Requires:	wget
+
+%description -n vserver-distro-redhat
+VServer build template for RedHat Linux 9.
+
+%description -n vserver-distro-redhat -l pl.UTF-8
+Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
+
+%package -n vserver-distro-suse
+Summary:	VServer build template for SuSE 9.1
+Summary(pl.UTF-8):	Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	rpm
+Requires:	tar
+Requires:	wget
+
+%description -n vserver-distro-suse
+VServer build template for SuSE Linux 9.1.
+
+%description -n vserver-distro-suse -l pl.UTF-8
+Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 
 %prep
 %setup -q -a11
@@ -482,6 +482,17 @@ rm -rf $RPM_BUILD_ROOT
 %post	lib -p /sbin/ldconfig
 %postun	lib -p /sbin/ldconfig
 
+%triggerpostun build -- %{name}-build < 0.30.210-5.2
+if [ -f /etc/vservers/.distributions/pld2.0/poldek/poldek.conf.rpmsave ]; then
+	mv -f /etc/vservers/.distributions/{pld2.0,pld-ac}/poldek/poldek.conf.rpmsave
+fi
+
+# kill old vserver specific package ignores which are no longer needed
+l=`egrep '^ignore.*(basesystem|SysVinit|rc-scripts)' /etc/vservers/*/apps/pkgmgmt/base/poldek/etc/poldek.conf -l 2>/dev/null`
+if [ "$l" ]; then
+	%{__sed} -i -e '/^ignore/s, \(basesystem\|SysVinit\|rc-scripts\),,g' $l
+fi
+
 %post init
 /sbin/chkconfig --add vrootdevices
 /sbin/chkconfig --add vprocunhide
@@ -522,17 +533,6 @@ if [ "$1" = "0" ]; then
 	%service vservers-legacy stop
 	/sbin/chkconfig --del rebootmgr
 	/sbin/chkconfig --del vservers-legacy
-fi
-
-%triggerpostun build -- %{name}-build < 0.30.210-5.2
-if [ -f /etc/vservers/.distributions/pld2.0/poldek/poldek.conf.rpmsave ]; then
-	mv -f /etc/vservers/.distributions/{pld2.0,pld-ac}/poldek/poldek.conf.rpmsave
-fi
-
-# kill old vserver specific package ignores which are no longer needed
-l=`egrep '^ignore.*(basesystem|SysVinit|rc-scripts)' /etc/vservers/*/apps/pkgmgmt/base/poldek/etc/poldek.conf -l 2>/dev/null`
-if [ "$l" ]; then
-	%{__sed} -i -e '/^ignore/s, \(basesystem\|SysVinit\|rc-scripts\),,g' $l
 fi
 
 %files
@@ -631,6 +631,10 @@ fi
 %dir %{_localstatedir}/run/vshelper
 %dir /var/cache/vservers
 
+%files lib
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
+
 %files devel
 %defattr(644,root,root,755)
 %{?with_doc:%doc lib/apidoc/latex/refman.pdf lib/apidoc/html}
@@ -642,20 +646,6 @@ fi
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libvserver.a
-
-%files lib
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
-
-%files init
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/%{name}/vsysvwrapper
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vrootdevices
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers
-%config(noreplace) %verify(not md5 mtime size) /etc/cron.d/vservers
-%attr(754,root,root) /etc/rc.d/init.d/vprocunhide
-%attr(754,root,root) /etc/rc.d/init.d/vrootdevices
-%attr(754,root,root) /etc/rc.d/init.d/vservers
 
 %files build
 %defattr(644,root,root,755)
@@ -706,39 +696,15 @@ fi
 %attr(755,root,root) %{_sbindir}/vrpm
 %attr(755,root,root) %{_sbindir}/vyum
 
-%files -n vserver-distro-fedora
+%files init
 %defattr(644,root,root,755)
-%dir %{_sysconfdir}/vservers/.distributions/fc*
-%dir %{_sysconfdir}/vservers/.distributions/fc*/apt
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
-%{_libdir}/%{name}/distributions/fc*
-
-%files -n vserver-distro-redhat
-%defattr(644,root,root,755)
-%dir %{_sysconfdir}/vservers/.distributions/rh*
-%dir %{_sysconfdir}/vservers/.distributions/rh*/apt
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/rh*/apt/sources.list
-%{_libdir}/%{name}/distributions/rh*
-
-%files -n vserver-distro-suse
-%defattr(644,root,root,755)
-%dir %{_sysconfdir}/vservers/.distributions/suse*
-%dir %{_sysconfdir}/vservers/.distributions/suse*/apt
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/suse*/apt/sources.list
-%{_libdir}/%{name}/distributions/suse*
-
-%files -n vserver-distro-centos
-%defattr(644,root,root,755)
-%{_libdir}/util-vserver/distributions/centos*
-
-%files -n vserver-distro-gentoo
-%defattr(644,root,root,755)
-%dir %{_libdir}/util-vserver/distributions/gentoo
-%attr(755,root,root) %{_libdir}/util-vserver/distributions/gentoo/*
-%attr(755,root,root) %{_sbindir}/vdispatch-conf
-%attr(755,root,root) %{_sbindir}/vemerge
-%attr(755,root,root) %{_sbindir}/vesync
-%attr(755,root,root) %{_sbindir}/vupdateworld
+%attr(755,root,root) %{_libdir}/%{name}/vsysvwrapper
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vrootdevices
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers
+%config(noreplace) %verify(not md5 mtime size) /etc/cron.d/vservers
+%attr(754,root,root) /etc/rc.d/init.d/vprocunhide
+%attr(754,root,root) /etc/rc.d/init.d/vrootdevices
+%attr(754,root,root) /etc/rc.d/init.d/vservers
 
 %files legacy
 %defattr(644,root,root,755)
@@ -754,3 +720,37 @@ fi
 %{_mandir}/man8/distrib-info.8*
 %{_mandir}/man8/rebootmgr.8*
 %{_mandir}/man8/vserver-copy.8*
+
+%files -n vserver-distro-centos
+%defattr(644,root,root,755)
+%{_libdir}/util-vserver/distributions/centos*
+
+%files -n vserver-distro-fedora
+%defattr(644,root,root,755)
+%dir %{_sysconfdir}/vservers/.distributions/fc*
+%dir %{_sysconfdir}/vservers/.distributions/fc*/apt
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
+%{_libdir}/%{name}/distributions/fc*
+
+%files -n vserver-distro-gentoo
+%defattr(644,root,root,755)
+%dir %{_libdir}/util-vserver/distributions/gentoo
+%attr(755,root,root) %{_libdir}/util-vserver/distributions/gentoo/*
+%attr(755,root,root) %{_sbindir}/vdispatch-conf
+%attr(755,root,root) %{_sbindir}/vemerge
+%attr(755,root,root) %{_sbindir}/vesync
+%attr(755,root,root) %{_sbindir}/vupdateworld
+
+%files -n vserver-distro-redhat
+%defattr(644,root,root,755)
+%dir %{_sysconfdir}/vservers/.distributions/rh*
+%dir %{_sysconfdir}/vservers/.distributions/rh*/apt
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/rh*/apt/sources.list
+%{_libdir}/%{name}/distributions/rh*
+
+%files -n vserver-distro-suse
+%defattr(644,root,root,755)
+%dir %{_sysconfdir}/vservers/.distributions/suse*
+%dir %{_sysconfdir}/vservers/.distributions/suse*/apt
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/suse*/apt/sources.list
+%{_libdir}/%{name}/distributions/suse*
