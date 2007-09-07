@@ -18,12 +18,12 @@
 Summary:	Linux virtual server utilities
 Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30.212
-Release:	13
+Version:	0.30.214
+Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
-# Source0-md5:	386b91732b7f0f132b4e9d978389dcc2
+# Source0-md5:	8bad879e36a6a1b9b4858d0d6d3c8c76
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -198,6 +198,40 @@ w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
 
 Ten pakiet zawiera narzêdzia pomagaj±ce przy budowaniu Vserwerów.
 
+%package -n vserver-distro-debian
+Summary:	VServer build templates for Debian
+Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Debian
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	rpm
+Requires:	tar
+Requires:	wget
+
+%description -n vserver-distro-debian
+VServer build templates for Debian.
+
+%description -n vserver-distro-debian -l pl
+Szablony do tworzenia VServerów dla dystrybucji Debian.
+
+%package -n vserver-distro-ubuntu
+Summary:	VServer build templates for Ubuntu
+Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Ubuntu
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	rpm
+Requires:	tar
+Requires:	wget
+
+%description -n vserver-distro-ubuntu
+VServer build templates for Ubuntu.
+
+%description -n vserver-distro-ubuntu -l pl
+Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
+
 %package -n vserver-distro-fedora
 Summary:	VServer build templates for Fedora Core
 Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Fedora Core
@@ -210,10 +244,10 @@ Requires:	tar
 Requires:	wget
 
 %description -n vserver-distro-fedora
-VServer build templates for Fedora Core 1,2,3,4.
+VServer build templates for Fedora Core 1,2,3,4,5,6 and 7.
 
 %description -n vserver-distro-fedora -l pl
-Szablony do tworzenia VServerów dla dystrybucji Fedora Core 1,2,3,4.
+Szablony do tworzenia VServerów dla dystrybucji Fedora Core 1,2,3,4,5,6 and 7.
 
 %package -n vserver-distro-redhat
 Summary:	VServer build template for Red Hat Linux 9
@@ -250,17 +284,17 @@ VServer build template for SuSE Linux 9.1.
 Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 
 %package -n vserver-distro-centos
-Summary:	VServer build template for CentOS 4.2
-Summary(pl):	Szablon budowania VServera dla CentOS 4.2
+Summary:	VServer build templates for CentOS 4.2 and 5.0
+Summary(pl):	Szablony budowania VServera dla CentOS 4.2 and 5.0
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	yum
 
 %description -n vserver-distro-centos
-VServer build template for CentOS 4.
+VServer build templates for CentOS 4 and 5.
 
 %description -n vserver-distro-centos -l pl
-Szablon budowania VServera dla CentOS 4.
+Szablony budowania VServera dla CentOS 4 and 5.
 
 %package -n vserver-distro-gentoo
 Summary:	VServer build template for Gentoo
@@ -542,6 +576,7 @@ fi
 %attr(755,root,root) %{_sbindir}/vnamespace
 %attr(755,root,root) %{_sbindir}/vkill
 %attr(755,root,root) %{_sbindir}/vlimit
+%attr(755,root,root) %{_sbindir}/vdevmap
 %attr(755,root,root) %{_sbindir}/vdu
 %attr(755,root,root) %{_sbindir}/vproc
 %attr(755,root,root) %{_sbindir}/vps
@@ -552,6 +587,7 @@ fi
 %attr(755,root,root) %{_sbindir}/vserver-info
 %attr(755,root,root) %{_sbindir}/vserver-stat
 %attr(755,root,root) %{_sbindir}/vsomething
+%attr(755,root,root) %{_sbindir}/vtag
 %attr(755,root,root) %{_sbindir}/vtop
 %attr(755,root,root) %{_sbindir}/vuname
 %attr(755,root,root) %{_sbindir}/vwait
@@ -570,6 +606,8 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/fakerunlevel
 %attr(755,root,root) %{_libdir}/%{name}/filetime
 %{_libdir}/%{name}/functions
+%attr(755,root,root) %{_libdir}/%{name}/h2ext
+%attr(755,root,root) %{_libdir}/%{name}/h2ext-worker
 %attr(755,root,root) %{_libdir}/%{name}/keep-ctx-alive
 %attr(755,root,root) %{_libdir}/%{name}/lockfile
 %attr(755,root,root) %{_libdir}/%{name}/mask2prefix
@@ -588,6 +626,7 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/vhashify.cron
 %attr(755,root,root) %{_libdir}/%{name}/vshelper
 %attr(755,root,root) %{_libdir}/%{name}/vshelper-sync
+%attr(755,root,root) %{_libdir}/%{name}/vsysctl
 %{_mandir}/man8/chbind.8*
 %{_mandir}/man8/chcontext.8*
 %{_mandir}/man8/reducecap.8*
@@ -650,7 +689,6 @@ fi
 %dir %{_libdir}/%{name}/distributions/template
 %attr(755,root,root) %{_libdir}/%{name}/distributions/template/init*
 %attr(-,root,root) %{_libdir}/%{name}/distributions/redhat
-%{_libdir}/%{name}/magic.mime
 %{_libdir}/%{name}/vserver-build.*
 %{_libdir}/%{name}/vserver-setup.functions
 %{_libdir}/%{name}/defaults/fstab
@@ -658,6 +696,7 @@ fi
 %{_libdir}/%{name}/defaults/vunify-exclude
 %attr(755,root,root) %{_libdir}/%{name}/pkgmgmt
 %attr(755,root,root) %{_libdir}/%{name}/vapt-get-worker
+%attr(755,root,root) %{_libdir}/%{name}/vclone
 %attr(755,root,root) %{_libdir}/%{name}/vcopy
 %attr(755,root,root) %{_libdir}/%{name}/vpkg
 %attr(755,root,root) %{_libdir}/%{name}/vpoldek-worker
@@ -670,11 +709,32 @@ fi
 %attr(755,root,root) %{_sbindir}/vrpm
 %attr(755,root,root) %{_sbindir}/vyum
 
+%files -n vserver-distro-debian
+%defattr(644,root,root,755)
+%{_libdir}/%{name}/distributions/debian
+%{_libdir}/%{name}/distributions/etch
+%{_libdir}/%{name}/distributions/lenny
+%{_libdir}/%{name}/distributions/sid
+
+%files -n vserver-distro-ubuntu
+%defattr(644,root,root,755)
+%{_libdir}/%{name}/distributions/breezy
+%{_libdir}/%{name}/distributions/dapper
+%{_libdir}/%{name}/distributions/edgy
+%{_libdir}/%{name}/distributions/feisty
+%{_libdir}/%{name}/distributions/gutsy
+%{_libdir}/%{name}/distributions/hoary
+%{_libdir}/%{name}/distributions/warty
+
 %files -n vserver-distro-fedora
 %defattr(644,root,root,755)
+%dir %{_sysconfdir}/vservers/.distributions/f7
+%dir %{_sysconfdir}/vservers/.distributions/f7/apt
 %dir %{_sysconfdir}/vservers/.distributions/fc*
 %dir %{_sysconfdir}/vservers/.distributions/fc*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/f7/apt/sources.list
+%{_libdir}/%{name}/distributions/f7
 %{_libdir}/%{name}/distributions/fc*
 
 %files -n vserver-distro-redhat
@@ -694,6 +754,7 @@ fi
 %files -n vserver-distro-centos
 %defattr(644,root,root,755)
 %{_libdir}/util-vserver/distributions/centos4
+%{_libdir}/util-vserver/distributions/centos5
 
 %files -n vserver-distro-gentoo
 %defattr(644,root,root,755)
