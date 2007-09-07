@@ -751,7 +751,9 @@ fi
 
 %files -n vserver-distro-debian
 %defattr(644,root,root,755)
-%{_libdir}/%{name}/distributions/debian
+%dir %{_libdir}/%{name}/distributions/debian
+%{_libdir}/%{name}/distributions/debian/debootstrap.script
+%attr(755,root,root) %{_libdir}/%{name}/distributions/debian/initpost
 %{_libdir}/%{name}/distributions/etch
 %{_libdir}/%{name}/distributions/lenny
 %{_libdir}/%{name}/distributions/sid
