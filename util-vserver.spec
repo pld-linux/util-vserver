@@ -119,6 +119,31 @@ new_s_context i set_ipv4root.
 Ten pakiet zawiera narzêdzia wymagane do komunikacji z j±drem z
 w³±czonym mechanizmem Linux-Vserver.
 
+%package lib
+Summary:	Dynamic libraries for util-vserver
+Summary(pl):	Biblioteki dynamiczne dla pakietu util-vserver
+Group:		Libraries
+
+%description lib
+util-vserver provides the components and a framework to setup virtual
+servers. A virtual server runs inside a linux server. It is
+nevertheless highly independent. As such, you can run various services
+pith normal configuration. The various vservers can't interact with
+each other and can't interact with services in the main server.
+
+This package contains the shared libraries needed by all other
+'util-vserver' subpackages.
+
+%description lib -l pl
+util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
+serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
+jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
+ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
+w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
+
+Ten pakiet zawiera biblioteki wspó³dzielone wymagane przez wszystkie
+podpakiety util-vserver.
+
 %package devel
 Summary:	Development files for Linux vserver libraries
 Summary(pl):	Pliki programistyczne dla bibliotek linuksowego vserwera
@@ -144,31 +169,6 @@ This package contains the static version of vserver library.
 
 %description static -l pl
 Ten pakiet zawiera statyczn± wersjê biblioteki vservera.
-
-%package lib
-Summary:	Dynamic libraries for util-vserver
-Summary(pl):	Biblioteki dynamiczne dla pakietu util-vserver
-Group:		Libraries
-
-%description lib
-util-vserver provides the components and a framework to setup virtual
-servers. A virtual server runs inside a linux server. It is
-nevertheless highly independent. As such, you can run various services
-pith normal configuration. The various vservers can't interact with
-each other and can't interact with services in the main server.
-
-This package contains the shared libraries needed by all other
-'util-vserver' subpackages.
-
-%description lib -l pl
-util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
-serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
-jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
-ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
-w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
-
-Ten pakiet zawiera biblioteki wspó³dzielone wymagane przez wszystkie
-podpakiety util-vserver.
 
 %package build
 Summary:	Tools which can be used to build vservers
@@ -197,116 +197,6 @@ ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
 w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
 
 Ten pakiet zawiera narzêdzia pomagaj±ce przy budowaniu Vserwerów.
-
-%package -n vserver-distro-debian
-Summary:	VServer build templates for Debian
-Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Debian
-Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
-Requires:	binutils
-Requires:	e2fsprogs
-Requires:	rpm
-Requires:	tar
-Requires:	wget
-
-%description -n vserver-distro-debian
-VServer build templates for Debian.
-
-%description -n vserver-distro-debian -l pl
-Szablony do tworzenia VServerów dla dystrybucji Debian.
-
-%package -n vserver-distro-ubuntu
-Summary:	VServer build templates for Ubuntu
-Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Ubuntu
-Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
-Requires:	binutils
-Requires:	e2fsprogs
-Requires:	rpm
-Requires:	tar
-Requires:	wget
-
-%description -n vserver-distro-ubuntu
-VServer build templates for Ubuntu.
-
-%description -n vserver-distro-ubuntu -l pl
-Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
-
-%package -n vserver-distro-fedora
-Summary:	VServer build templates for Fedora Core
-Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Fedora Core
-Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
-Requires:	binutils
-Requires:	e2fsprogs
-Requires:	rpm
-Requires:	tar
-Requires:	wget
-
-%description -n vserver-distro-fedora
-VServer build templates for Fedora Core 1,2,3,4,5,6 and 7.
-
-%description -n vserver-distro-fedora -l pl
-Szablony do tworzenia VServerów dla dystrybucji Fedora Core 1,2,3,4,5,6 and 7.
-
-%package -n vserver-distro-redhat
-Summary:	VServer build template for Red Hat Linux 9
-Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
-Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
-Requires:	binutils
-Requires:	e2fsprogs
-Requires:	rpm
-Requires:	tar
-Requires:	wget
-
-%description -n vserver-distro-redhat
-VServer build template for RedHat Linux 9.
-
-%description -n vserver-distro-redhat -l pl
-Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
-
-%package -n vserver-distro-suse
-Summary:	VServer build template for SuSE 9.1
-Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1
-Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
-Requires:	binutils
-Requires:	e2fsprogs
-Requires:	rpm
-Requires:	tar
-Requires:	wget
-
-%description -n vserver-distro-suse
-VServer build template for SuSE Linux 9.1.
-
-%description -n vserver-distro-suse -l pl
-Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
-
-%package -n vserver-distro-centos
-Summary:	VServer build templates for CentOS 4.2 and 5.0
-Summary(pl):	Szablony budowania VServera dla CentOS 4.2 and 5.0
-Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
-Requires:	yum
-
-%description -n vserver-distro-centos
-VServer build templates for CentOS 4 and 5.
-
-%description -n vserver-distro-centos -l pl
-Szablony budowania VServera dla CentOS 4 and 5.
-
-%package -n vserver-distro-gentoo
-Summary:	VServer build template for Gentoo
-Summary(pl):	Szablon budowania VServera dla Gentoo
-Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
-
-%description -n vserver-distro-gentoo
-VServer build template for Gentoo.
-
-%description -n vserver-distro-gentoo -l pl
-Szablon budowania VServera dla Gentoo.
 
 %package init
 Summary:	initscripts for vserver
@@ -365,6 +255,105 @@ w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
 
 Ten pakiet zawiera narzêdzia potrzebne do pracy z Vserwerami maj±cymi
 konfiguracjê w starym stylu.
+
+%package -n vserver-distro-centos
+Summary:	VServer build templates for CentOS 4.2 and 5.0
+Summary(pl):	Szablony budowania VServera dla CentOS 4.2 and 5.0
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	yum
+
+%description -n vserver-distro-centos
+VServer build templates for CentOS 4 and 5.
+
+%description -n vserver-distro-centos -l pl
+Szablony budowania VServera dla CentOS 4 and 5.
+
+%package -n vserver-distro-debian
+Summary:	VServer build templates for Debian
+Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Debian
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	dpkg
+
+%description -n vserver-distro-debian
+VServer build templates for Debian.
+
+%description -n vserver-distro-debian -l pl
+Szablony do tworzenia VServerów dla dystrybucji Debian.
+
+%package -n vserver-distro-fedora
+Summary:	VServer build templates for Fedora Core
+Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Fedora Core
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	rpm
+Requires:	wget
+
+%description -n vserver-distro-fedora
+VServer build templates for Fedora Core 1,2,3,4,5,6 and 7.
+
+%description -n vserver-distro-fedora -l pl
+Szablony do tworzenia VServerów dla dystrybucji Fedora Core 1,2,3,4,5,6 and 7.
+
+%package -n vserver-distro-gentoo
+Summary:	VServer build template for Gentoo
+Summary(pl):	Szablon budowania VServera dla Gentoo
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+
+%description -n vserver-distro-gentoo
+VServer build template for Gentoo.
+
+%description -n vserver-distro-gentoo -l pl
+Szablon budowania VServera dla Gentoo.
+
+%package -n vserver-distro-ubuntu
+Summary:	VServer build templates for Ubuntu
+Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Ubuntu
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	dpkg
+
+%description -n vserver-distro-ubuntu
+VServer build templates for Ubuntu.
+
+%description -n vserver-distro-ubuntu -l pl
+Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
+
+%package -n vserver-distro-redhat
+Summary:	VServer build template for Red Hat Linux 9
+Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	rpm
+Requires:	wget
+
+%description -n vserver-distro-redhat
+VServer build template for RedHat Linux 9.
+
+%description -n vserver-distro-redhat -l pl
+Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
+
+%package -n vserver-distro-suse
+Summary:	VServer build template for SuSE 9.1
+Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	rpm
+Requires:	wget
+
+%description -n vserver-distro-suse
+VServer build template for SuSE Linux 9.1.
+
+%description -n vserver-distro-suse -l pl
+Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 
 %prep
 %setup -q -a11
