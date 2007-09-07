@@ -256,39 +256,55 @@ w interakcję z innymi ani z usługami na głównym serwerze.
 Ten pakiet zawiera narzędzia potrzebne do pracy z Vserwerami mającymi
 konfigurację w starym stylu.
 
-%package -n vserver-distro-centos
-Summary:	VServer build template for CentOS 4.2
-Summary(pl.UTF-8):	Szablon budowania VServera dla CentOS 4.2
-Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
-Requires:	yum
-
-%description -n vserver-distro-centos
-VServer build template for CentOS 4.
-
-%description -n vserver-distro-centos -l pl.UTF-8
-Szablon budowania VServera dla CentOS 4.
-
-%package -n vserver-distro-fedora
-Summary:	VServer build templates for Fedora Core
-Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Fedora Core
+%package -n vserver-distro-debian
+Summary:	VServer build templates for Debian
+Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Debian
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
-Requires:	tar
+Requires:	wget
+
+%description -n vserver-distro-debian
+VServer build templates for Debian.
+
+%description -n vserver-distro-debian -l pl
+Szablony do tworzenia VServerów dla dystrybucji Debian.
+
+%package -n vserver-distro-centos
+Summary:	VServer build template for CentOS
+Summary(pl.UTF-8):	Szablon budowania VServerów dla dystrybucji CentOS
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	yum
+
+%description -n vserver-distro-centos
+VServer build template for CentOS 4.2 and 5.
+
+%description -n vserver-distro-centos -l pl.UTF-8
+Szablon budowania VServerów dla dystrybucji CentOS 4.2 i 5.
+
+%package -n vserver-distro-fedora
+Summary:	VServer build templates for Fedora
+Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Fedora
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	rpm
 Requires:	wget
 
 %description -n vserver-distro-fedora
-VServer build templates for Fedora Core 1,2,3,4.
+VServer build templates for Fedora Core 1,2,3,4,5,6 and Fedora 7.
 
 %description -n vserver-distro-fedora -l pl.UTF-8
-Szablony do tworzenia VServerów dla dystrybucji Fedora Core 1,2,3,4.
+Szablony do tworzenia VServerów dla dystrybucji Fedora Core
+1,2,3,4,5,6 oraz Fedora 7.
 
 %package -n vserver-distro-gentoo
 Summary:	VServer build template for Gentoo
-Summary(pl.UTF-8):	Szablon budowania VServera dla Gentoo
+Summary(pl.UTF-8):	Szablon budowania VServerów dla Gentoo
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 
@@ -296,7 +312,7 @@ Requires:	%{name}-build = %{version}-%{release}
 VServer build template for Gentoo.
 
 %description -n vserver-distro-gentoo -l pl.UTF-8
-Szablon budowania VServera dla Gentoo.
+Szablon budowania VServerów dla Gentoo.
 
 %package -n vserver-distro-redhat
 Summary:	VServer build template for Red Hat Linux 9
@@ -306,7 +322,6 @@ Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
-Requires:	tar
 Requires:	wget
 
 %description -n vserver-distro-redhat
@@ -323,7 +338,6 @@ Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
-Requires:	tar
 Requires:	wget
 
 %description -n vserver-distro-suse
@@ -331,6 +345,22 @@ VServer build template for SuSE Linux 9.1.
 
 %description -n vserver-distro-suse -l pl.UTF-8
 Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
+
+%package -n vserver-distro-ubuntu
+Summary:	VServer build templates for Ubuntu
+Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Ubuntu
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	rpm
+Requires:	wget
+
+%description -n vserver-distro-ubuntu
+VServer build templates for Ubuntu.
+
+%description -n vserver-distro-ubuntu -l pl
+Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 
 %prep
 %setup -q -a11
@@ -725,11 +755,22 @@ fi
 %defattr(644,root,root,755)
 %{_libdir}/util-vserver/distributions/centos*
 
+%files -n vserver-distro-debian
+%defattr(644,root,root,755)
+%{_libdir}/%{name}/distributions/debian
+%{_libdir}/%{name}/distributions/etch
+%{_libdir}/%{name}/distributions/lenny
+%{_libdir}/%{name}/distributions/sid
+
 %files -n vserver-distro-fedora
 %defattr(644,root,root,755)
+%dir %{_sysconfdir}/vservers/.distributions/f7
+%dir %{_sysconfdir}/vservers/.distributions/f7/apt
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/f7/apt/sources.list
 %dir %{_sysconfdir}/vservers/.distributions/fc*
 %dir %{_sysconfdir}/vservers/.distributions/fc*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
+%{_libdir}/%{name}/distributions/f7
 %{_libdir}/%{name}/distributions/fc*
 
 %files -n vserver-distro-gentoo
@@ -754,3 +795,13 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/suse*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/suse*/apt/sources.list
 %{_libdir}/%{name}/distributions/suse*
+
+%files -n vserver-distro-ubuntu
+%defattr(644,root,root,755)
+%{_libdir}/%{name}/distributions/breezy
+%{_libdir}/%{name}/distributions/dapper
+%{_libdir}/%{name}/distributions/edgy
+%{_libdir}/%{name}/distributions/feisty
+%{_libdir}/%{name}/distributions/gutsy
+%{_libdir}/%{name}/distributions/hoary
+%{_libdir}/%{name}/distributions/warty
