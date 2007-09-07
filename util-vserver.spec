@@ -261,10 +261,7 @@ Summary:	VServer build templates for Debian
 Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Debian
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
-Requires:	binutils
-Requires:	e2fsprogs
-Requires:	rpm
-Requires:	wget
+Requires:	dpkg
 
 %description -n vserver-distro-debian
 VServer build templates for Debian.
@@ -351,10 +348,7 @@ Summary:	VServer build templates for Ubuntu
 Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Ubuntu
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
-Requires:	binutils
-Requires:	e2fsprogs
-Requires:	rpm
-Requires:	wget
+Requires:	dpkg
 
 %description -n vserver-distro-ubuntu
 VServer build templates for Ubuntu.
