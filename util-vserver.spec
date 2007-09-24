@@ -422,9 +422,6 @@ cp -a vserver-compat.h $RPM_BUILD_ROOT%{_includedir}
 
 chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
 
-ln -s /vservers $RPM_BUILD_ROOT%{_sysconfdir}/vservers/vdirbase
-ln -s %{_localstatedir}/run/vservers.rev $RPM_BUILD_ROOT%{_sysconfdir}/vservers/run.rev
-
 for i in $RPM_BUILD_ROOT/etc/rc.d/init.d/v_* ; do
 	s=`basename $i | sed s/v_//`
 	cat >$RPM_BUILD_ROOT%{_sysconfdir}/vservices/$s << EOF
@@ -569,8 +566,6 @@ fi
 %dir %{_sysconfdir}/vservers/.defaults/files
 %{_sysconfdir}/vservers/.defaults/vdirbase
 %{_sysconfdir}/vservers/.defaults/run.rev
-%{_sysconfdir}/vservers/vdirbase
-%{_sysconfdir}/vservers/run.rev
 /sbin/vshelper
 %attr(755,root,root) %{_sbindir}/chbind
 %attr(755,root,root) %{_sbindir}/chcontext
