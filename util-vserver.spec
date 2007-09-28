@@ -42,7 +42,6 @@ Source12:	%{name}-vhashify.cron
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
 Patch2:		%{name}-vrpm.patch
-Patch3:		%{name}-include.patch
 Patch4:		%{name}-m4-diet.patch
 Patch6:		%{name}-build-umask.patch
 Patch7:		%{name}-utmpx.patch
@@ -361,7 +360,6 @@ Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 %patch4 -p1
 %patch6 -p1
 %patch7 -p1
