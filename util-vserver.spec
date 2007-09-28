@@ -19,7 +19,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.214
-Release:	2.1
+Release:	2.2
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -41,7 +41,6 @@ Source11:	http://www.13thfloor.at/vserver/s_release/v1.2.10/vproc-%{_vproc_versi
 Source12:	%{name}-vhashify.cron
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
-Patch2:		%{name}-vrpm.patch
 Patch4:		%{name}-m4-diet.patch
 Patch6:		%{name}-build-umask.patch
 Patch7:		%{name}-utmpx.patch
@@ -359,7 +358,6 @@ Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 %setup -q -a11
 %patch0 -p1
 %patch1 -p1
-#%patch2 -p1
 %patch4 -p1
 %patch6 -p1
 %patch7 -p1
