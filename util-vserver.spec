@@ -372,8 +372,6 @@ Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 
 install %{SOURCE9} package-management.txt
 
-cp -a compat.h vserver-compat.h
-
 %build
 unset LD_SYMBOLIC_FUNCTIONS || :
 
@@ -415,8 +413,6 @@ install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d,cron.d},/dev/pt
 
 %{__make} -j1 install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
-
-cp -a vserver-compat.h $RPM_BUILD_ROOT%{_includedir}
 
 chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
 
