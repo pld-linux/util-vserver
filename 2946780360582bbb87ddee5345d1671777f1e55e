@@ -1,0 +1,2 @@
+- removed include patch, it's not needed (vserver developers say that
+  anything from that file should be in kernel headers)
