@@ -174,7 +174,10 @@ Summary(pl.UTF-8):	Narzędzia do budowania vserverów
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	/etc/pld-release
+# for ar, used by debbootstrap
+Requires:	binutils
 Requires:	e2fsprogs
+Requires:	wget
 Requires:	which
 Conflicts:	poldek < 0.18.8-10
 
