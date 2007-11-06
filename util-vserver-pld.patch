@@ -1,19 +1,20 @@
---- util-vserver-0.30.214.orig/distrib/Makefile.am	2007-09-02 22:06:42.000000000 +0200
-+++ util-vserver-0.30.214/distrib/Makefile.am	2007-09-07 12:51:57.000000000 +0200
-@@ -67,6 +67,9 @@
- 			   centos5/yum/yum.conf $(wildcard centos5/yum.repos.d/*.repo) \
+--- util-vserver-0.30.212.org/distrib/Makefile.am	2006-12-09 17:15:33.000000000 +0100
++++ util-vserver-0.30.212/distrib/Makefile.am	2007-02-04 19:00:38.703238500 +0100
+@@ -58,7 +58,9 @@
+ 			   centos4/pkgs/01 centos4/pkgs/02 centos4/pkgs/03 \
+ 			   centos4/yum/yum.conf $(wildcard centos4/yum.repos.d/*.repo) \
  			   suse91/apt/rpmpriorities suse91/pkgs/01 suse91/pkgs/02 \
- 			   suse91/rpm/macros \
+-			   suse91/rpm/macros
 +			   suse91/rpm/macros pld-ac/pkgs/01 pld-ac/rpm/macros \
 +			   pld-ac/rpmlist.d/00.lst \
-+			   pld-th/pkgs/01 pld-th/rpm/macros pld-th/rpmlist.d/00.lst \
- 			   gentoo/init-vserver.sh gentoo/net.vserver \
- 			   gentoo/reboot.sh gentoo/shutdown.sh \
- 			   debian/debootstrap.script \
-@@ -83,7 +86,17 @@
++			   pld-th/pkgs/01 pld-th/rpm/macros pld-th/rpmlist.d/00.lst
+ 
+ nobase_confdistrib_DATA	=  rh9/apt/sources.list \
+ 			   fc1/apt/sources.list \
+@@ -67,7 +69,18 @@
+ 			   fc4/apt/sources.list \
  			   fc5/apt/sources.list \
  			   fc6/apt/sources.list \
- 			   f7/apt/sources.list \
 -			   suse91/apt/sources.list
 +			   suse91/apt/sources.list \
 +			   pld-ac/poldek/aliases.conf \
@@ -26,12 +27,13 @@
 +			   pld-th/poldek/pld-source.conf \
 +			   pld-th/poldek/poldek.conf \
 +			   pld-th/poldek/source.conf
++
  
  AM_INSTALLCHECK_STD_OPTIONS_EXEMPT \
  			=  $(nobase_distrib_SCRIPTS)
-@@ -107,6 +120,9 @@
- 			l="$(sid_style)"; for i in $$l; do \
- 				ln -sf debian $(DESTDIR)$(distribdir)/$$i; \
+@@ -87,6 +100,9 @@
+ 				ln -sf ../redhat/initpost $(DESTDIR)$(distribdir)/$$i/ && \
+ 				ln -sf ../redhat/initpre  $(DESTDIR)$(distribdir)/$$i/; \
  			done
 +			POLDEKARCH=$(shell rpm -E '%{_target_cpu}' 2>/dev/null); \
 +			if [ -z "$$POLDEKARCH" ] ; then POLDEKARCH=$(shell uname -m) ; fi ; \
@@ -1008,8 +1010,8 @@
  
  function vshelper.doSanityCheck
  {
---- util-vserver-0.30.214.orig/scripts/Makefile-files	2007-09-02 22:06:41.000000000 +0200
-+++ util-vserver-0.30.214/scripts/Makefile-files	2007-09-07 12:52:59.000000000 +0200
+--- util-vserver-0.30.212.org/scripts/Makefile-files	2006-12-09 17:15:24.000000000 +0100
++++ util-vserver-0.30.212/scripts/Makefile-files	2007-02-04 18:20:38.669245750 +0100
 @@ -21,6 +21,7 @@
  				scripts/vapt-get-worker \
  				scripts/vrpm-worker \
@@ -1019,9 +1021,9 @@
  				scripts/save_s_context \
  				scripts/vservers.grabinfo.sh \
 @@ -47,11 +48,13 @@
+ 				scripts/vserver-build.yum \
  				scripts/vserver-build.template \
  				scripts/vserver-build.rsync \
- 				scripts/vserver-build.clone \
 +				scripts/vserver-build.poldek \
  				scripts/vserver-build.functions \
  				scripts/vserver-build.functions.apt \
@@ -1032,7 +1034,7 @@
  				scripts/vserver-setup.functions \
  				scripts/vserver.functions \
  				scripts/vserver.start \
-@@ -65,6 +68,7 @@
+@@ -64,6 +67,7 @@
  scripts_pkglib_src_SCRPTS =	scripts/pkgmgmt \
  				scripts/vapt-get-worker \
  				scripts/vpkg \
@@ -1040,7 +1042,7 @@
  				scripts/vrpm-worker \
  				scripts/vrpm-preload \
  				scripts/start-vservers \
-@@ -88,6 +92,7 @@
+@@ -86,6 +90,7 @@
  scripts_sbin_src_PRGS =		scripts/chbind \
  				scripts/chcontext \
  				scripts/vapt-get \
@@ -1424,8 +1426,8 @@
 +	--conf=$POLDEK_CONFIG \
 +	--pmcmd=$RPM_BINARY \
 +	"$@"
---- util-vserver-0.30.214.orig/scripts/vserver-build	2007-09-02 22:06:41.000000000 +0200
-+++ util-vserver-0.30.214/scripts/vserver-build	2007-09-07 12:53:50.000000000 +0200
+--- util-vserver-0.30.212.org/scripts/vserver-build	2006-12-09 17:15:24.000000000 +0100
++++ util-vserver-0.30.212/scripts/vserver-build	2007-02-04 18:20:38.673246000 +0100
 @@ -57,6 +57,9 @@
      yum         ... -- -d <distribution>
                  ...  installs the base-packages of the given distribution with
@@ -1436,12 +1438,12 @@
      rpm         ... -- [-d <distribution>] --empty|([--force] [--nodeps] <manifest>)+
                  ...  installs lists of rpm-packages
      skeleton    ... -- [<cmd> <args>*]
-@@ -136,7 +139,7 @@
+@@ -134,7 +137,7 @@
  
  case x"$method" in
      (xlegacy)	exec $_VSERVER_LEGACY "$VSERVER_NAME" build "$@" ;;
--    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xtemplate|xfai|xrsync|xclone)
-+    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xtemplate|xfai|xrsync|xclone|xpoldek)
+-    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xtemplate|xfai|xrsync)
++    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xtemplate|xfai|xrsync|xpoldek)
  		. $__PKGLIBDIR/vserver-build.$method
  		;;
      (x)		panic $"No build-method specified";;
