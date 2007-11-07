@@ -52,6 +52,7 @@ Patch10:	%{name}-no-dynamic-ctx.patch
 Patch11:	%{name}-more-ip.patch
 Patch12:	%{name}-rpm-fake-resolver-badperm-errorlogging.patch
 Patch13:	%{name}-tmpdir.patch
+Patch14:	%{name}-rpmpath.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -176,8 +177,6 @@ Summary(pl):	Narzêdzia do budowania vserverów
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	/etc/pld-release
-Requires:	e2fsprogs
-Requires:	which
 Conflicts:	poldek < 0.18.8-10
 
 %description build
@@ -347,6 +346,7 @@ konfiguracjê w starym stylu.
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
 
 install %{SOURCE9} package-management.txt
 
