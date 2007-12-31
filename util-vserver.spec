@@ -16,7 +16,7 @@
 %undefine	with_ccache
 #
 Summary:	Linux virtual server utilities
-Summary(pl):	Narzêdzia dla linuksowych serwerów wirtualnych
+Summary(pl.UTF-8):	NarzÄ™dzia dla linuksowych serwerÃ³w wirtualnych
 Name:		util-vserver
 Version:	0.30.212
 Release:	13
@@ -107,22 +107,22 @@ set_ipv4root system call.
 This package contains utilities which are required to communicate with
 the Linux-Vserver enabled kernel.
 
-%description -l pl
-Ten pakiet dostarcza sk³adniki i szkielet do tworzenia wirtualnych
-serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
-jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
-ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
-w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
+%description -l pl.UTF-8
+Ten pakiet dostarcza skÅ‚adniki i szkielet do tworzenia wirtualnych
+serwerÃ³w. Wirtualny serwer dziaÅ‚a wewnÄ…trz serwera linuksowego, lecz
+jest od niego w duÅ¼ym stopniu niezaleÅ¼ny. Jako taki moÅ¼e uruchamiaÄ‡
+rÃ³Å¼ne usÅ‚ugi z normalnÄ… konfiguracjÄ…. RÃ³Å¼ne vserwery nie mogÄ… wchodziÄ‡
+w interakcjÄ™ z innymi ani z usÅ‚ugami na gÅ‚Ã³wnym serwerze.
 
-Wymaga to specjalnego j±dra obs³uguj±cego nowe wywo³ania systemowe
+Wymaga to specjalnego jÄ…dra obsÅ‚ugujÄ…cego nowe wywoÅ‚ania systemowe
 new_s_context i set_ipv4root.
 
-Ten pakiet zawiera narzêdzia wymagane do komunikacji z j±drem z
-w³±czonym mechanizmem Linux-Vserver.
+Ten pakiet zawiera narzÄ™dzia wymagane do komunikacji z jÄ…drem z
+wÅ‚Ä…czonym mechanizmem Linux-Vserver.
 
 %package devel
 Summary:	Development files for Linux vserver libraries
-Summary(pl):	Pliki programistyczne dla bibliotek linuksowego vserwera
+Summary(pl.UTF-8):	Pliki programistyczne dla bibliotek linuksowego vserwera
 Group:		Development/Libraries
 Requires:	%{name}-lib = %{version}-%{release}
 
@@ -130,25 +130,25 @@ Requires:	%{name}-lib = %{version}-%{release}
 This package contains the development files necessary for developing
 programs which use vserver library.
 
-%description devel -l pl
+%description devel -l pl.UTF-8
 Ten pakiet zawiera pliki programistyczne konieczne do rozwijania
-programów u¿ywaj±cych biblioteki vserver.
+programÃ³w uÅ¼ywajÄ…cych biblioteki vserver.
 
 %package static
 Summary:	Static vserver library
-Summary(pl):	Biblioteka statyczna vservera
+Summary(pl.UTF-8):	Biblioteka statyczna vservera
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 This package contains the static version of vserver library.
 
-%description static -l pl
-Ten pakiet zawiera statyczn± wersjê biblioteki vservera.
+%description static -l pl.UTF-8
+Ten pakiet zawiera statycznÄ… wersjÄ™ biblioteki vservera.
 
 %package lib
 Summary:	Dynamic libraries for util-vserver
-Summary(pl):	Biblioteki dynamiczne dla pakietu util-vserver
+Summary(pl.UTF-8):	Biblioteki dynamiczne dla pakietu util-vserver
 Group:		Libraries
 
 %description lib
@@ -161,19 +161,19 @@ each other and can't interact with services in the main server.
 This package contains the shared libraries needed by all other
 'util-vserver' subpackages.
 
-%description lib -l pl
-util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
-serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
-jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
-ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
-w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
+%description lib -l pl.UTF-8
+util-vserver dostarcza skÅ‚adniki i szkielet do tworzenia wirtualnych
+serwerÃ³w. Wirtualny serwer dziaÅ‚a wewnÄ…trz serwera linuksowego, lecz
+jest od niego w duÅ¼ym stopniu niezaleÅ¼ny. Jako taki moÅ¼e uruchamiaÄ‡
+rÃ³Å¼ne usÅ‚ugi z normalnÄ… konfiguracjÄ…. RÃ³Å¼ne vserwery nie mogÄ… wchodziÄ‡
+w interakcjÄ™ z innymi ani z usÅ‚ugami na gÅ‚Ã³wnym serwerze.
 
-Ten pakiet zawiera biblioteki wspó³dzielone wymagane przez wszystkie
+Ten pakiet zawiera biblioteki wspÃ³Å‚dzielone wymagane przez wszystkie
 podpakiety util-vserver.
 
 %package build
 Summary:	Tools which can be used to build vservers
-Summary(pl):	Narzêdzia do budowania vserverów
+Summary(pl.UTF-8):	NarzÄ™dzia do budowania vserverÃ³w
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	/etc/pld-release
@@ -188,18 +188,18 @@ each other and can't interact with services in the main server.
 
 This package contains utilities which assist in building Vservers.
 
-%description build -l pl
-util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
-serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
-jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
-ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
-w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
+%description build -l pl.UTF-8
+util-vserver dostarcza skÅ‚adniki i szkielet do tworzenia wirtualnych
+serwerÃ³w. Wirtualny serwer dziaÅ‚a wewnÄ…trz serwera linuksowego, lecz
+jest od niego w duÅ¼ym stopniu niezaleÅ¼ny. Jako taki moÅ¼e uruchamiaÄ‡
+rÃ³Å¼ne usÅ‚ugi z normalnÄ… konfiguracjÄ…. RÃ³Å¼ne vserwery nie mogÄ… wchodziÄ‡
+w interakcjÄ™ z innymi ani z usÅ‚ugami na gÅ‚Ã³wnym serwerze.
 
-Ten pakiet zawiera narzêdzia pomagaj±ce przy budowaniu Vserwerów.
+Ten pakiet zawiera narzÄ™dzia pomagajÄ…ce przy budowaniu VserwerÃ³w.
 
 %package -n vserver-distro-fedora
 Summary:	VServer build templates for Fedora Core
-Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Fedora Core
+Summary(pl.UTF-8):	Szablony do tworzenia VServerÃ³w dla dystrybucji Fedora Core
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
@@ -211,12 +211,12 @@ Requires:	wget
 %description -n vserver-distro-fedora
 VServer build templates for Fedora Core 1,2,3,4.
 
-%description -n vserver-distro-fedora -l pl
-Szablony do tworzenia VServerów dla dystrybucji Fedora Core 1,2,3,4.
+%description -n vserver-distro-fedora -l pl.UTF-8
+Szablony do tworzenia VServerÃ³w dla dystrybucji Fedora Core 1,2,3,4.
 
 %package -n vserver-distro-redhat
 Summary:	VServer build template for Red Hat Linux 9
-Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
+Summary(pl.UTF-8):	Szablon do tworzenia VServerÃ³w dla dystrybucji Red Hat Linux 9
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
@@ -228,12 +228,12 @@ Requires:	wget
 %description -n vserver-distro-redhat
 VServer build template for RedHat Linux 9.
 
-%description -n vserver-distro-redhat -l pl
-Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
+%description -n vserver-distro-redhat -l pl.UTF-8
+Szablon do tworzenia VServerÃ³w dla dystrybucji Red Hat Linux 9.
 
 %package -n vserver-distro-suse
 Summary:	VServer build template for SuSE 9.1
-Summary(pl):	Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1
+Summary(pl.UTF-8):	Szablon do tworzenia VServerÃ³w dla dystrybucji SuSE 9.1
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	binutils
@@ -245,12 +245,12 @@ Requires:	wget
 %description -n vserver-distro-suse
 VServer build template for SuSE Linux 9.1.
 
-%description -n vserver-distro-suse -l pl
-Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
+%description -n vserver-distro-suse -l pl.UTF-8
+Szablon do tworzenia VServerÃ³w dla dystrybucji SuSE 9.1.
 
 %package -n vserver-distro-centos
 Summary:	VServer build template for CentOS 4.2
-Summary(pl):	Szablon budowania VServera dla CentOS 4.2
+Summary(pl.UTF-8):	Szablon budowania VServera dla CentOS 4.2
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	yum
@@ -258,24 +258,24 @@ Requires:	yum
 %description -n vserver-distro-centos
 VServer build template for CentOS 4.
 
-%description -n vserver-distro-centos -l pl
+%description -n vserver-distro-centos -l pl.UTF-8
 Szablon budowania VServera dla CentOS 4.
 
 %package -n vserver-distro-gentoo
 Summary:	VServer build template for Gentoo
-Summary(pl):	Szablon budowania VServera dla Gentoo
+Summary(pl.UTF-8):	Szablon budowania VServera dla Gentoo
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 
 %description -n vserver-distro-gentoo
 VServer build template for Gentoo.
 
-%description -n vserver-distro-gentoo -l pl
+%description -n vserver-distro-gentoo -l pl.UTF-8
 Szablon budowania VServera dla Gentoo.
 
 %package init
 Summary:	initscripts for vserver
-Summary(pl):	Skrypty inicjalizuj±ce dla vserwera
+Summary(pl.UTF-8):	Skrypty inicjalizujÄ…ce dla vserwera
 Group:		Applications/System
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
@@ -293,19 +293,19 @@ each other and can't interact with services in the main server.
 This package contains the SysV initscripts which start and stop
 Vservers and related tools.
 
-%description init -l pl
-util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
-serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
-jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
-ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
-w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
+%description init -l pl.UTF-8
+util-vserver dostarcza skÅ‚adniki i szkielet do tworzenia wirtualnych
+serwerÃ³w. Wirtualny serwer dziaÅ‚a wewnÄ…trz serwera linuksowego, lecz
+jest od niego w duÅ¼ym stopniu niezaleÅ¼ny. Jako taki moÅ¼e uruchamiaÄ‡
+rÃ³Å¼ne usÅ‚ugi z normalnÄ… konfiguracjÄ…. RÃ³Å¼ne vserwery nie mogÄ… wchodziÄ‡
+w interakcjÄ™ z innymi ani z usÅ‚ugami na gÅ‚Ã³wnym serwerze.
 
-Ten pakiet zawiera skrypty inicjalizuj±ce SysV uruchamiaj±ce i
-zatrzymuj±ce Vserwery oraz powi±zane narzêdzia.
+Ten pakiet zawiera skrypty inicjalizujÄ…ce SysV uruchamiajÄ…ce i
+zatrzymujÄ…ce Vserwery oraz powiÄ…zane narzÄ™dzia.
 
 %package legacy
 Summary:	Legacy utilities for util-vserver
-Summary(pl):	Stare narzêdzia dla util-vserver
+Summary(pl.UTF-8):	Stare narzÄ™dzia dla util-vserver
 Group:		Applications/System
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
@@ -321,15 +321,15 @@ each other and can't interact with services in the main server.
 This package contains the tools which are needed to work with Vservers
 having an old-style configuration.
 
-%description legacy -l pl
-util-vserver dostarcza sk³adniki i szkielet do tworzenia wirtualnych
-serwerów. Wirtualny serwer dzia³a wewn±trz serwera linuksowego, lecz
-jest od niego w du¿ym stopniu niezale¿ny. Jako taki mo¿e uruchamiaæ
-ró¿ne us³ugi z normaln± konfiguracj±. Ró¿ne vserwery nie mog± wchodziæ
-w interakcjê z innymi ani z us³ugami na g³ównym serwerze.
+%description legacy -l pl.UTF-8
+util-vserver dostarcza skÅ‚adniki i szkielet do tworzenia wirtualnych
+serwerÃ³w. Wirtualny serwer dziaÅ‚a wewnÄ…trz serwera linuksowego, lecz
+jest od niego w duÅ¼ym stopniu niezaleÅ¼ny. Jako taki moÅ¼e uruchamiaÄ‡
+rÃ³Å¼ne usÅ‚ugi z normalnÄ… konfiguracjÄ…. RÃ³Å¼ne vserwery nie mogÄ… wchodziÄ‡
+w interakcjÄ™ z innymi ani z usÅ‚ugami na gÅ‚Ã³wnym serwerze.
 
-Ten pakiet zawiera narzêdzia potrzebne do pracy z Vserwerami maj±cymi
-konfiguracjê w starym stylu.
+Ten pakiet zawiera narzÄ™dzia potrzebne do pracy z Vserwerami majÄ…cymi
+konfiguracjÄ™ w starym stylu.
 
 %prep
 %setup -q -a11
