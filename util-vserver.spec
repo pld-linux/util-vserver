@@ -177,6 +177,11 @@ Summary(pl.UTF-8):	Narzędzia do budowania vserverów
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	/etc/pld-release
+# for ar, used by debbootstrap
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	wget
+Requires:	which
 Conflicts:	poldek < 0.18.8-10
 
 %description build
@@ -255,6 +260,19 @@ w interakcję z innymi ani z usługami na głównym serwerze.
 Ten pakiet zawiera narzędzia potrzebne do pracy z Vserwerami mającymi
 konfigurację w starym stylu.
 
+%package -n vserver-distro-debian
+Summary:	VServer build templates for Debian
+Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Debian
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	dpkg
+
+%description -n vserver-distro-debian
+VServer build templates for Debian.
+
+%description -n vserver-distro-debian -l pl
+Szablony do tworzenia VServerów dla dystrybucji Debian.
+
 %package -n vserver-distro-centos
 Summary:	VServer build template for CentOS
 Summary(pl.UTF-8):	Szablon budowania VServerów dla dystrybucji CentOS
@@ -328,6 +346,19 @@ VServer build template for SuSE Linux 9.1.
 
 %description -n vserver-distro-suse -l pl.UTF-8
 Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
+
+%package -n vserver-distro-ubuntu
+Summary:	VServer build templates for Ubuntu
+Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Ubuntu
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	dpkg
+
+%description -n vserver-distro-ubuntu
+VServer build templates for Ubuntu.
+
+%description -n vserver-distro-ubuntu -l pl
+Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 
 %prep
 %setup -q -a11
@@ -425,6 +456,7 @@ install %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/vrootdevices
 install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/initpost
 install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/initpost
+install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti/initpost
 install vproc-%{_vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE12} $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 
@@ -601,6 +633,10 @@ fi
 %dir %{_localstatedir}/run/vshelper
 %dir /var/cache/vservers
 
+%files lib
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
+
 %files devel
 %defattr(644,root,root,755)
 %{?with_doc:%doc lib/apidoc/latex/refman.pdf lib/apidoc/html}
@@ -612,20 +648,6 @@ fi
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libvserver.a
-
-%files lib
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
-
-%files init
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/%{name}/vsysvwrapper
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vrootdevices
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers
-%config(noreplace) %verify(not md5 mtime size) /etc/cron.d/vservers
-%attr(754,root,root) /etc/rc.d/init.d/vprocunhide
-%attr(754,root,root) /etc/rc.d/init.d/vrootdevices
-%attr(754,root,root) /etc/rc.d/init.d/vservers
 
 %files build
 %defattr(644,root,root,755)
@@ -668,39 +690,15 @@ fi
 %attr(755,root,root) %{_sbindir}/vrpm
 %attr(755,root,root) %{_sbindir}/vyum
 
-%files -n vserver-distro-fedora
+%files init
 %defattr(644,root,root,755)
-%dir %{_sysconfdir}/vservers/.distributions/fc*
-%dir %{_sysconfdir}/vservers/.distributions/fc*/apt
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
-%{_libdir}/%{name}/distributions/fc*
-
-%files -n vserver-distro-redhat
-%defattr(644,root,root,755)
-%dir %{_sysconfdir}/vservers/.distributions/rh*
-%dir %{_sysconfdir}/vservers/.distributions/rh*/apt
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/rh*/apt/sources.list
-%{_libdir}/%{name}/distributions/rh*
-
-%files -n vserver-distro-suse
-%defattr(644,root,root,755)
-%dir %{_sysconfdir}/vservers/.distributions/suse*
-%dir %{_sysconfdir}/vservers/.distributions/suse*/apt
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/suse*/apt/sources.list
-%{_libdir}/%{name}/distributions/suse*
-
-%files -n vserver-distro-centos
-%defattr(644,root,root,755)
-%{_libdir}/util-vserver/distributions/centos4
-
-%files -n vserver-distro-gentoo
-%defattr(644,root,root,755)
-%dir %{_libdir}/util-vserver/distributions/gentoo
-%attr(755,root,root) %{_libdir}/util-vserver/distributions/gentoo/*
-%attr(755,root,root) %{_sbindir}/vdispatch-conf
-%attr(755,root,root) %{_sbindir}/vemerge
-%attr(755,root,root) %{_sbindir}/vesync
-%attr(755,root,root) %{_sbindir}/vupdateworld
+%attr(755,root,root) %{_libdir}/%{name}/vsysvwrapper
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vrootdevices
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers
+%config(noreplace) %verify(not md5 mtime size) /etc/cron.d/vservers
+%attr(754,root,root) /etc/rc.d/init.d/vprocunhide
+%attr(754,root,root) /etc/rc.d/init.d/vrootdevices
+%attr(754,root,root) /etc/rc.d/init.d/vservers
 
 %files legacy
 %defattr(644,root,root,755)
@@ -716,3 +714,60 @@ fi
 %{_mandir}/man8/distrib-info.8*
 %{_mandir}/man8/rebootmgr.8*
 %{_mandir}/man8/vserver-copy.8*
+
+%files -n vserver-distro-centos
+%defattr(644,root,root,755)
+%{_libdir}/util-vserver/distributions/centos*
+
+%files -n vserver-distro-debian
+%defattr(644,root,root,755)
+%dir %{_libdir}/%{name}/distributions/debian
+%{_libdir}/%{name}/distributions/debian/debootstrap.script
+%attr(755,root,root) %{_libdir}/%{name}/distributions/debian/initpost
+%{_libdir}/%{name}/distributions/etch
+%{_libdir}/%{name}/distributions/lenny
+%{_libdir}/%{name}/distributions/sid
+
+%files -n vserver-distro-fedora
+%defattr(644,root,root,755)
+%dir %{_sysconfdir}/vservers/.distributions/f7
+%dir %{_sysconfdir}/vservers/.distributions/f7/apt
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/f7/apt/sources.list
+%dir %{_sysconfdir}/vservers/.distributions/fc*
+%dir %{_sysconfdir}/vservers/.distributions/fc*/apt
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
+%{_libdir}/%{name}/distributions/f7
+%{_libdir}/%{name}/distributions/fc*
+
+%files -n vserver-distro-gentoo
+%defattr(644,root,root,755)
+%dir %{_libdir}/util-vserver/distributions/gentoo
+%attr(755,root,root) %{_libdir}/util-vserver/distributions/gentoo/*
+%attr(755,root,root) %{_sbindir}/vdispatch-conf
+%attr(755,root,root) %{_sbindir}/vemerge
+%attr(755,root,root) %{_sbindir}/vesync
+%attr(755,root,root) %{_sbindir}/vupdateworld
+
+%files -n vserver-distro-redhat
+%defattr(644,root,root,755)
+%dir %{_sysconfdir}/vservers/.distributions/rh*
+%dir %{_sysconfdir}/vservers/.distributions/rh*/apt
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/rh*/apt/sources.list
+%{_libdir}/%{name}/distributions/rh*
+
+%files -n vserver-distro-suse
+%defattr(644,root,root,755)
+%dir %{_sysconfdir}/vservers/.distributions/suse*
+%dir %{_sysconfdir}/vservers/.distributions/suse*/apt
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/suse*/apt/sources.list
+%{_libdir}/%{name}/distributions/suse*
+
+%files -n vserver-distro-ubuntu
+%defattr(644,root,root,755)
+%{_libdir}/%{name}/distributions/breezy
+%{_libdir}/%{name}/distributions/dapper
+%{_libdir}/%{name}/distributions/edgy
+%{_libdir}/%{name}/distributions/feisty
+%{_libdir}/%{name}/distributions/gutsy
+%{_libdir}/%{name}/distributions/hoary
+%{_libdir}/%{name}/distributions/warty
