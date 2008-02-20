@@ -262,7 +262,7 @@ konfigurację w starym stylu.
 
 %package -n vserver-distro-debian
 Summary:	VServer build templates for Debian
-Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Debian
+Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Debian
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	dpkg
@@ -270,7 +270,7 @@ Requires:	dpkg
 %description -n vserver-distro-debian
 VServer build templates for Debian.
 
-%description -n vserver-distro-debian -l pl
+%description -n vserver-distro-debian -l pl.UTF-8
 Szablony do tworzenia VServerów dla dystrybucji Debian.
 
 %package -n vserver-distro-centos
@@ -349,7 +349,7 @@ Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 
 %package -n vserver-distro-ubuntu
 Summary:	VServer build templates for Ubuntu
-Summary(pl):	Szablony do tworzenia VServerów dla dystrybucji Ubuntu
+Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Ubuntu
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	dpkg
@@ -357,7 +357,7 @@ Requires:	dpkg
 %description -n vserver-distro-ubuntu
 VServer build templates for Ubuntu.
 
-%description -n vserver-distro-ubuntu -l pl
+%description -n vserver-distro-ubuntu -l pl.UTF-8
 Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 
 %prep
