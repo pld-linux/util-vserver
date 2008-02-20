@@ -19,7 +19,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.212
-Release:	14
+Release:	15
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -718,24 +718,11 @@ fi
 %defattr(644,root,root,755)
 %{_libdir}/util-vserver/distributions/centos*
 
-%files -n vserver-distro-debian
-%defattr(644,root,root,755)
-%dir %{_libdir}/%{name}/distributions/debian
-%{_libdir}/%{name}/distributions/debian/debootstrap.script
-%attr(755,root,root) %{_libdir}/%{name}/distributions/debian/initpost
-%{_libdir}/%{name}/distributions/etch
-%{_libdir}/%{name}/distributions/lenny
-%{_libdir}/%{name}/distributions/sid
-
 %files -n vserver-distro-fedora
 %defattr(644,root,root,755)
-%dir %{_sysconfdir}/vservers/.distributions/f7
-%dir %{_sysconfdir}/vservers/.distributions/f7/apt
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/f7/apt/sources.list
 %dir %{_sysconfdir}/vservers/.distributions/fc*
 %dir %{_sysconfdir}/vservers/.distributions/fc*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
-%{_libdir}/%{name}/distributions/f7
 %{_libdir}/%{name}/distributions/fc*
 
 %files -n vserver-distro-gentoo
@@ -760,13 +747,3 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/suse*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/suse*/apt/sources.list
 %{_libdir}/%{name}/distributions/suse*
-
-%files -n vserver-distro-ubuntu
-%defattr(644,root,root,755)
-%{_libdir}/%{name}/distributions/breezy
-%{_libdir}/%{name}/distributions/dapper
-%{_libdir}/%{name}/distributions/edgy
-%{_libdir}/%{name}/distributions/feisty
-%{_libdir}/%{name}/distributions/gutsy
-%{_libdir}/%{name}/distributions/hoary
-%{_libdir}/%{name}/distributions/warty
