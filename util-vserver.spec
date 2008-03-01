@@ -357,6 +357,12 @@ VServer build templates for Ubuntu.
 %description -n vserver-distro-ubuntu -l pl.UTF-8
 Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 
+%ifarch amd64
+%define _x8664name amd64
+%else
+%define _x8664name x86_64
+%endif
+
 %prep
 %setup -q -a11
 %patch0 -p1
@@ -461,7 +467,7 @@ echo "%{_target_cpu}-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name
 echo "i686-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac-i686/rpm/platform
 cp -a $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac \
         $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac-i686
-sed -i 's/x86_64/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac-i686/poldek/*.conf
+sed -i 's/%{_x8664name}/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac-i686/poldek/*.conf
 
 # th i686
 cp -a $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th \
@@ -470,7 +476,7 @@ echo "%{_target_cpu}-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name
 echo "i686-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th-i686/rpm/platform
 cp -a $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th \
 	$RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th-i686
-sed -i 's/x86_64/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th-i686/poldek/*.conf
+sed -i 's/%{_x8664name}/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th-i686/poldek/*.conf
 
 # titanium i686
 cp -a $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti \
@@ -479,7 +485,7 @@ echo "%{_target_cpu}-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name
 echo "i686-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti-i686/rpm/platform
 cp -a $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti \
 	$RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti-i686
-sed -i 's/x86_64/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti-i686/poldek/*.conf
+sed -i 's/%{_x8664name}/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti-i686/poldek/*.conf
 
 # ac x86_64
 sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pkgs/01
