@@ -18,12 +18,12 @@
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30.212
-Release:	17
+Version:	0.30.214
+Release:	0
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
-# Source0-md5:	386b91732b7f0f132b4e9d978389dcc2
+# Source0-md5:	8bad879e36a6a1b9b4858d0d6d3c8c76
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -41,8 +41,6 @@ Source11:	http://www.13thfloor.at/vserver/s_release/v1.2.10/vproc-%{_vproc_versi
 Source12:	%{name}-vhashify.cron
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
-Patch2:		%{name}-vrpm.patch
-Patch3:		%{name}-include.patch
 Patch4:		%{name}-m4-diet.patch
 Patch6:		%{name}-build-umask.patch
 Patch7:		%{name}-utmpx.patch
@@ -361,12 +359,16 @@ VServer build templates for Ubuntu.
 %description -n vserver-distro-ubuntu -l pl.UTF-8
 Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 
+%ifarch amd64
+%define _x8664name amd64
+%else
+%define _x8664name x86_64
+%endif
+
 %prep
 %setup -q -a11
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
 %patch4 -p1
 %patch6 -p1
 %patch7 -p1
@@ -381,13 +383,11 @@ Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 
 install %{SOURCE9} package-management.txt
 
-cp -a compat.h vserver-compat.h
-
 %build
 unset LD_SYMBOLIC_FUNCTIONS || :
 
 %if %{with dietlibc}
-CFLAGS="%{rpmcflags} -D__GLIBC__"
+CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1 -U__STRICT_ANSI__"
 %endif
 %{__aclocal} -I m4
 %{__automake}
@@ -396,8 +396,8 @@ CFLAGS="%{rpmcflags} -D__GLIBC__"
 	--with-initrddir=/etc/rc.d/init.d \
 	--enable-release \
 	--enable-apis=NOLEGACY \
-	%{?with_dietlibc:--enable-dietlibc} \
-	%{!?with_dietlibc:--disable-dietlibc} \
+	--with-initscripts=sysv \
+	--%{?with_dietlibc:en}%{!?with_dietlibc:dis}able-dietlibc \
 	MKTEMP=/bin/mktemp \
 	MOUNT=/bin/mount \
 	PS=/bin/ps \
@@ -422,15 +422,10 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d,cron.d},/dev/pts} \
 	$RPM_BUILD_ROOT{%{_sysconfdir}/vservices,/vservers/.pkg}
 
-%{__make} install install-distribution \
+%{__make} -j1 install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
 
-cp -a vserver-compat.h $RPM_BUILD_ROOT%{_includedir}
-
 chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
-
-ln -s /vservers $RPM_BUILD_ROOT%{_sysconfdir}/vservers/vdirbase
-ln -s %{_localstatedir}/run/vservers.rev $RPM_BUILD_ROOT%{_sysconfdir}/vservers/run.rev
 
 for i in $RPM_BUILD_ROOT/etc/rc.d/init.d/v_* ; do
 	s=`basename $i | sed s/v_//`
@@ -458,6 +453,7 @@ install %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/vrootdevices
 install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/initpost
 install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/initpost
+install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti/initpost
 install vproc-%{_vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE12} $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 
@@ -632,8 +628,6 @@ fi
 %dir %{_sysconfdir}/vservers/.defaults/files
 %{_sysconfdir}/vservers/.defaults/vdirbase
 %{_sysconfdir}/vservers/.defaults/run.rev
-%{_sysconfdir}/vservers/vdirbase
-%{_sysconfdir}/vservers/run.rev
 /sbin/vshelper
 %attr(755,root,root) %{_sbindir}/chbind
 %attr(755,root,root) %{_sbindir}/chcontext
@@ -652,6 +646,7 @@ fi
 %attr(755,root,root) %{_sbindir}/vnamespace
 %attr(755,root,root) %{_sbindir}/vkill
 %attr(755,root,root) %{_sbindir}/vlimit
+%attr(755,root,root) %{_sbindir}/vdevmap
 %attr(755,root,root) %{_sbindir}/vdu
 %attr(755,root,root) %{_sbindir}/vproc
 %attr(755,root,root) %{_sbindir}/vps
@@ -662,6 +657,7 @@ fi
 %attr(755,root,root) %{_sbindir}/vserver-info
 %attr(755,root,root) %{_sbindir}/vserver-stat
 %attr(755,root,root) %{_sbindir}/vsomething
+%attr(755,root,root) %{_sbindir}/vtag
 %attr(755,root,root) %{_sbindir}/vtop
 %attr(755,root,root) %{_sbindir}/vuname
 %attr(755,root,root) %{_sbindir}/vwait
@@ -680,6 +676,8 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/fakerunlevel
 %attr(755,root,root) %{_libdir}/%{name}/filetime
 %{_libdir}/%{name}/functions
+%attr(755,root,root) %{_libdir}/%{name}/h2ext
+%attr(755,root,root) %{_libdir}/%{name}/h2ext-worker
 %attr(755,root,root) %{_libdir}/%{name}/keep-ctx-alive
 %attr(755,root,root) %{_libdir}/%{name}/lockfile
 %attr(755,root,root) %{_libdir}/%{name}/mask2prefix
@@ -698,6 +696,7 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/vhashify.cron
 %attr(755,root,root) %{_libdir}/%{name}/vshelper
 %attr(755,root,root) %{_libdir}/%{name}/vshelper-sync
+%attr(755,root,root) %{_libdir}/%{name}/vsysctl
 %{_mandir}/man8/chbind.8*
 %{_mandir}/man8/chcontext.8*
 %{_mandir}/man8/reducecap.8*
@@ -750,7 +749,6 @@ fi
 %dir %{_libdir}/%{name}/distributions/template
 %attr(755,root,root) %{_libdir}/%{name}/distributions/template/init*
 %attr(-,root,root) %{_libdir}/%{name}/distributions/redhat
-%{_libdir}/%{name}/magic.mime
 %{_libdir}/%{name}/vserver-build.*
 %{_libdir}/%{name}/vserver-setup.functions
 %{_libdir}/%{name}/defaults/fstab
@@ -758,6 +756,7 @@ fi
 %{_libdir}/%{name}/defaults/vunify-exclude
 %attr(755,root,root) %{_libdir}/%{name}/pkgmgmt
 %attr(755,root,root) %{_libdir}/%{name}/vapt-get-worker
+%attr(755,root,root) %{_libdir}/%{name}/vclone
 %attr(755,root,root) %{_libdir}/%{name}/vcopy
 %attr(755,root,root) %{_libdir}/%{name}/vpkg
 %attr(755,root,root) %{_libdir}/%{name}/vpoldek-worker
@@ -799,11 +798,24 @@ fi
 %defattr(644,root,root,755)
 %{_libdir}/util-vserver/distributions/centos*
 
+%files -n vserver-distro-debian
+%defattr(644,root,root,755)
+%dir %{_libdir}/%{name}/distributions/debian
+%{_libdir}/%{name}/distributions/debian/debootstrap.script
+%attr(755,root,root) %{_libdir}/%{name}/distributions/debian/initpost
+%{_libdir}/%{name}/distributions/etch
+%{_libdir}/%{name}/distributions/lenny
+%{_libdir}/%{name}/distributions/sid
+
 %files -n vserver-distro-fedora
 %defattr(644,root,root,755)
+%dir %{_sysconfdir}/vservers/.distributions/f7
+%dir %{_sysconfdir}/vservers/.distributions/f7/apt
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/f7/apt/sources.list
 %dir %{_sysconfdir}/vservers/.distributions/fc*
 %dir %{_sysconfdir}/vservers/.distributions/fc*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
+%{_libdir}/%{name}/distributions/f7
 %{_libdir}/%{name}/distributions/fc*
 
 %files -n vserver-distro-gentoo
@@ -828,3 +840,13 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/suse*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/suse*/apt/sources.list
 %{_libdir}/%{name}/distributions/suse*
+
+%files -n vserver-distro-ubuntu
+%defattr(644,root,root,755)
+%{_libdir}/%{name}/distributions/breezy
+%{_libdir}/%{name}/distributions/dapper
+%{_libdir}/%{name}/distributions/edgy
+%{_libdir}/%{name}/distributions/feisty
+%{_libdir}/%{name}/distributions/gutsy
+%{_libdir}/%{name}/distributions/hoary
+%{_libdir}/%{name}/distributions/warty
