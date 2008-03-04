@@ -547,6 +547,25 @@ sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-
 sed -i 's/glibc\-\[0\-9\]\*\.rpm/glibc64\-\[0\-9\]\*\.rpm/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpmlist.d/00.lst
 %endif
 
+# fixup pkgs list (it's too crazy to update the patch)
+rm $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpmlist.d/00.lst
+cat <<'EOF' > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pkgs/01.lst
+basesystem
+filesystem
+%ifarch %{x8664}
+glibc64
+%else
+glibc
+%endif
+issue
+vserver-packages
+EOF
+cat <<'EOF' > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pkgs/02.lst
+glibc-misc
+libgcc
+rpm-base
+EOF
+
 # XXX baggins check this: needed but seems unused
 install -d $RPM_BUILD_ROOT/var/cache/vservers
 
