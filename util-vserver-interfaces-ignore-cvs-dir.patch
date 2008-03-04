@@ -8,7 +8,7 @@ Signed-off-by: Elan Ruusamäe <glen@delfi.ee>
  
      for iface in "$1/interfaces/"*; do
          test   -d "$iface"          || continue
-+        test "${iface##*/}" = "CVS" || continue
++        test "${iface##*/}" != "CVS" || continue
          test ! -e "$iface"/disabled || continue
      
          _processSingleInterface "$iface"
