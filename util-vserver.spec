@@ -50,7 +50,8 @@ Patch10:	%{name}-no-dynamic-ctx.patch
 Patch11:	%{name}-more-ip.patch
 Patch12:	%{name}-rpm-fake-resolver-badperm-errorlogging.patch
 Patch13:	%{name}-tmpdir.patch
-Patch14:	%{name}-interfaces-ignore-cvs-dir.patch
+Patch14:	%{name}-rpmpath.patch
+Patch15:	%{name}-interfaces-ignore-cvs-dir.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -378,6 +379,7 @@ Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
+%patch15 -p1
 
 install %{SOURCE9} package-management.txt
 
