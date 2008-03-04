@@ -2,6 +2,8 @@
 # - somewhy empty /var/cache/vservers is needed when building pld vserver
 # - make build create /dev/std{in,out,err} links
 # - reject install in %pre if /proc/virtual/info has incompatible version
+# - unpackaged
+#   /etc/rc.d/init.d/util-vserver -- # integrate to our initscript (util-vserver sets the path to vshelper and kills all guest processes)
 #
 # m68k and mips are the only not supported archs
 #
@@ -425,6 +427,9 @@ install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d,cron.d},/dev/pt
 %{__make} -j1 install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
 
+rm -rf $RPM_BUILD_ROOT/dev
+rm -f $RPM_BUILD_ROOT/usr/lib/util-vserver/vserver-init.functions
+
 chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
 
 for i in $RPM_BUILD_ROOT/etc/rc.d/init.d/v_* ; do
@@ -460,8 +465,6 @@ install %{SOURCE12} $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 cat > $RPM_BUILD_ROOT/etc/cron.d/vservers << EOF
 02 2 * * 0      root    %{_libdir}/%{name}/vhashify.cron
 EOF
-
-ln -sf null $RPM_BUILD_ROOT/dev/initctl
 
 # first platform file entry can't contain regexps
 echo "%{_target_cpu}-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
@@ -646,6 +649,7 @@ fi
 %dir %{_sysconfdir}/vservers/.defaults/apps
 %dir %{_sysconfdir}/vservers/.defaults/files
 %{_sysconfdir}/vservers/.defaults/vdirbase
+%{_sysconfdir}/vservers/.defaults/cachebase
 %{_sysconfdir}/vservers/.defaults/run.rev
 /sbin/vshelper
 %attr(755,root,root) %{_sbindir}/chbind
@@ -733,12 +737,13 @@ fi
 
 %files lib
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libvserver.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libvserver.so.0
 
 %files devel
 %defattr(644,root,root,755)
 %{?with_doc:%doc lib/apidoc/latex/refman.pdf lib/apidoc/html}
-%attr(755,root,root) %{_libdir}/lib*.so
+%attr(755,root,root) %{_libdir}/libvserver.so
 %{_libdir}/lib*.la
 %{_includedir}/vserver*.h
 %{_pkgconfigdir}/*.pc
@@ -761,6 +766,9 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/pld-th
 %dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/*.conf
+%dir %{_sysconfdir}/vservers/.distributions/pld-ti
+%dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/*.conf
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %dir %{_libdir}/%{name}/distributions
 %attr(-,root,root) %{_libdir}/%{name}/distributions/defaults
