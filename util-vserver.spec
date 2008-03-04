@@ -19,7 +19,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.212
-Release:	16
+Release:	17
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -466,6 +466,85 @@ cat > $RPM_BUILD_ROOT/etc/cron.d/vservers << EOF
 EOF
 
 ln -sf null $RPM_BUILD_ROOT/dev/initctl
+
+# first platform file entry can't contain regexps
+echo "%{_target_cpu}-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+# x86_64 things
+%ifarch x86_64
+echo "amd64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+echo "x86_64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+%ifarch amd64
+echo "amd64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+echo "x86_64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+%ifarch ia32e
+echo "ia32e-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+echo "x86_64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+
+# x86 things
+%ifarch athlon %{x8664}
+echo "athlon-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+%ifarch pentium4 athlon %{x8664}
+echo "pentium4-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+%ifarch pentium3 pentium4 athlon %{x8664}
+echo "pentium3-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+%ifarch i686 pentium3 pentium4 athlon %{x8664}
+echo "i686-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+%ifarch i586 i686 pentium3 pentium4 athlon %{x8664}
+echo "i586-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+%ifarch i486 i586 i686 pentium3 pentium4 athlon %{x8664}
+echo "i486-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+%ifarch %{ix86} %{x8664}
+echo "i386-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+
+%ifarch alpha
+echo "alpha-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+
+%ifarch ia64
+echo "ia64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+
+%ifarch ppc64
+echo "powerpc64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+echo "ppc64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+%ifarch ppc ppc64
+echo "powerpc-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+echo "ppc-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+
+%ifarch s390x
+echo "s390x-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+%ifarch s390 s390x
+echo "s390-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+
+%ifarch sparc64
+echo "sparc64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+echo "sparcv8-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+echo "sparcv9-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+%ifarch sparcv9
+echo "sparcv8-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+echo "sparcv9-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+%ifarch sparc sparcv9 sparc64
+echo "sparc-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%endif
+
+# noarch
+echo "noarch-[^-]*-.*" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
 
 %ifarch %{x8664}
 sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pkgs/01
