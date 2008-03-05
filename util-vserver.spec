@@ -21,7 +21,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.214
-Release:	0
+Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -178,11 +178,6 @@ Summary(pl.UTF-8):	Narzędzia do budowania vserverów
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	/etc/pld-release
-# for ar, used by debbootstrap
-Requires:	binutils
-Requires:	e2fsprogs
-Requires:	wget
-Requires:	which
 Conflicts:	poldek < 0.18.8-10
 
 %description build
@@ -428,7 +423,7 @@ install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d,cron.d},/dev/pt
 	DESTDIR=$RPM_BUILD_ROOT
 
 rm -rf $RPM_BUILD_ROOT/dev
-rm -f $RPM_BUILD_ROOT/usr/lib/util-vserver/vserver-init.functions
+rm -f $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-init.functions
 
 chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
 
