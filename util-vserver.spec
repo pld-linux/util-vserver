@@ -294,6 +294,7 @@ Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
 Requires:	wget
+Requires:	yum
 
 %description -n vserver-distro-fedora
 VServer build templates for Fedora Core 1,2,3,4,5,6 and Fedora 7.
