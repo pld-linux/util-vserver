@@ -20,8 +20,8 @@
  	(xgentoo)
 @@ -317,7 +317,7 @@
  
- 	    INITCMD_START=( env TERM=$TERM /lib/rcscripts/sh/init-vserver.sh "$RUNLEVEL_START" )
- 	    INITCMD_STOP=( env -i TERM=$TERM RUNLEVEL=0 /sbin/rc shutdown )
+ 	    INITCMD_START=( env TERM=$TERM $RC_WRAP "$RUNLEVEL_START" )
+ 	    INITCMD_STOP=( env -i PATH=$RC_PATH TERM=$TERM RUNLEVEL=0 /sbin/rc shutdown )
 -	    INITCMD_PREPARE=( $_FAKE_RUNLEVEL 3 /var/run/utmp )
 +	    INITCMD_PREPARE=( $_FAKE_RUNLEVEL 3 /var/run/utmpx )
  	    ;;
