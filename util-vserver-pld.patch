@@ -41,16 +41,6 @@ diff -urN util-vserver-0.30.214.org/distrib/Makefile.am util-vserver-0.30.214/di
  
  AM_INSTALLCHECK_STD_OPTIONS_EXEMPT \
  			=  $(nobase_distrib_SCRIPTS)
-@@ -107,6 +129,9 @@
- 			l="$(sid_style)"; for i in $$l; do \
- 				ln -sf debian $(DESTDIR)$(distribdir)/$$i; \
- 			done
-+			POLDEKARCH=$(shell rpm -E '%{_target_cpu}' 2>/dev/null); \
-+			if [ -z "$$POLDEKARCH" ] ; then POLDEKARCH=$(shell uname -m) ; fi ; \
-+				sed -i -e "s|%ARCH%|$$POLDEKARCH|g" $(DESTDIR)$(confdistribdir)/pld-*/poldek/pld-source.conf
- 			$(mkinstalldirs) $(DESTDIR)$(confdir) \
- 				$(DESTDIR)$(confdistribdir)/.common/pubkeys \
- 				$(DESTDIR)$(confdefaultsdir) \
 diff -urN util-vserver-0.30.214.org/distrib/pld-ac/pkgs/01 util-vserver-0.30.214/distrib/pld-ac/pkgs/01
 --- util-vserver-0.30.214.org/distrib/pld-ac/pkgs/01	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ac/pkgs/01	2007-11-15 23:20:48.181172125 +0100
