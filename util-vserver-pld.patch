@@ -47,11 +47,12 @@
 +
 +#hold =
 +ignore = kernel* udev devfs
---- util-vserver-0.30.214.org/distrib/pld-ac/pkgs/01	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.214/distrib/pld-ac/pkgs/01	2007-11-15 23:20:48.181172125 +0100
-@@ -0,0 +1,5 @@
+--- util-vserver-0.30.214/distrib/pld-ac/pkgs/01	2007-11-15 23:20:48.181172125 +0100
++++ util-vserver-0.30.214/distrib/pld-ac/pkgs/01	2008-03-25 23:05:18.538916218 +0200
+@@ -0,0 +1,6 @@
 +basesystem
-+glibc
++filesystem
++glibc-misc
 +issue
 +rpm-base
 +vserver-packages
@@ -109,11 +110,12 @@
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
 +%_netsharedpath		/dev
---- util-vserver-0.30.214.org/distrib/pld-th/pkgs/01	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.214/distrib/pld-th/pkgs/01	2007-11-15 23:20:48.181172125 +0100
-@@ -0,0 +1,5 @@
+--- util-vserver-0.30.214/distrib/pld-th/pkgs/01	2007-11-15 23:20:48.181172125 +0100
++++ util-vserver-0.30.214/distrib/pld-th/pkgs/01	2008-03-25 23:05:18.538916218 +0200
+@@ -0,0 +1,6 @@
 +basesystem
-+glibc
++filesystem
++glibc-misc
 +issue
 +rpm-base
 +vserver-packages
@@ -178,11 +180,12 @@
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
 +%_netsharedpath		/dev
---- util-vserver-0.30.214.org/distrib/pld-ti/pkgs/01	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.214/distrib/pld-ti/pkgs/01	2007-11-15 23:20:48.217840583 +0100
-@@ -0,0 +1,5 @@
+--- util-vserver-0.30.214/distrib/pld-ti/pkgs/01	2007-11-15 23:20:48.181172125 +0100
++++ util-vserver-0.30.214/distrib/pld-ti/pkgs/01	2008-03-25 23:05:18.538916218 +0200
+@@ -0,0 +1,6 @@
 +basesystem
-+glibc
++filesystem
++glibc-misc
 +issue
 +rpm-base
 +vserver-packages
