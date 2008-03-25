@@ -4,7 +4,6 @@
 # - reject install in %pre if /proc/virtual/info has incompatible version
 # - unpackaged
 #   /etc/rc.d/init.d/util-vserver -- # integrate to our initscript (util-vserver sets the path to vshelper and kills all guest processes)
-# - f8 subpackage
 #
 # m68k and mips are the only not supported archs
 #
@@ -21,12 +20,12 @@
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30.215
-Release:	0.1
+Version:	0.30.214
+Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
-# Source0-md5:	befd9b8e5311e87395b67ee381d83649
+# Source0-md5:	8bad879e36a6a1b9b4858d0d6d3c8c76
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -426,6 +425,7 @@ install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d,cron.d},/dev/pt
 
 rm -rf $RPM_BUILD_ROOT/dev
 rm -f $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-init.functions
+rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/util-vserver
 
 chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
 
@@ -669,12 +669,9 @@ fi
 %attr(755,root,root) %{_sbindir}/vlimit
 %attr(755,root,root) %{_sbindir}/vdevmap
 %attr(755,root,root) %{_sbindir}/vdu
-%attr(755,root,root) %{_sbindir}/vmemctrl
-%attr(755,root,root) %{_sbindir}/vmount
 %attr(755,root,root) %{_sbindir}/vproc
 %attr(755,root,root) %{_sbindir}/vps
 %attr(755,root,root) %{_sbindir}/vpstree
-%attr(755,root,root) %{_sbindir}/vspace
 %attr(755,root,root) %{_sbindir}/vrsetup
 %attr(755,root,root) %{_sbindir}/vsched
 %attr(755,root,root) %{_sbindir}/vserver
@@ -710,7 +707,6 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/secure-mount
 %attr(755,root,root) %{_libdir}/%{name}/sigexec
 %attr(755,root,root) %{_libdir}/%{name}/start-vservers
-%attr(755,root,root) %{_libdir}/%{name}/tunctl
 %attr(755,root,root) %{_libdir}/%{name}/vprocunhide
 %{_libdir}/%{name}/vserver.*
 %{_libdir}/%{name}/vserver-setup.*
@@ -727,7 +723,6 @@ fi
 %{_mandir}/man8/reducecap.8*
 %{_mandir}/man8/vps.8*
 %{_mandir}/man8/vpstree.8*
-%{_mandir}/man8/vserver-build.8*
 %{_mandir}/man8/vserver-stat.8*
 %{_mandir}/man8/vserver.8*
 %{_mandir}/man8/vtop.8*
