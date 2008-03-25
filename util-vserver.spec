@@ -1,12 +1,9 @@
 # TODO
 # - somewhy empty /var/cache/vservers is needed when building pld vserver
 # - make build create /dev/std{in,out,err} links
-# - reject install in %pre if /proc/virtual/info has incompatible version
+# - reject install in %%pretrans if /proc/virtual/info has incompatible version
 # - unpackaged
 #   /etc/rc.d/init.d/util-vserver -- # integrate to our initscript (util-vserver sets the path to vshelper and kills all guest processes)
-# - duplicate: # rpm -qf /usr/lib64/util-vserver/vserver-setup.functions
-#   util-vserver-0.30.214-1.3.amd64
-#   util-vserver-build-0.30.214-1.3.amd64
 #
 # m68k and mips are the only not supported archs
 #
@@ -24,7 +21,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.214
-Release:	1.8
+Release:	1.13
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -467,8 +464,30 @@ cat > $RPM_BUILD_ROOT/etc/cron.d/vservers << EOF
 02 2 * * 0      root    %{_libdir}/%{name}/vhashify.cron
 EOF
 
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/pubkeys
-cp -a %{SOURCE13} $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/pubkeys/pld-ac.asc
+install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pubkeys
+cp -a %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pubkeys/pld-ac.asc
+
+%ifarch i386 i586 i686 ppc sparc alpha athlon
+%define		_ftp_arch	%{_target_cpu}
+%else
+%ifarch %{x8664}
+%define		_ftp_arch	amd64
+%define		_ftp_alt_arch	i686
+%else
+%ifarch i486
+%define		_ftp_arch	i386
+%else
+%ifarch pentium2 pentium3 pentium4
+%define		_ftp_arch	i686
+%else
+%ifarch sparcv9 sparc64
+%define		_ftp_arch	sparc
+%endif
+%endif
+%endif
+%endif
+
+sed -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/pld.conf
 
 cat <<'EOF' > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/defaults/rpm/platform
 # first platform file entry can't contain regexps
@@ -695,9 +714,7 @@ fi
 %attr(755,root,root) %{_libdir}/%{name}/start-vservers
 %attr(755,root,root) %{_libdir}/%{name}/vprocunhide
 %{_libdir}/%{name}/vserver.*
-%{_libdir}/%{name}/vserver-setup.*
 %attr(755,root,root) %{_libdir}/%{name}/vserver-build
-%{_libdir}/%{name}/vserver-build.*
 %attr(755,root,root) %{_libdir}/%{name}/vservers.grabinfo.sh
 %attr(755,root,root) %{_libdir}/%{name}/vhashify
 %attr(755,root,root) %{_libdir}/%{name}/vhashify.cron
@@ -747,8 +764,6 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d
-%dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/pubkeys
-%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/pubkeys/*.asc
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/*.conf
 %dir %{_sysconfdir}/vservers/.distributions/pld-th
 %dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
@@ -766,8 +781,8 @@ fi
 %dir %{_libdir}/%{name}/distributions/template
 %attr(755,root,root) %{_libdir}/%{name}/distributions/template/init*
 %attr(-,root,root) %{_libdir}/%{name}/distributions/redhat
-%{_libdir}/%{name}/vserver-build.*
 %{_libdir}/%{name}/vserver-setup.functions
+%{_libdir}/%{name}/vserver-build.*
 %{_libdir}/%{name}/defaults/fstab
 %{_libdir}/%{name}/defaults/debootstrap.uri
 %{_libdir}/%{name}/defaults/vunify-exclude
