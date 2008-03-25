@@ -1885,9 +1885,9 @@
  	elif test -n "$1"; then
  	    DISTRIBUTION=$1
  	else
---- util-vserver-0.30.214.org/scripts/vserver-build.functions.poldek	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.214/scripts/vserver-build.functions.poldek	2007-11-15 23:20:48.224507577 +0100
-@@ -0,0 +1,67 @@
+--- util-vserver-0.30.214/scripts/vserver-build.functions.poldek	2007-11-15 23:20:48.224507577 +0100
++++ util-vserver-0.30.214/scripts/vserver-build.functions.poldek	2008-03-25 19:20:07.685144000 +0200
+@@ -0,0 +1,72 @@
 +# $Id$	--*- sh -*--
 +
 +# Copyright (C) 2003 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
@@ -1942,7 +1942,7 @@
 +
 +function poldek.initFilesystem
 +{
-+    mkdir -p "$PKGCFGDIR"/poldek/etc
++    mkdir -p "$PKGCFGDIR"/poldek/etc/repos.d
 +    mkdir -p "$PKGCFGBASE"/poldek-cache
 +
 +    $_LN_S "$PKGCFGBASE"/poldek-cache "$PKGCFGDIR"/poldek/cache
@@ -1951,6 +1951,11 @@
 +	"$__DISTRIBDIR/defaults/poldek" \
 +	"$__DISTRIBDIR/$DISTRIBUTION/poldek" \
 +	"$__CONFDIR/.distributions/$DISTRIBUTION/poldek"
++
++    populateDirectory "$PKGCFGDIR/poldek/etc/repos.d" \
++	"$__DISTRIBDIR/defaults/poldek/repos.d" \
++	"$__DISTRIBDIR/$DISTRIBUTION/poldek/repos.d" \
++	"$__CONFDIR/.distributions/$DISTRIBUTION/poldek/repos.d"
 +
 +#    test -z "$POLDEKCONFDEFAULT" || \
 +#	$_LN_S "$POLDEKCONFDEFAULT" "$PKGCFGDIR"/poldek/etc/
