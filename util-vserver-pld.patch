@@ -1,5 +1,5 @@
---- util-vserver-0.30.214/distrib/Makefile.am	2008-03-25 22:57:41.202725402 +0200
-+++ util-vserver-0.30.214/distrib/Makefile.am	2008-03-25 22:59:35.515771366 +0200
+--- util-vserver-0.30.214/distrib/Makefile.am	2008-03-25 22:59:35.515771366 +0200
++++ util-vserver-0.30.214/distrib/Makefile.am	2008-03-25 23:22:53.714374272 +0200
 @@ -42,6 +42,7 @@
  			   defaults/apt.conf \
  			   defaults/rpm/macros \
@@ -16,11 +16,11 @@
 +			   warty/debootstrap.script \
 +			   pld-ac/pkgs/01 pld-ac/rpm/macros \
 +			   pld-th/pkgs/01 pld-th/rpm/macros \
-+			   pld-ti/pkgs/01 pld-ti/rpm/macros \
++			   pld-ti/pkgs/01 pld-ti/rpm/macros
  
  nobase_confdistrib_DATA	=  rh9/apt/sources.list \
  			   fc1/apt/sources.list \
-@@ -83,7 +87,11 @@
+@@ -83,7 +87,10 @@
  			   fc5/apt/sources.list \
  			   fc6/apt/sources.list \
  			   f7/apt/sources.list \
@@ -28,8 +28,7 @@
 +			   suse91/apt/sources.list \
 +			   pld-ac/poldek/repos.d/pld.conf \
 +			   pld-th/poldek/repos.d/pld.conf \
-+			   pld-ti/poldek/repos.d/pld.conf \
-+
++			   pld-ti/poldek/repos.d/pld.conf
  
  AM_INSTALLCHECK_STD_OPTIONS_EXEMPT \
  			=  $(nobase_distrib_SCRIPTS)
