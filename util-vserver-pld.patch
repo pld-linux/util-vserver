@@ -1,41 +1,34 @@
---- util-vserver-0.30.214.org/distrib/Makefile.am	2007-09-02 22:06:42.000000000 +0200
-+++ util-vserver-0.30.214/distrib/Makefile.am	2007-11-15 23:20:48.177838628 +0100
-@@ -73,7 +73,13 @@
+--- util-vserver-0.30.214/distrib/Makefile.am	2008-03-25 22:57:41.202725402 +0200
++++ util-vserver-0.30.214/distrib/Makefile.am	2008-03-25 22:59:35.515771366 +0200
+@@ -42,6 +42,7 @@
+ 			   defaults/apt.conf \
+ 			   defaults/rpm/macros \
+ 			   defaults/apt/apt.conf \
++			   defaults/poldek/poldek.conf \
+ 			   template/initpost template/initpre \
+ 			   rh9/apt/rpmpriorities    rh9/pkgs/01    rh9/pkgs/02 \
+ 			   fc1/apt/rpmpriorities    fc1/pkgs/01    fc1/pkgs/02 \
+@@ -73,7 +74,10 @@
  			   breezy/debootstrap.script dapper/debootstrap.script \
  			   edgy/debootstrap.script   feisty/debootstrap.script \
  			   gutsy/debootstrap.script  hoary/debootstrap.script \
 -			   warty/debootstrap.script
 +			   warty/debootstrap.script \
 +			   pld-ac/pkgs/01 pld-ac/rpm/macros \
-+			   pld-ac/rpmlist.d/00.lst \
 +			   pld-th/pkgs/01 pld-th/rpm/macros \
-+			   pld-th/rpmlist.d/00.lst \
 +			   pld-ti/pkgs/01 pld-ti/rpm/macros \
-+			   pld-ti/rpmlist.d/00.lst
  
  nobase_confdistrib_DATA	=  rh9/apt/sources.list \
  			   fc1/apt/sources.list \
-@@ -83,7 +89,23 @@
+@@ -83,7 +87,11 @@
  			   fc5/apt/sources.list \
  			   fc6/apt/sources.list \
  			   f7/apt/sources.list \
 -			   suse91/apt/sources.list
 +			   suse91/apt/sources.list \
-+			   pld-ac/poldek/aliases.conf \
-+			   pld-ac/poldek/fetch.conf \
-+			   pld-ac/poldek/pld-source.conf \
-+			   pld-ac/poldek/poldek.conf \
-+			   pld-ac/poldek/source.conf \
-+			   pld-th/poldek/aliases.conf \
-+			   pld-th/poldek/fetch.conf \
-+			   pld-th/poldek/pld-source.conf \
-+			   pld-th/poldek/poldek.conf \
-+			   pld-th/poldek/source.conf \
-+			   pld-ti/poldek/aliases.conf \
-+			   pld-ti/poldek/fetch.conf \
-+			   pld-ti/poldek/pld-source.conf \
-+			   pld-ti/poldek/poldek.conf \
-+			   pld-ti/poldek/source.conf
++			   pld-ac/poldek/repos.d/pld.conf \
++			   pld-th/poldek/repos.d/pld.conf \
++			   pld-ti/poldek/repos.d/pld.conf \
 +
  
  AM_INSTALLCHECK_STD_OPTIONS_EXEMPT \
@@ -62,8 +55,8 @@
 +issue
 +rpm-base
 +vserver-packages
---- util-vserver-0.30.214.org/distrib/pld-ac/poldek/pld-source.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.214/distrib/pld-ac/poldek/pld-source.conf	2007-11-15 23:20:48.181172125 +0100
+--- util-vserver-0.30.214.org/distrib/pld-ac/poldek/repos.d/pld.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.214/distrib/pld-ac/poldek/repos.d/pld.conf	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,44 @@
 +# $Id$
 +# PLD <http://www.pld-linux.org/>
@@ -109,191 +102,6 @@
 +name  = ac-test
 +path  = %{_pld_prefix}/test/%{_pld_arch}/
 +noauto	= yes
---- util-vserver-0.30.214.org/distrib/pld-ac/poldek/poldek.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.214/distrib/pld-ac/poldek/poldek.conf	2007-11-15 23:20:48.181172125 +0100
-@@ -0,0 +1,182 @@
-+# poldek main configuration file.
-+
-+# Some macros. Macros are local, they are not visible in included files
-+# and macros declared in them are not visible to includer.
-+# Macros names starts with underscore '_'.
-+#
-+_distro  = pld
-+
-+# Both local and remote files may be included. Included files may not contain
-+# [global] section, it will be ignored anyway. 
-+%include %{_distro}-source.conf
-+
-+# local sources
-+%include source.conf
-+
-+# External downloaders configuration, not necessary in most cases, cause
-+# to internal HTTP and FTP client.
-+#%include fetch.conf
-+
-+[global]
-+
-+
-+# This parameter allows to configure the default repository index type.
-+#default index type = pndir
-+
-+# Cache directory for downloaded files. NOTE: that parent directory of cachedir 
-+# must exists.
-+#cachedir = $HOME/.poldek-cache
-+
-+# Switch to ordinary user at startup when executed by root
-+#runas = poldek
-+
-+# Permits using root privileges for installation only. Automatically turned
-+# on when poldek executed as ordinary user.
-+#use sudo = no
-+
-+# Load /etc/apt/sources.list. 
-+#load apt sources list = no
-+
-+# Handle gzipped indexes externally (needed on RedHat 9 and Fedora Core 1 and 2).
-+# This option is a workaround for broken zlib linked into librpm; with enabled 
-+# 'auto zlib in rpm' poldek tries to detect such case and then enables external
-+# *.gz handling automatically.
-+#vfile external compress = no
-+
-+# Auto detection of zlib linked into librpm. See 'vfile external compress' 
-+# description.
-+#auto zlib in rpm = yes
-+
-+# Automatically download whole index if incremental update fails.
-+#autoupa = yes
-+
-+# Do not save given paths into created indexes. This option may significantly
-+# reduce index size. Example (notice missing starting '/'):
-+# exclude path = usr/share/doc:usr/share/man:usr/src
-+#exclude path = 
-+
-+# Full path name to a PM (rpm for now) binary. 
-+#pm command = /bin/rpm
-+
-+# Full path name to sudo binary. 
-+#sudo command = /usr/bin/sudo
-+
-+
-+### File downloaders configuration
-+
-+# Send ${USER}@${HOSTNAME} as anonymous FTP password (by default 
-+# 'poldek@znienacka.net' is sent) 
-+#vfile ftp sysuser as anon passwd = no
-+
-+# File getters configuration parameter. By this option URL handlers may be configured.
-+# To get file from HTTP and FTP servers poldek uses its internal client (what is 
-+# recommended), although it can be changedby this option. Others protocols handled 
-+# by external utilities can be configured also. The syntax is:
-+# default fetcher = PROTOCOL[,PROTOCOL...]:FETCHER_NAME
-+
-+# where FETCHER_NAME is a name of one of the fetcher preconfigured in [fetch]
-+# sections (placed in fetch.conf in default configuration).
-+# Examples:
-+# default fetcher = ftp,http:internal
-+# default fetcher = https:wget
-+# default fetcher = cdrom:vfjuggle
-+# vfjuggle is a cdrom getter supplied with poldek.
-+#default fetcher = http,ftp: internal
-+
-+# Proxies for internal FTP and HTTP client may be configured in usual
-+# way, by environment variables ftp_proxy and http_proxy, or by this option.
-+# Its syntax is similar to "default fetcher" one:
-+# proxy = PROTOCOL[,PROTOCOL...]:PROXY_URL
-+# Example:
-+# proxy = http: http://w3cache.foo.org:8080
-+#proxy = 
-+
-+# Comma separated list of hosts or domains which will not be accessed via proxy.
-+# Option overrides no_proxy environment variable.
-+# Example:
-+# noproxy = localhost, .pl, ftp.foo.bar.org
-+#noproxy = 
-+
-+# Internal HTTP and FTP client is stubborn, it retries to retrive 
-+# file if connection breaks. This option tells it how many times
-+# it should try.
-+#vfile retries = 128
-+
-+
-+### Installation options
-+
-+# Install packages in small groups instead of doing all-or-nothing 
-+# installations.
-+particle install = no
-+
-+# Do not remove downloaded packages after its successful installation.
-+#keep downloads = no
-+
-+# Controls visibility of multiple package instances with different EVR.
-+# If on, only one, highest version will be visible.
-+#unique package names = no
-+
-+# Epoch autopromotion during dependency comparision. RPM specific.
-+# Set it up if you are using system with rpm prior to 4.2.1 version.
-+#promoteepoch = no
-+
-+# Confirm packages installation.
-+#confirm installation = no
-+
-+# Confirm packages removal.
-+#confirm removal = yes
-+
-+# Let the user select package among equivalents.
-+choose equivalents manually = yes
-+
-+# Prevent package listed from being upgraded if they are already installed.
-+# hold = kernel* dev
-+#hold = 
-+
-+# Ignore package list - packages fits given mask will be invisible.
-+# ignore   = *-smp-* foo*
-+ignore = kernel* udev devfs
-+
-+# Conflicts with already installed packages are treated as resolved 
-+# if at least one of multiple-installed package satisfies conflict. 
-+# rpm doesn't support such cases, so --pm-nodeps is needed (use with
-+# care).
-+#allow duplicates = yes
-+
-+
-+### RPM specific options
-+
-+# rpm macros can be set by this option. Examples:
-+# rpmdef   = _install_langs pl:pl_PL:lt:lt_LT
-+# Do not install any documentation:
-+# rpmdef  = _netsharedpath /usr/share/info:/usr/share/man
-+# rpmdef  = _excludedocs 1
-+#rpmdef = 
-+
-+
-+### Dependency processing settings
-+# Subtle dependency processing options, they should not be changed 
-+# unless you know what you are doing
-+
-+# Automatically install packages required by installed ones.
-+#follow = yes
-+
-+# Greedy upgrades, i.e. upgrade packages which dependencies are broken
-+# by being uninstalled ones.
-+#greedy = yes
-+
-+# Be yet more greedy; if successor of orphaned package found, and this 
-+# successor drags no packages then upgrade the package instead of process
-+# its dependencies. Option value is implied by 'greedy' one by defalut.
-+#aggressive greedy = yes
-+
-+# Be tolerant for unmatched versioned dependencies which rpm tolerates, e.g.
-+# package A requires capability foo &gt;= 1.0 while package B provides "foo"
-+# without any version. Use with care, it may cause weird dependency errors.
-+#mercy = no
-+
-+# Taking into account package Obsoletes.
-+#obsoletes = yes
-+
-+# Taking into account package Conflicts.
-+#conflicts = yes
 --- util-vserver-0.30.214.org/distrib/pld-ac/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ac/rpm/macros	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,4 @@
@@ -309,8 +117,8 @@
 +issue
 +rpm-base
 +vserver-packages
---- util-vserver-0.30.214.org/distrib/pld-th/poldek/pld-source.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.214/distrib/pld-th/poldek/pld-source.conf	2007-11-15 23:20:48.181172125 +0100
+--- util-vserver-0.30.214.org/distrib/pld-th/poldek/repos.d/pld.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.214/distrib/pld-th/poldek/repos.d/pld.conf	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,51 @@
 +# PLD <http://www.pld-linux.org/>
 +
@@ -363,191 +171,6 @@
 +name  = th-test
 +path  = %{_pld_prefix}/test/%{_pld_arch}/RPMS/
 +noauto	= yes
---- util-vserver-0.30.214.org/distrib/pld-th/poldek/poldek.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.214/distrib/pld-th/poldek/poldek.conf	2007-11-15 23:20:48.184505622 +0100
-@@ -0,0 +1,182 @@
-+# poldek main configuration file.
-+
-+# Some macros. Macros are local, they are not visible in included files
-+# and macros declared in them are not visible to includer.
-+# Macros names starts with underscore '_'.
-+#
-+_distro  = pld
-+
-+# Both local and remote files may be included. Included files may not contain
-+# [global] section, it will be ignored anyway. 
-+%include %{_distro}-source.conf
-+
-+# local sources
-+%include source.conf
-+
-+# External downloaders configuration, not necessary in most cases, cause
-+# to internal HTTP and FTP client.
-+#%include fetch.conf
-+
-+[global]
-+
-+
-+# This parameter allows to configure the default repository index type.
-+#default index type = pndir
-+
-+# Cache directory for downloaded files. NOTE: that parent directory of cachedir 
-+# must exists.
-+#cachedir = $HOME/.poldek-cache
-+
-+# Switch to ordinary user at startup when executed by root
-+#runas = poldek
-+
-+# Permits using root privileges for installation only. Automatically turned
-+# on when poldek executed as ordinary user.
-+#use sudo = no
-+
-+# Load /etc/apt/sources.list. 
-+#load apt sources list = no
-+
-+# Handle gzipped indexes externally (needed on RedHat 9 and Fedora Core 1 and 2).
-+# This option is a workaround for broken zlib linked into librpm; with enabled 
-+# 'auto zlib in rpm' poldek tries to detect such case and then enables external
-+# *.gz handling automatically.
-+#vfile external compress = no
-+
-+# Auto detection of zlib linked into librpm. See 'vfile external compress' 
-+# description.
-+#auto zlib in rpm = yes
-+
-+# Automatically download whole index if incremental update fails.
-+#autoupa = yes
-+
-+# Do not save given paths into created indexes. This option may significantly
-+# reduce index size. Example (notice missing starting '/'):
-+# exclude path = usr/share/doc:usr/share/man:usr/src
-+#exclude path = 
-+
-+# Full path name to a PM (rpm for now) binary. 
-+#pm command = /bin/rpm
-+
-+# Full path name to sudo binary. 
-+#sudo command = /usr/bin/sudo
-+
-+
-+### File downloaders configuration
-+
-+# Send ${USER}@${HOSTNAME} as anonymous FTP password (by default 
-+# 'poldek@znienacka.net' is sent) 
-+#vfile ftp sysuser as anon passwd = no
-+
-+# File getters configuration parameter. By this option URL handlers may be configured.
-+# To get file from HTTP and FTP servers poldek uses its internal client (what is 
-+# recommended), although it can be changedby this option. Others protocols handled 
-+# by external utilities can be configured also. The syntax is:
-+# default fetcher = PROTOCOL[,PROTOCOL...]:FETCHER_NAME
-+
-+# where FETCHER_NAME is a name of one of the fetcher preconfigured in [fetch]
-+# sections (placed in fetch.conf in default configuration).
-+# Examples:
-+# default fetcher = ftp,http:internal
-+# default fetcher = https:wget
-+# default fetcher = cdrom:vfjuggle
-+# vfjuggle is a cdrom getter supplied with poldek.
-+#default fetcher = http,ftp: internal
-+
-+# Proxies for internal FTP and HTTP client may be configured in usual
-+# way, by environment variables ftp_proxy and http_proxy, or by this option.
-+# Its syntax is similar to "default fetcher" one:
-+# proxy = PROTOCOL[,PROTOCOL...]:PROXY_URL
-+# Example:
-+# proxy = http: http://w3cache.foo.org:8080
-+#proxy = 
-+
-+# Comma separated list of hosts or domains which will not be accessed via proxy.
-+# Option overrides no_proxy environment variable.
-+# Example:
-+# noproxy = localhost, .pl, ftp.foo.bar.org
-+#noproxy = 
-+
-+# Internal HTTP and FTP client is stubborn, it retries to retrive 
-+# file if connection breaks. This option tells it how many times
-+# it should try.
-+#vfile retries = 128
-+
-+
-+### Installation options
-+
-+# Install packages in small groups instead of doing all-or-nothing 
-+# installations.
-+particle install = no
-+
-+# Do not remove downloaded packages after its successful installation.
-+#keep downloads = no
-+
-+# Controls visibility of multiple package instances with different EVR.
-+# If on, only one, highest version will be visible.
-+#unique package names = no
-+
-+# Epoch autopromotion during dependency comparision. RPM specific.
-+# Set it up if you are using system with rpm prior to 4.2.1 version.
-+#promoteepoch = no
-+
-+# Confirm packages installation.
-+#confirm installation = no
-+
-+# Confirm packages removal.
-+#confirm removal = yes
-+
-+# Let the user select package among equivalents.
-+choose equivalents manually = yes
-+
-+# Prevent package listed from being upgraded if they are already installed.
-+# hold = kernel* dev
-+#hold = 
-+
-+# Ignore package list - packages fits given mask will be invisible.
-+# ignore   = *-smp-* foo*
-+ignore = kernel* udev devfs
-+
-+# Conflicts with already installed packages are treated as resolved 
-+# if at least one of multiple-installed package satisfies conflict. 
-+# rpm doesn't support such cases, so --pm-nodeps is needed (use with
-+# care).
-+#allow duplicates = yes
-+
-+
-+### RPM specific options
-+
-+# rpm macros can be set by this option. Examples:
-+# rpmdef   = _install_langs pl:pl_PL:lt:lt_LT
-+# Do not install any documentation:
-+# rpmdef  = _netsharedpath /usr/share/info:/usr/share/man
-+# rpmdef  = _excludedocs 1
-+#rpmdef = 
-+
-+
-+### Dependency processing settings
-+# Subtle dependency processing options, they should not be changed 
-+# unless you know what you are doing
-+
-+# Automatically install packages required by installed ones.
-+#follow = yes
-+
-+# Greedy upgrades, i.e. upgrade packages which dependencies are broken
-+# by being uninstalled ones.
-+#greedy = yes
-+
-+# Be yet more greedy; if successor of orphaned package found, and this 
-+# successor drags no packages then upgrade the package instead of process
-+# its dependencies. Option value is implied by 'greedy' one by defalut.
-+#aggressive greedy = yes
-+
-+# Be tolerant for unmatched versioned dependencies which rpm tolerates, e.g.
-+# package A requires capability foo &gt;= 1.0 while package B provides "foo"
-+# without any version. Use with care, it may cause weird dependency errors.
-+#mercy = no
-+
-+# Taking into account package Obsoletes.
-+#obsoletes = yes
-+
-+# Taking into account package Conflicts.
-+#conflicts = yes
 --- util-vserver-0.30.214.org/distrib/pld-th/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-th/rpm/macros	2007-11-15 23:20:48.184505622 +0100
 @@ -0,0 +1,4 @@
@@ -563,8 +186,8 @@
 +issue
 +rpm-base
 +vserver-packages
---- util-vserver-0.30.214.org/distrib/pld-ti/poldek/pld-source.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.214/distrib/pld-ti/poldek/pld-source.conf	2007-11-15 23:20:48.217840583 +0100
+--- util-vserver-0.30.214.org/distrib/pld-ti/poldek/repos.d/pld.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.214/distrib/pld-ti/poldek/repos.d/pld.conf	2007-11-15 23:20:48.217840583 +0100
 @@ -0,0 +1,46 @@
 +# PLD Titanium
 +# Unofficial version of PLD Linux Distribution
@@ -612,191 +235,6 @@
 +path   = %{_prefix}/test/noarch/RPMS/
 +auto   = no
 +autoup = no
---- util-vserver-0.30.214.org/distrib/pld-ti/poldek/poldek.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.214/distrib/pld-ti/poldek/poldek.conf	2007-11-15 23:20:48.217840583 +0100
-@@ -0,0 +1,182 @@
-+# poldek main configuration file.
-+
-+# Some macros. Macros are local, they are not visible in included files
-+# and macros declared in them are not visible to includer.
-+# Macros names starts with underscore '_'.
-+#
-+_distro  = pld
-+
-+# Both local and remote files may be included. Included files may not contain
-+# [global] section, it will be ignored anyway. 
-+%include %{_distro}-source.conf
-+
-+# local sources
-+%include source.conf
-+
-+# External downloaders configuration, not necessary in most cases, cause
-+# to internal HTTP and FTP client.
-+#%include fetch.conf
-+
-+[global]
-+
-+
-+# This parameter allows to configure the default repository index type.
-+#default index type = pndir
-+
-+# Cache directory for downloaded files. NOTE: that parent directory of cachedir 
-+# must exists.
-+#cachedir = $HOME/.poldek-cache
-+
-+# Switch to ordinary user at startup when executed by root
-+#runas = poldek
-+
-+# Permits using root privileges for installation only. Automatically turned
-+# on when poldek executed as ordinary user.
-+#use sudo = no
-+
-+# Load /etc/apt/sources.list. 
-+#load apt sources list = no
-+
-+# Handle gzipped indexes externally (needed on RedHat 9 and Fedora Core 1 and 2).
-+# This option is a workaround for broken zlib linked into librpm; with enabled 
-+# 'auto zlib in rpm' poldek tries to detect such case and then enables external
-+# *.gz handling automatically.
-+#vfile external compress = no
-+
-+# Auto detection of zlib linked into librpm. See 'vfile external compress' 
-+# description.
-+#auto zlib in rpm = yes
-+
-+# Automatically download whole index if incremental update fails.
-+#autoupa = yes
-+
-+# Do not save given paths into created indexes. This option may significantly
-+# reduce index size. Example (notice missing starting '/'):
-+# exclude path = usr/share/doc:usr/share/man:usr/src
-+#exclude path = 
-+
-+# Full path name to a PM (rpm for now) binary. 
-+#pm command = /bin/rpm
-+
-+# Full path name to sudo binary. 
-+#sudo command = /usr/bin/sudo
-+
-+
-+### File downloaders configuration
-+
-+# Send ${USER}@${HOSTNAME} as anonymous FTP password (by default 
-+# 'poldek@znienacka.net' is sent) 
-+#vfile ftp sysuser as anon passwd = no
-+
-+# File getters configuration parameter. By this option URL handlers may be configured.
-+# To get file from HTTP and FTP servers poldek uses its internal client (what is 
-+# recommended), although it can be changedby this option. Others protocols handled 
-+# by external utilities can be configured also. The syntax is:
-+# default fetcher = PROTOCOL[,PROTOCOL...]:FETCHER_NAME
-+
-+# where FETCHER_NAME is a name of one of the fetcher preconfigured in [fetch]
-+# sections (placed in fetch.conf in default configuration).
-+# Examples:
-+# default fetcher = ftp,http:internal
-+# default fetcher = https:wget
-+# default fetcher = cdrom:vfjuggle
-+# vfjuggle is a cdrom getter supplied with poldek.
-+#default fetcher = http,ftp: internal
-+
-+# Proxies for internal FTP and HTTP client may be configured in usual
-+# way, by environment variables ftp_proxy and http_proxy, or by this option.
-+# Its syntax is similar to "default fetcher" one:
-+# proxy = PROTOCOL[,PROTOCOL...]:PROXY_URL
-+# Example:
-+# proxy = http: http://w3cache.foo.org:8080
-+#proxy = 
-+
-+# Comma separated list of hosts or domains which will not be accessed via proxy.
-+# Option overrides no_proxy environment variable.
-+# Example:
-+# noproxy = localhost, .pl, ftp.foo.bar.org
-+#noproxy = 
-+
-+# Internal HTTP and FTP client is stubborn, it retries to retrive 
-+# file if connection breaks. This option tells it how many times
-+# it should try.
-+#vfile retries = 128
-+
-+
-+### Installation options
-+
-+# Install packages in small groups instead of doing all-or-nothing 
-+# installations.
-+particle install = no
-+
-+# Do not remove downloaded packages after its successful installation.
-+#keep downloads = no
-+
-+# Controls visibility of multiple package instances with different EVR.
-+# If on, only one, highest version will be visible.
-+#unique package names = no
-+
-+# Epoch autopromotion during dependency comparision. RPM specific.
-+# Set it up if you are using system with rpm prior to 4.2.1 version.
-+#promoteepoch = no
-+
-+# Confirm packages installation.
-+#confirm installation = no
-+
-+# Confirm packages removal.
-+#confirm removal = yes
-+
-+# Let the user select package among equivalents.
-+choose equivalents manually = yes
-+
-+# Prevent package listed from being upgraded if they are already installed.
-+# hold = kernel* dev
-+#hold = 
-+
-+# Ignore package list - packages fits given mask will be invisible.
-+# ignore   = *-smp-* foo*
-+ignore = kernel* udev devfs
-+
-+# Conflicts with already installed packages are treated as resolved 
-+# if at least one of multiple-installed package satisfies conflict. 
-+# rpm doesn't support such cases, so --pm-nodeps is needed (use with
-+# care).
-+#allow duplicates = yes
-+
-+
-+### RPM specific options
-+
-+# rpm macros can be set by this option. Examples:
-+# rpmdef   = _install_langs pl:pl_PL:lt:lt_LT
-+# Do not install any documentation:
-+# rpmdef  = _netsharedpath /usr/share/info:/usr/share/man
-+# rpmdef  = _excludedocs 1
-+#rpmdef = 
-+
-+
-+### Dependency processing settings
-+# Subtle dependency processing options, they should not be changed 
-+# unless you know what you are doing
-+
-+# Automatically install packages required by installed ones.
-+#follow = yes
-+
-+# Greedy upgrades, i.e. upgrade packages which dependencies are broken
-+# by being uninstalled ones.
-+#greedy = yes
-+
-+# Be yet more greedy; if successor of orphaned package found, and this 
-+# successor drags no packages then upgrade the package instead of process
-+# its dependencies. Option value is implied by 'greedy' one by defalut.
-+#aggressive greedy = yes
-+
-+# Be tolerant for unmatched versioned dependencies which rpm tolerates, e.g.
-+# package A requires capability foo &gt;= 1.0 while package B provides "foo"
-+# without any version. Use with care, it may cause weird dependency errors.
-+#mercy = no
-+
-+# Taking into account package Obsoletes.
-+#obsoletes = yes
-+
-+# Taking into account package Conflicts.
-+#conflicts = yes
 --- util-vserver-0.30.214.org/distrib/pld-ti/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ti/rpm/macros	2007-11-15 23:20:48.221174080 +0100
 @@ -0,0 +1,4 @@
