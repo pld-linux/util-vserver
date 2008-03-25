@@ -1,4 +1,3 @@
-diff -urN util-vserver-0.30.214.org/distrib/Makefile.am util-vserver-0.30.214/distrib/Makefile.am
 --- util-vserver-0.30.214.org/distrib/Makefile.am	2007-09-02 22:06:42.000000000 +0200
 +++ util-vserver-0.30.214/distrib/Makefile.am	2007-11-15 23:20:48.177838628 +0100
 @@ -73,7 +73,13 @@
@@ -41,7 +40,6 @@ diff -urN util-vserver-0.30.214.org/distrib/Makefile.am util-vserver-0.30.214/di
  
  AM_INSTALLCHECK_STD_OPTIONS_EXEMPT \
  			=  $(nobase_distrib_SCRIPTS)
-diff -urN util-vserver-0.30.214.org/distrib/pld-ac/pkgs/01 util-vserver-0.30.214/distrib/pld-ac/pkgs/01
 --- util-vserver-0.30.214.org/distrib/pld-ac/pkgs/01	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ac/pkgs/01	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,5 @@
@@ -50,7 +48,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ac/pkgs/01 util-vserver-0.30.214
 +issue
 +rpm-base
 +vserver-packages
-diff -urN util-vserver-0.30.214.org/distrib/pld-ac/poldek/aliases.conf util-vserver-0.30.214/distrib/pld-ac/poldek/aliases.conf
 --- util-vserver-0.30.214.org/distrib/pld-ac/poldek/aliases.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ac/poldek/aliases.conf	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,30 @@
@@ -84,7 +81,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ac/poldek/aliases.conf util-vser
 +grep = !grep
 +awk  = !awk
 +
-diff -urN util-vserver-0.30.214.org/distrib/pld-ac/poldek/fetch.conf util-vserver-0.30.214/distrib/pld-ac/poldek/fetch.conf
 --- util-vserver-0.30.214.org/distrib/pld-ac/poldek/fetch.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ac/poldek/fetch.conf	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,62 @@
@@ -150,7 +146,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ac/poldek/fetch.conf util-vserve
 +#cmd   = foo.sh %d %Pn
 + 
 +  
-diff -urN util-vserver-0.30.214.org/distrib/pld-ac/poldek/pld-source.conf util-vserver-0.30.214/distrib/pld-ac/poldek/pld-source.conf
 --- util-vserver-0.30.214.org/distrib/pld-ac/poldek/pld-source.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ac/poldek/pld-source.conf	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,44 @@
@@ -198,7 +193,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ac/poldek/pld-source.conf util-v
 +name  = ac-test
 +path  = %{_pld_prefix}/test/%{_pld_arch}/
 +noauto	= yes
-diff -urN util-vserver-0.30.214.org/distrib/pld-ac/poldek/poldek.conf util-vserver-0.30.214/distrib/pld-ac/poldek/poldek.conf
 --- util-vserver-0.30.214.org/distrib/pld-ac/poldek/poldek.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ac/poldek/poldek.conf	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,182 @@
@@ -384,7 +378,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ac/poldek/poldek.conf util-vserv
 +
 +# Taking into account package Conflicts.
 +#conflicts = yes
-diff -urN util-vserver-0.30.214.org/distrib/pld-ac/poldek/source.conf util-vserver-0.30.214/distrib/pld-ac/poldek/source.conf
 --- util-vserver-0.30.214.org/distrib/pld-ac/poldek/source.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ac/poldek/source.conf	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,85 @@
@@ -473,7 +466,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ac/poldek/source.conf util-vserv
 +#ignore = kernel*-smp-*
 +#dscr   = pl_PL
 +  
-diff -urN util-vserver-0.30.214.org/distrib/pld-ac/rpm/macros util-vserver-0.30.214/distrib/pld-ac/rpm/macros
 --- util-vserver-0.30.214.org/distrib/pld-ac/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ac/rpm/macros	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,4 @@
@@ -481,7 +473,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ac/rpm/macros util-vserver-0.30.
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
 +%_netsharedpath		/dev
-diff -urN util-vserver-0.30.214.org/distrib/pld-ac/rpmlist.d/00.lst util-vserver-0.30.214/distrib/pld-ac/rpmlist.d/00.lst
 --- util-vserver-0.30.214.org/distrib/pld-ac/rpmlist.d/00.lst	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ac/rpmlist.d/00.lst	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,10 @@
@@ -495,7 +486,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ac/rpmlist.d/00.lst util-vserver
 +issue-[0-9]*.rpm
 +rpm-base-*.rpm
 +vserver-packages-*.rpm
-diff -urN util-vserver-0.30.214.org/distrib/pld-th/pkgs/01 util-vserver-0.30.214/distrib/pld-th/pkgs/01
 --- util-vserver-0.30.214.org/distrib/pld-th/pkgs/01	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-th/pkgs/01	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,5 @@
@@ -504,7 +494,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-th/pkgs/01 util-vserver-0.30.214
 +issue
 +rpm-base
 +vserver-packages
-diff -urN util-vserver-0.30.214.org/distrib/pld-th/poldek/aliases.conf util-vserver-0.30.214/distrib/pld-th/poldek/aliases.conf
 --- util-vserver-0.30.214.org/distrib/pld-th/poldek/aliases.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-th/poldek/aliases.conf	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,30 @@
@@ -538,7 +527,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-th/poldek/aliases.conf util-vser
 +grep = !grep
 +awk  = !awk
 +
-diff -urN util-vserver-0.30.214.org/distrib/pld-th/poldek/fetch.conf util-vserver-0.30.214/distrib/pld-th/poldek/fetch.conf
 --- util-vserver-0.30.214.org/distrib/pld-th/poldek/fetch.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-th/poldek/fetch.conf	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,62 @@
@@ -604,7 +592,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-th/poldek/fetch.conf util-vserve
 +#cmd   = foo.sh %d %Pn
 + 
 +  
-diff -urN util-vserver-0.30.214.org/distrib/pld-th/poldek/pld-source.conf util-vserver-0.30.214/distrib/pld-th/poldek/pld-source.conf
 --- util-vserver-0.30.214.org/distrib/pld-th/poldek/pld-source.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-th/poldek/pld-source.conf	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,51 @@
@@ -659,7 +646,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-th/poldek/pld-source.conf util-v
 +name  = th-test
 +path  = %{_pld_prefix}/test/%{_pld_arch}/RPMS/
 +noauto	= yes
-diff -urN util-vserver-0.30.214.org/distrib/pld-th/poldek/poldek.conf util-vserver-0.30.214/distrib/pld-th/poldek/poldek.conf
 --- util-vserver-0.30.214.org/distrib/pld-th/poldek/poldek.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-th/poldek/poldek.conf	2007-11-15 23:20:48.184505622 +0100
 @@ -0,0 +1,182 @@
@@ -845,7 +831,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-th/poldek/poldek.conf util-vserv
 +
 +# Taking into account package Conflicts.
 +#conflicts = yes
-diff -urN util-vserver-0.30.214.org/distrib/pld-th/poldek/source.conf util-vserver-0.30.214/distrib/pld-th/poldek/source.conf
 --- util-vserver-0.30.214.org/distrib/pld-th/poldek/source.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-th/poldek/source.conf	2007-11-15 23:20:48.184505622 +0100
 @@ -0,0 +1,85 @@
@@ -934,7 +919,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-th/poldek/source.conf util-vserv
 +#ignore = kernel*-smp-*
 +#dscr   = pl_PL
 +  
-diff -urN util-vserver-0.30.214.org/distrib/pld-th/rpm/macros util-vserver-0.30.214/distrib/pld-th/rpm/macros
 --- util-vserver-0.30.214.org/distrib/pld-th/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-th/rpm/macros	2007-11-15 23:20:48.184505622 +0100
 @@ -0,0 +1,4 @@
@@ -942,7 +926,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-th/rpm/macros util-vserver-0.30.
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
 +%_netsharedpath		/dev
-diff -urN util-vserver-0.30.214.org/distrib/pld-th/rpmlist.d/00.lst util-vserver-0.30.214/distrib/pld-th/rpmlist.d/00.lst
 --- util-vserver-0.30.214.org/distrib/pld-th/rpmlist.d/00.lst	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-th/rpmlist.d/00.lst	2007-11-15 23:20:48.184505622 +0100
 @@ -0,0 +1,10 @@
@@ -956,7 +939,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-th/rpmlist.d/00.lst util-vserver
 +issue-[0-9]*.rpm
 +rpm-base-*.rpm
 +vserver-packages-*.rpm
-diff -urN util-vserver-0.30.214.org/distrib/pld-ti/pkgs/01 util-vserver-0.30.214/distrib/pld-ti/pkgs/01
 --- util-vserver-0.30.214.org/distrib/pld-ti/pkgs/01	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ti/pkgs/01	2007-11-15 23:20:48.217840583 +0100
 @@ -0,0 +1,5 @@
@@ -965,7 +947,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ti/pkgs/01 util-vserver-0.30.214
 +issue
 +rpm-base
 +vserver-packages
-diff -urN util-vserver-0.30.214.org/distrib/pld-ti/poldek/aliases.conf util-vserver-0.30.214/distrib/pld-ti/poldek/aliases.conf
 --- util-vserver-0.30.214.org/distrib/pld-ti/poldek/aliases.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ti/poldek/aliases.conf	2007-11-15 23:20:48.217840583 +0100
 @@ -0,0 +1,30 @@
@@ -999,7 +980,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ti/poldek/aliases.conf util-vser
 +grep = !grep
 +awk  = !awk
 +
-diff -urN util-vserver-0.30.214.org/distrib/pld-ti/poldek/fetch.conf util-vserver-0.30.214/distrib/pld-ti/poldek/fetch.conf
 --- util-vserver-0.30.214.org/distrib/pld-ti/poldek/fetch.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ti/poldek/fetch.conf	2007-11-15 23:20:48.217840583 +0100
 @@ -0,0 +1,62 @@
@@ -1065,7 +1045,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ti/poldek/fetch.conf util-vserve
 +#cmd   = foo.sh %d %Pn
 + 
 +  
-diff -urN util-vserver-0.30.214.org/distrib/pld-ti/poldek/pld-source.conf util-vserver-0.30.214/distrib/pld-ti/poldek/pld-source.conf
 --- util-vserver-0.30.214.org/distrib/pld-ti/poldek/pld-source.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ti/poldek/pld-source.conf	2007-11-15 23:20:48.217840583 +0100
 @@ -0,0 +1,46 @@
@@ -1115,7 +1094,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ti/poldek/pld-source.conf util-v
 +path   = %{_prefix}/test/noarch/RPMS/
 +auto   = no
 +autoup = no
-diff -urN util-vserver-0.30.214.org/distrib/pld-ti/poldek/poldek.conf util-vserver-0.30.214/distrib/pld-ti/poldek/poldek.conf
 --- util-vserver-0.30.214.org/distrib/pld-ti/poldek/poldek.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ti/poldek/poldek.conf	2007-11-15 23:20:48.217840583 +0100
 @@ -0,0 +1,182 @@
@@ -1301,7 +1279,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ti/poldek/poldek.conf util-vserv
 +
 +# Taking into account package Conflicts.
 +#conflicts = yes
-diff -urN util-vserver-0.30.214.org/distrib/pld-ti/poldek/source.conf util-vserver-0.30.214/distrib/pld-ti/poldek/source.conf
 --- util-vserver-0.30.214.org/distrib/pld-ti/poldek/source.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ti/poldek/source.conf	2007-11-15 23:20:48.217840583 +0100
 @@ -0,0 +1,85 @@
@@ -1390,7 +1367,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ti/poldek/source.conf util-vserv
 +#ignore = kernel*-smp-*
 +#dscr   = pl_PL
 +  
-diff -urN util-vserver-0.30.214.org/distrib/pld-ti/rpm/macros util-vserver-0.30.214/distrib/pld-ti/rpm/macros
 --- util-vserver-0.30.214.org/distrib/pld-ti/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ti/rpm/macros	2007-11-15 23:20:48.221174080 +0100
 @@ -0,0 +1,4 @@
@@ -1398,7 +1374,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ti/rpm/macros util-vserver-0.30.
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
 +%_netsharedpath		/dev
-diff -urN util-vserver-0.30.214.org/distrib/pld-ti/rpmlist.d/00.lst util-vserver-0.30.214/distrib/pld-ti/rpmlist.d/00.lst
 --- util-vserver-0.30.214.org/distrib/pld-ti/rpmlist.d/00.lst	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ti/rpmlist.d/00.lst	2007-11-15 23:20:48.221174080 +0100
 @@ -0,0 +1,10 @@
@@ -1412,7 +1387,6 @@ diff -urN util-vserver-0.30.214.org/distrib/pld-ti/rpmlist.d/00.lst util-vserver
 +issue-[0-9]*.rpm
 +rpm-base-*.rpm
 +vserver-packages-*.rpm
-diff -urN util-vserver-0.30.214.org/scripts/functions util-vserver-0.30.214/scripts/functions
 --- util-vserver-0.30.214.org/scripts/functions	2007-09-02 22:06:41.000000000 +0200
 +++ util-vserver-0.30.214/scripts/functions	2007-11-15 23:20:48.221174080 +0100
 @@ -403,6 +403,20 @@
@@ -1481,7 +1455,6 @@ diff -urN util-vserver-0.30.214.org/scripts/functions util-vserver-0.30.214/scri
  
  function vshelper.doSanityCheck
  {
-diff -urN util-vserver-0.30.214.org/scripts/Makefile-files util-vserver-0.30.214/scripts/Makefile-files
 --- util-vserver-0.30.214.org/scripts/Makefile-files	2007-09-02 22:06:41.000000000 +0200
 +++ util-vserver-0.30.214/scripts/Makefile-files	2007-11-15 23:20:48.221174080 +0100
 @@ -21,6 +21,7 @@
@@ -1522,7 +1495,6 @@ diff -urN util-vserver-0.30.214.org/scripts/Makefile-files util-vserver-0.30.214
  				scripts/vdispatch-conf \
  				scripts/vemerge \
  				scripts/vesync \
-diff -urN util-vserver-0.30.214.org/scripts/pkgmgmt util-vserver-0.30.214/scripts/pkgmgmt
 --- util-vserver-0.30.214.org/scripts/pkgmgmt	2007-09-02 22:06:41.000000000 +0200
 +++ util-vserver-0.30.214/scripts/pkgmgmt	2007-11-15 23:20:48.221174080 +0100
 @@ -195,7 +195,7 @@
@@ -1686,7 +1658,6 @@ diff -urN util-vserver-0.30.214.org/scripts/pkgmgmt util-vserver-0.30.214/script
  	(debian)		processVserver_Debian "$vserver" "$IS_INTERNALIZE";;
  	(*)
  	    echo $"Vserver style '$style' is not supported for packagemanagment" >&2
-diff -urN util-vserver-0.30.214.org/scripts/util-vserver-vars.pathsubst util-vserver-0.30.214/scripts/util-vserver-vars.pathsubst
 --- util-vserver-0.30.214.org/scripts/util-vserver-vars.pathsubst	2007-09-02 22:06:41.000000000 +0200
 +++ util-vserver-0.30.214/scripts/util-vserver-vars.pathsubst	2007-11-15 23:20:48.221174080 +0100
 @@ -53,6 +53,7 @@
@@ -1706,7 +1677,6 @@ diff -urN util-vserver-0.30.214.org/scripts/util-vserver-vars.pathsubst util-vse
  
  _AWK="@AWK@"
  _BZIP2="@BZIP2@"
-diff -urN util-vserver-0.30.214.org/scripts/vpkg util-vserver-0.30.214/scripts/vpkg
 --- util-vserver-0.30.214.org/scripts/vpkg	2007-09-02 22:06:41.000000000 +0200
 +++ util-vserver-0.30.214/scripts/vpkg	2007-11-15 23:20:48.221174080 +0100
 @@ -115,6 +115,44 @@
@@ -1754,7 +1724,6 @@ diff -urN util-vserver-0.30.214.org/scripts/vpkg util-vserver-0.30.214/scripts/v
      (debian)
  	case "$tag" in
  	    (get-conffiles)
-diff -urN util-vserver-0.30.214.org/scripts/vpoldek util-vserver-0.30.214/scripts/vpoldek
 --- util-vserver-0.30.214.org/scripts/vpoldek	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/scripts/vpoldek	2007-11-15 22:00:24.000000000 +0100
 @@ -0,0 +1,74 @@
@@ -1832,7 +1801,6 @@ diff -urN util-vserver-0.30.214.org/scripts/vpoldek util-vserver-0.30.214/script
 +
 +test ${#poldek_opts[@]} -eq 0 || poldek_opts=( "${poldek_opts[@]}" -- )
 +exec $_VSOMETHING "${send_through[@]}" poldek "${poldek_opts[@]}" "$@"
-diff -urN util-vserver-0.30.214.org/scripts/vpoldek-worker util-vserver-0.30.214/scripts/vpoldek-worker
 --- util-vserver-0.30.214.org/scripts/vpoldek-worker	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/scripts/vpoldek-worker	2007-11-15 22:58:23.000000000 +0100
 @@ -0,0 +1,45 @@
@@ -1881,7 +1849,6 @@ diff -urN util-vserver-0.30.214.org/scripts/vpoldek-worker util-vserver-0.30.214
 +	--conf=$POLDEK_CONFIG \
 +	--pmcmd=$RPM_BINARY \
 +	"$@"
-diff -urN util-vserver-0.30.214.org/scripts/vserver-build util-vserver-0.30.214/scripts/vserver-build
 --- util-vserver-0.30.214.org/scripts/vserver-build	2007-09-02 22:06:41.000000000 +0200
 +++ util-vserver-0.30.214/scripts/vserver-build	2007-11-15 23:20:48.224507577 +0100
 @@ -57,6 +57,9 @@
@@ -1903,7 +1870,6 @@ diff -urN util-vserver-0.30.214.org/scripts/vserver-build util-vserver-0.30.214/
  		. $__PKGLIBDIR/vserver-build.$method
  		;;
      (x)		panic $"No build-method specified";;
-diff -urN util-vserver-0.30.214.org/scripts/vserver-build.functions util-vserver-0.30.214/scripts/vserver-build.functions
 --- util-vserver-0.30.214.org/scripts/vserver-build.functions	2007-09-02 22:06:41.000000000 +0200
 +++ util-vserver-0.30.214/scripts/vserver-build.functions	2007-11-15 23:20:48.224507577 +0100
 @@ -167,6 +167,12 @@
@@ -1919,7 +1885,6 @@ diff -urN util-vserver-0.30.214.org/scripts/vserver-build.functions util-vserver
  	elif test -n "$1"; then
  	    DISTRIBUTION=$1
  	else
-diff -urN util-vserver-0.30.214.org/scripts/vserver-build.functions.poldek util-vserver-0.30.214/scripts/vserver-build.functions.poldek
 --- util-vserver-0.30.214.org/scripts/vserver-build.functions.poldek	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/scripts/vserver-build.functions.poldek	2007-11-15 23:20:48.224507577 +0100
 @@ -0,0 +1,67 @@
@@ -1990,7 +1955,6 @@ diff -urN util-vserver-0.30.214.org/scripts/vserver-build.functions.poldek util-
 +#    test -z "$POLDEKCONFDEFAULT" || \
 +#	$_LN_S "$POLDEKCONFDEFAULT" "$PKGCFGDIR"/poldek/etc/
 +}
-diff -urN util-vserver-0.30.214.org/scripts/vserver-build.poldek util-vserver-0.30.214/scripts/vserver-build.poldek
 --- util-vserver-0.30.214.org/scripts/vserver-build.poldek	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/scripts/vserver-build.poldek	2007-11-15 23:20:48.224507577 +0100
 @@ -0,0 +1,64 @@
