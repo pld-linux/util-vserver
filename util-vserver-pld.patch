@@ -40,6 +40,20 @@
  
  AM_INSTALLCHECK_STD_OPTIONS_EXEMPT \
  			=  $(nobase_distrib_SCRIPTS)
+--- /dev/null	2007-11-07 17:05:30.000000000 +0200
++++ util-vserver-0.30.214/distrib/defaults/poldek/poldek.conf	2008-03-25 19:36:58.721331962 +0200
+@@ -0,0 +1,11 @@
++# poldek configuration file.
++
++%includedir repos.d
++
++[global]
++particle install = no
++choose equivalents manually = yes
++unique package names = yes
++
++#hold =
++ignore = kernel* udev devfs
 --- util-vserver-0.30.214.org/distrib/pld-ac/pkgs/01	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ac/pkgs/01	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,5 @@
