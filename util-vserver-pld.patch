@@ -1302,9 +1302,9 @@
  	elif test -n "$1"; then
  	    DISTRIBUTION=$1
  	else
---- util-vserver-0.30.214/scripts/vserver-build.functions.poldek	2007-11-15 23:20:48.224507577 +0100
-+++ util-vserver-0.30.214/scripts/vserver-build.functions.poldek	2008-03-25 19:20:07.685144000 +0200
-@@ -0,0 +1,72 @@
+--- util-vserver-0.30.214/scripts/vserver-build.functions.poldek	2008-03-25 19:20:07.685144000 +0200
++++ util-vserver-0.30.214/scripts/vserver-build.functions.poldek	2008-03-25 20:37:09.000000000 +0200
+@@ -0,0 +1,82 @@
 +# $Id$	--*- sh -*--
 +
 +# Copyright (C) 2003 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
@@ -1374,12 +1374,22 @@
 +	"$__DISTRIBDIR/$DISTRIBUTION/poldek/repos.d" \
 +	"$__CONFDIR/.distributions/$DISTRIBUTION/poldek/repos.d"
 +
++	if [ -n "$SETUP_MACHINE" ]; then
++		say "Using $SETUP_MACHINE as machine"
++		sed -i -e "s#^\(_pld_arch\s*\)=.*#\1= $SETUP_MACHINE#" "$PKGCFGDIR"/poldek/etc/repos.d/pld.conf
++	fi
++
++	if [ -n "$MIRROR" ]; then
++		say "Using $MIRROR as mirror URL"
++		sed -i -e "s#^\(_pld_prefix\s*\)=.*#\1= $MIRROR#" "$PKGCFGDIR"/poldek/etc/repos.d/pld.conf
++	fi
++
 +#    test -z "$POLDEKCONFDEFAULT" || \
 +#	$_LN_S "$POLDEKCONFDEFAULT" "$PKGCFGDIR"/poldek/etc/
 +}
---- util-vserver-0.30.214.org/scripts/vserver-build.poldek	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.214/scripts/vserver-build.poldek	2007-11-15 23:20:48.224507577 +0100
-@@ -0,0 +1,64 @@
+--- util-vserver-0.30.214/scripts/vserver-build.poldek	2007-11-15 23:20:48.224507577 +0100
++++ util-vserver-0.30.214/scripts/vserver-build.poldek	2008-03-25 20:25:23.000000000 +0200
+@@ -0,0 +1,65 @@
 +# $Id$	--*- sh -*--
 +
 +# Copyright (C) 2003 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
@@ -1397,7 +1407,7 @@
 +# along with this program; if not, write to the Free Software
 +# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 +
-+tmp=$(getopt -o +d: --long debug -n "$0" -- "$@") || exit 1
++tmp=$(getopt -o +d:,m: --long debug -n "$0" -- "$@") || exit 1
 +eval set -- "$tmp"
 +
 +. "$_LIB_VSERVER_BUILD_FUNCTIONS_RPM"
@@ -1407,6 +1417,7 @@
 +while true; do
 +    case "$1" in
 +	(-d)		DISTRIBUTION=$2; shift;;
++	(-m)		MIRROR=$2; shift;;
 +	(--debug)	set -x;;
 +	(--)		shift; break ;;
 +	(*)		echo "vserver-build.poldek: internal error: unrecognized option '$1'" >&2
