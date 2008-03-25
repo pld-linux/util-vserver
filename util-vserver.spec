@@ -4,6 +4,9 @@
 # - reject install in %pre if /proc/virtual/info has incompatible version
 # - unpackaged
 #   /etc/rc.d/init.d/util-vserver -- # integrate to our initscript (util-vserver sets the path to vshelper and kills all guest processes)
+# - duplicate: # rpm -qf /usr/lib64/util-vserver/vserver-setup.functions
+#   util-vserver-0.30.214-1.3.amd64
+#   util-vserver-build-0.30.214-1.3.amd64
 #
 # m68k and mips are the only not supported archs
 #
@@ -21,7 +24,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.214
-Release:	1
+Release:	1.8
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -41,6 +44,7 @@ Source10:	%{name}-initpost.sh
 Source11:	http://www.13thfloor.at/vserver/s_release/v1.2.10/vproc-%{_vproc_version}.tar.bz2
 # Source11-md5:	1d030717bdbc958ea4b35fd2410dad85
 Source12:	%{name}-vhashify.cron
+Source13:	RPM-GPG-KEY
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
 Patch4:		%{name}-m4-diet.patch
@@ -54,6 +58,7 @@ Patch12:	%{name}-rpm-fake-resolver-badperm-errorlogging.patch
 Patch13:	%{name}-tmpdir.patch
 Patch14:	%{name}-rpmpath.patch
 Patch15:	%{name}-interfaces-ignore-cvs-dir.patch
+Patch16:	%{name}-personalitymachine.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -378,6 +383,7 @@ Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
+%patch16 -p1
 
 install %{SOURCE9} package-management.txt
 
@@ -423,10 +429,6 @@ install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d,cron.d},/dev/pt
 %{__make} -j1 install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
 
-rm -rf $RPM_BUILD_ROOT/dev
-rm -f $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-init.functions
-rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/util-vserver
-
 chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
 
 for i in $RPM_BUILD_ROOT/etc/rc.d/init.d/v_* ; do
@@ -453,9 +455,11 @@ install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 
 install %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/vrootdevices
-install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/initpost
-install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/initpost
-install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti/initpost
+install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld
+install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld/initpost
+ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/initpost
+ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/initpost
+ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti/initpost
 install vproc-%{_vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE12} $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 
@@ -463,107 +467,88 @@ cat > $RPM_BUILD_ROOT/etc/cron.d/vservers << EOF
 02 2 * * 0      root    %{_libdir}/%{name}/vhashify.cron
 EOF
 
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/pubkeys
+cp -a %{SOURCE13} $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/pubkeys/pld-ac.asc
+
+cat <<'EOF' > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/defaults/rpm/platform
 # first platform file entry can't contain regexps
-echo "%{_target_cpu}-%{_target_vendor}-linux" > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+%{_target_cpu}-%{_target_vendor}-linux
 # x86_64 things
 %ifarch x86_64
-echo "amd64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
-echo "x86_64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+amd64-[^-]*-linux(-gnu)?
+x86_64-[^-]*-linux(-gnu)?
 %endif
 %ifarch amd64
-echo "amd64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
-echo "x86_64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+amd64-[^-]*-linux(-gnu)?
+x86_64-[^-]*-linux(-gnu)?
 %endif
 %ifarch ia32e
-echo "ia32e-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
-echo "x86_64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+ia32e-[^-]*-linux(-gnu)?
+x86_64-[^-]*-linux(-gnu)?
 %endif
 
 # x86 things
 %ifarch athlon %{x8664}
-echo "athlon-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+athlon-[^-]*-linux(-gnu)?
 %endif
 %ifarch pentium4 athlon %{x8664}
-echo "pentium4-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+pentium4-[^-]*-linux(-gnu)?
 %endif
 %ifarch pentium3 pentium4 athlon %{x8664}
-echo "pentium3-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+pentium3-[^-]*-linux(-gnu)?
 %endif
 %ifarch i686 pentium3 pentium4 athlon %{x8664}
-echo "i686-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+i686-[^-]*-linux(-gnu)?
 %endif
 %ifarch i586 i686 pentium3 pentium4 athlon %{x8664}
-echo "i586-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+i586-[^-]*-linux(-gnu)?
 %endif
 %ifarch i486 i586 i686 pentium3 pentium4 athlon %{x8664}
-echo "i486-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+i486-[^-]*-linux(-gnu)?
 %endif
 %ifarch %{ix86} %{x8664}
-echo "i386-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+i386-[^-]*-linux(-gnu)?
 %endif
 
 %ifarch alpha
-echo "alpha-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+alpha-[^-]*-linux(-gnu)?
 %endif
 
 %ifarch ia64
-echo "ia64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+ia64-[^-]*-linux(-gnu)?
 %endif
 
 %ifarch ppc64
-echo "powerpc64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
-echo "ppc64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+powerpc64-[^-]*-linux(-gnu)?
+ppc64-[^-]*-linux(-gnu)?
 %endif
 %ifarch ppc ppc64
-echo "powerpc-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
-echo "ppc-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+powerpc-[^-]*-linux(-gnu)?
+ppc-[^-]*-linux(-gnu)?
 %endif
 
 %ifarch s390x
-echo "s390x-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+s390x-[^-]*-linux(-gnu)?
 %endif
 %ifarch s390 s390x
-echo "s390-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+s390-[^-]*-linux(-gnu)?
 %endif
 
 %ifarch sparc64
-echo "sparc64-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
-echo "sparcv8-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
-echo "sparcv9-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+sparc64-[^-]*-linux(-gnu)?
+sparcv8-[^-]*-linux(-gnu)?
+sparcv9-[^-]*-linux(-gnu)?
 %endif
 %ifarch sparcv9
-echo "sparcv8-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
-echo "sparcv9-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+sparcv8-[^-]*-linux(-gnu)?
+sparcv9-[^-]*-linux(-gnu)?
 %endif
 %ifarch sparc sparcv9 sparc64
-echo "sparc-[^-]*-linux(-gnu)?" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
+sparc-[^-]*-linux(-gnu)?
 %endif
 
 # noarch
-echo "noarch-[^-]*-.*" >> $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpm/platform
-
-%ifarch %{x8664}
-sed -i 's/^glibc$/glibc64/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pkgs/01
-sed -i 's/glibc\-\[0\-9\]\*\.rpm/glibc64\-\[0\-9\]\*\.rpm/' $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpmlist.d/00.lst
-%endif
-
-# fixup pkgs list (it's too crazy to update the patch)
-rm $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/rpmlist.d/00.lst
-cat <<'EOF' > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pkgs/01.lst
-basesystem
-filesystem
-%ifarch %{x8664}
-glibc64
-%else
-glibc
-%endif
-issue
-vserver-packages
-EOF
-cat <<'EOF' > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pkgs/02.lst
-glibc-misc
-libgcc
-rpm-base
+noarch-[^-]*-.*
 EOF
 
 # XXX baggins check this: needed but seems unused
@@ -571,9 +556,10 @@ install -d $RPM_BUILD_ROOT/var/cache/vservers
 
 # we have our own initscript which does the same
 rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
+rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/util-vserver
+rm -rf $RPM_BUILD_ROOT/dev
 rm -f $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-wrapper
 rm -f $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-init.functions
-# probaly the part of them
 rm -f $RPM_BUILD_ROOT%{_sysconfdir}/vservers.conf
 
 %clean
@@ -760,17 +746,23 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions/.common/pubkeys
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/*.conf
+%dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d
+%dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/pubkeys
+%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/pubkeys/*.asc
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/*.conf
 %dir %{_sysconfdir}/vservers/.distributions/pld-th
 %dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/*.conf
+%dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/*.conf
 %dir %{_sysconfdir}/vservers/.distributions/pld-ti
 %dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/*.conf
+%dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/*.conf
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %dir %{_libdir}/%{name}/distributions
 %attr(-,root,root) %{_libdir}/%{name}/distributions/defaults
-%attr(-,root,root) %{_libdir}/%{name}/distributions/pld*
+%attr(-,root,root) %{_libdir}/%{name}/distributions/pld
+%attr(-,root,root) %{_libdir}/%{name}/distributions/pld-*
 %dir %{_libdir}/%{name}/distributions/template
 %attr(755,root,root) %{_libdir}/%{name}/distributions/template/init*
 %attr(-,root,root) %{_libdir}/%{name}/distributions/redhat
