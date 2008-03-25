@@ -62,7 +62,7 @@
 +# PLD Linux Distribution <http://www.pld-linux.org/>.
 +
 +# specify our packages architecture
-+_pld_arch   = %ARCH%
++_arch   = %ARCH%
 +
 +# main PLD-site for often changed things:
 +_pld_main_prefix = ftp://ftp.ac.pld-linux.org/dists/ac
@@ -70,48 +70,48 @@
 +## Some mirrors
 +## You can use them if you have better connection there
 +# CI TASK:
-+#_pld_prefix = ftp://ftp.task.pld-linux.org/dists/ac
-+#_pld_prefix = %{_pld_main_prefix}
-+_pld_prefix = %{_pld_main_prefix}
++#_prefix = ftp://ftp.task.pld-linux.org/dists/ac
++#_prefix = %{_pld_main_prefix}
++_prefix = %{_pld_main_prefix}
 +
-+_ac_idxtype = pndir
++_type = pndir
 +
 +# PLD 2.0 (Ac)
 +[source]
-+type   = %{_ac_idxtype}
++type   = %{_type}
 +name   = ac
-+path   = %{_pld_prefix}/PLD/%{_pld_arch}/PLD/RPMS/
++path   = %{_prefix}/PLD/%{_arch}/PLD/RPMS/
 +signed = yes
 +# buggy deps -- use one from updates instead
 +ignore = msmtp-sendmail*
 +pri    = 1
 +
 +[source]
-+type   = %{_ac_idxtype}
++type   = %{_type}
 +name   = ac-updates
-+path   = %{_pld_prefix}/updates/%{_pld_arch}/
++path   = %{_prefix}/updates/%{_arch}/
 +signed = yes
 +pri    = 1
 +
 +[source]
-+type   = %{_ac_idxtype}
++type   = %{_type}
 +name   = ac-supported
-+path   = %{_pld_prefix}/supported/%{_pld_arch}/
++path   = %{_prefix}/supported/%{_arch}/
 +auto   = no
 +autoup = no
 +signed = yes
 +
 +[source]
-+type   = %{_ac_idxtype}
++type   = %{_type}
 +name   = ac-ready
-+path   = %{_pld_main_prefix}/ready/%{_pld_arch}/
++path   = %{_pld_main_prefix}/ready/%{_arch}/
 +auto   = no
 +autoup = no
 +
 +[source]
-+type   = %{_ac_idxtype}
++type   = %{_type}
 +name   = ac-test
-+path   = %{_pld_main_prefix}/test/%{_pld_arch}/
++path   = %{_pld_main_prefix}/test/%{_arch}/
 +auto   = no
 +autoup = no
 --- util-vserver-0.30.214.org/distrib/pld-ac/rpm/macros	1970-01-01 01:00:00.000000000 +0100
@@ -135,54 +135,54 @@
 @@ -0,0 +1,51 @@
 +# PLD <http://www.pld-linux.org/>
 +
-+_pld_arch   = %ARCH%
-+_pld_prefix = ftp://ftp.th.pld-linux.org/dists/th
++_arch   = %ARCH%
++_prefix = ftp://ftp.th.pld-linux.org/dists/th
 +## Some mirrors
 +## You can use them if you have better connection there
 +# CI TASK:
-+#_pld_prefix = ftp://ftp.task.pld-linux.org/dists/th
++#_prefix = ftp://ftp.task.pld-linux.org/dists/th
 +
 +
-+_th_idxtype = pndir
++_type = pndir
 +
 +# PLD 3.0 (Th)
 +[source]
-+type  = %{_th_idxtype}
++type  = %{_type}
 +name  = th
-+path  = %{_pld_prefix}/PLD/%{_pld_arch}/RPMS/
++path  = %{_prefix}/PLD/%{_arch}/RPMS/
 +
 +[source]
-+type  = %{_th_idxtype}
++type  = %{_type}
 +name  = th
-+path  = %{_pld_prefix}/PLD/noarch/RPMS/
++path  = %{_prefix}/PLD/noarch/RPMS/
 +
 +[source]
-+type  = %{_th_idxtype}
++type  = %{_type}
 +name  = th-updates-security
-+path  = %{_pld_prefix}/updates-security/%{_pld_arch}/RPMS/
++path  = %{_prefix}/updates-security/%{_arch}/RPMS/
 +
 +[source]
-+type  = %{_th_idxtype}
++type  = %{_type}
 +name  = th-updates-general
-+path  = %{_pld_prefix}/updates-general/%{_pld_arch}/RPMS/
++path  = %{_prefix}/updates-general/%{_arch}/RPMS/
 +noauto	= yes
 +
 +#[source]
-+#type  = %{_th_idxtype}
++#type  = %{_type}
 +#name  = th-supported
-+#path  = %{_pld_prefix}/supported/%{_pld_arch}/RPMS/
++#path  = %{_prefix}/supported/%{_arch}/RPMS/
 +#noauto	= yes
 +
 +[source]
-+type  = %{_th_idxtype}
++type  = %{_type}
 +name  = th-ready
-+path  = %{_pld_prefix}/ready/%{_pld_arch}/RPMS/
++path  = %{_prefix}/ready/%{_arch}/RPMS/
 +noauto	= yes
 +
 +[source]
-+type  = %{_th_idxtype}
++type  = %{_type}
 +name  = th-test
-+path  = %{_pld_prefix}/test/%{_pld_arch}/RPMS/
++path  = %{_prefix}/test/%{_arch}/RPMS/
 +noauto	= yes
 --- util-vserver-0.30.214.org/distrib/pld-th/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-th/rpm/macros	2007-11-15 23:20:48.184505622 +0100
@@ -828,12 +828,12 @@
 +
 +	if [ -n "$SETUP_MACHINE" ]; then
 +		say "Using $SETUP_MACHINE as machine"
-+		sed -i -e "s#^\(_pld_arch\s*\)=.*#\1= $SETUP_MACHINE#" "$PKGCFGDIR"/poldek/etc/repos.d/pld.conf
++		sed -i -e "s#^\(_arch\s*\)=.*#\1= $SETUP_MACHINE#" "$PKGCFGDIR"/poldek/etc/repos.d/pld.conf
 +	fi
 +
 +	if [ -n "$MIRROR" ]; then
 +		say "Using $MIRROR as mirror URL"
-+		sed -i -e "s#^\(_pld_prefix\s*\)=.*#\1= $MIRROR#" "$PKGCFGDIR"/poldek/etc/repos.d/pld.conf
++		sed -i -e "s#^\(_prefix\s*\)=.*#\1= $MIRROR#" "$PKGCFGDIR"/poldek/etc/repos.d/pld.conf
 +	fi
 +
 +#    test -z "$POLDEKCONFDEFAULT" || \
