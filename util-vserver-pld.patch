@@ -56,53 +56,65 @@
 +issue
 +rpm-base
 +vserver-packages
---- util-vserver-0.30.214.org/distrib/pld-ac/poldek/repos.d/pld.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.214/distrib/pld-ac/poldek/repos.d/pld.conf	2007-11-15 23:20:48.181172125 +0100
-@@ -0,0 +1,44 @@
+--- util-vserver-0.30.214/distrib/pld-ac/poldek/repos.d/pld.conf	2007-11-15 23:20:48.181172125 +0100
++++ util-vserver-0.30.214/distrib/pld-ac/poldek/repos.d/pld.conf	2008-03-25 20:34:12.000000000 +0200
+@@ -0,0 +1,56 @@
 +# $Id$
-+# PLD <http://www.pld-linux.org/>
++# PLD Linux Distribution <http://www.pld-linux.org/>.
 +
++# specify our packages architecture
 +_pld_arch   = %ARCH%
-+_pld_prefix = ftp://ftp.ac.pld-linux.org/dists/ac
++
++# main PLD-site for often changed things:
++_pld_main_prefix = ftp://ftp.ac.pld-linux.org/dists/ac
++
 +## Some mirrors
 +## You can use them if you have better connection there
 +# CI TASK:
 +#_pld_prefix = ftp://ftp.task.pld-linux.org/dists/ac
-+
++#_pld_prefix = %{_pld_main_prefix}
++_pld_prefix = %{_pld_main_prefix}
 +
 +_ac_idxtype = pndir
 +
 +# PLD 2.0 (Ac)
 +[source]
-+type  = %{_ac_idxtype}
-+name  = ac
-+path  = %{_pld_prefix}/PLD/%{_pld_arch}/PLD/RPMS/
-+#signed = yes
++type   = %{_ac_idxtype}
++name   = ac
++path   = %{_pld_prefix}/PLD/%{_pld_arch}/PLD/RPMS/
++signed = yes
++# buggy deps -- use one from updates instead
++ignore = msmtp-sendmail*
++pri    = 1
 +
 +[source]
-+type  = %{_ac_idxtype}
-+name  = ac-updates
-+path  = %{_pld_prefix}/updates/%{_pld_arch}/
-+#signed = yes
++type   = %{_ac_idxtype}
++name   = ac-updates
++path   = %{_pld_prefix}/updates/%{_pld_arch}/
++signed = yes
++pri    = 1
 +
 +[source]
-+type  = %{_ac_idxtype}
-+name  = ac-supported
-+path  = %{_pld_prefix}/supported/%{_pld_arch}/
-+noauto	= yes
-+#signed = yes
++type   = %{_ac_idxtype}
++name   = ac-supported
++path   = %{_pld_prefix}/supported/%{_pld_arch}/
++auto   = no
++autoup = no
++signed = yes
 +
 +[source]
-+type  = %{_ac_idxtype}
-+name  = ac-ready
-+path  = %{_pld_prefix}/ready/%{_pld_arch}/
-+noauto	= yes
++type   = %{_ac_idxtype}
++name   = ac-ready
++path   = %{_pld_main_prefix}/ready/%{_pld_arch}/
++auto   = no
++autoup = no
 +
 +[source]
-+type  = %{_ac_idxtype}
-+name  = ac-test
-+path  = %{_pld_prefix}/test/%{_pld_arch}/
-+noauto	= yes
++type   = %{_ac_idxtype}
++name   = ac-test
++path   = %{_pld_main_prefix}/test/%{_pld_arch}/
++auto   = no
++autoup = no
 --- util-vserver-0.30.214.org/distrib/pld-ac/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ac/rpm/macros	2007-11-15 23:20:48.181172125 +0100
 @@ -0,0 +1,4 @@
