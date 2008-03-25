@@ -21,7 +21,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.214
-Release:	1.13
+Release:	1.16
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -179,7 +179,6 @@ Summary:	Tools which can be used to build vservers
 Summary(pl.UTF-8):	Narzędzia do budowania vserverów
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
-Requires:	/etc/pld-release
 Conflicts:	poldek < 0.18.8-10
 
 %description build
@@ -324,6 +323,20 @@ Requires:	e2fsprogs
 Requires:	rpm
 Requires:	wget
 
+%package -n vserver-distro-pld
+Summary:	VServer build templates for PLD Linux
+Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji PLD Linuxa
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	/etc/pld-release
+Requires:	poldek
+
+%description -n vserver-distro-pld
+VServer build templates for PLD Linux.
+
+%description -n vserver-distro-pld -l pl.UTF-8
+Szablony do tworzenia VServerów dla dystrybucji PLD Linuxa.
+
 %description -n vserver-distro-redhat
 VServer build template for RedHat Linux 9.
 
@@ -358,12 +371,6 @@ VServer build templates for Ubuntu.
 
 %description -n vserver-distro-ubuntu -l pl.UTF-8
 Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
-
-%ifarch amd64
-%define _x8664name amd64
-%else
-%define _x8664name x86_64
-%endif
 
 %prep
 %setup -q -a11
@@ -469,25 +476,21 @@ cp -a %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pubkeys
 
 %ifarch i386 i586 i686 ppc sparc alpha athlon
 %define		_ftp_arch	%{_target_cpu}
-%else
+%endif
 %ifarch %{x8664}
 %define		_ftp_arch	amd64
-%define		_ftp_alt_arch	i686
-%else
+%endif
 %ifarch i486
 %define		_ftp_arch	i386
-%else
+%endif
 %ifarch pentium2 pentium3 pentium4
 %define		_ftp_arch	i686
-%else
+%endif
 %ifarch sparcv9 sparc64
 %define		_ftp_arch	sparc
 %endif
-%endif
-%endif
-%endif
 
-sed -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/pld.conf
+%{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/pld.conf
 
 cat <<'EOF' > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/defaults/rpm/platform
 # first platform file entry can't contain regexps
@@ -589,17 +592,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %post	lib -p /sbin/ldconfig
 %postun	lib -p /sbin/ldconfig
-
-%triggerpostun build -- %{name}-build < 0.30.210-5.2
-if [ -f /etc/vservers/.distributions/pld2.0/poldek/poldek.conf.rpmsave ]; then
-	mv -f /etc/vservers/.distributions/{pld2.0,pld-ac}/poldek/poldek.conf.rpmsave
-fi
-
-# kill old vserver specific package ignores which are no longer needed
-l=`egrep '^ignore.*(basesystem|SysVinit|rc-scripts)' /etc/vservers/*/apps/pkgmgmt/base/poldek/etc/poldek.conf -l 2>/dev/null`
-if [ "$l" ]; then
-	%{__sed} -i -e '/^ignore/s, \(basesystem\|SysVinit\|rc-scripts\),,g' $l
-fi
 
 %post init
 /sbin/chkconfig --add vrootdevices
@@ -761,23 +753,9 @@ fi
 %dir %{_sysconfdir}/vservers/.distributions
 %dir %{_sysconfdir}/vservers/.distributions/.common
 %dir %{_sysconfdir}/vservers/.distributions/.common/pubkeys
-%dir %{_sysconfdir}/vservers/.distributions/pld-ac
-%dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
-%dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/*.conf
-%dir %{_sysconfdir}/vservers/.distributions/pld-th
-%dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
-%dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/*.conf
-%dir %{_sysconfdir}/vservers/.distributions/pld-ti
-%dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek
-%dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/*.conf
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %dir %{_libdir}/%{name}/distributions
 %attr(-,root,root) %{_libdir}/%{name}/distributions/defaults
-%attr(-,root,root) %{_libdir}/%{name}/distributions/pld
-%attr(-,root,root) %{_libdir}/%{name}/distributions/pld-*
 %dir %{_libdir}/%{name}/distributions/template
 %attr(755,root,root) %{_libdir}/%{name}/distributions/template/init*
 %attr(-,root,root) %{_libdir}/%{name}/distributions/redhat
@@ -858,6 +836,23 @@ fi
 %attr(755,root,root) %{_sbindir}/vemerge
 %attr(755,root,root) %{_sbindir}/vesync
 %attr(755,root,root) %{_sbindir}/vupdateworld
+
+%files -n vserver-distro-pld
+%defattr(644,root,root,755)
+%attr(-,root,root) %{_libdir}/%{name}/distributions/pld
+%attr(-,root,root) %{_libdir}/%{name}/distributions/pld-*
+%dir %{_sysconfdir}/vservers/.distributions/pld-ac
+%dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
+%dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/*.conf
+%dir %{_sysconfdir}/vservers/.distributions/pld-th
+%dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
+%dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/*.conf
+%dir %{_sysconfdir}/vservers/.distributions/pld-ti
+%dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek
+%dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/*.conf
 
 %files -n vserver-distro-redhat
 %defattr(644,root,root,755)
