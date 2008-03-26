@@ -21,7 +21,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.214
-Release:	2
+Release:	3
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -179,6 +179,7 @@ Summary:	Tools which can be used to build vservers
 Summary(pl.UTF-8):	Narzędzia do budowania vserverów
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
+Requires:	vserver-distro-pld = %{version}-%{release}
 Conflicts:	poldek < 0.18.8-10
 
 %description build
@@ -335,7 +336,7 @@ Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji PLD Linux
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	/etc/pld-release
-Requires:	poldek
+Requires:	poldek >= 0.21-0.20070703.00.16
 
 %description -n vserver-distro-pld
 VServer build templates for PLD Linux.
@@ -634,6 +635,17 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del rebootmgr
 	/sbin/chkconfig --del vservers-legacy
 fi
+
+%triggerpostun -n vserver-distro-pld -- util-vserver-build < 0.30.214-2.3
+D=%{_sysconfdir}/vservers/.distributions/pld-ac/poldek
+
+if [ -f $D/pld-source.conf.rpmsave ]; then
+	cp -f $D/repos.d/pld.conf{,.rpmnew}
+	mv -f $D/pld-source.conf.rpmsave $D/repos.d/pld.conf
+	%{__sed} -i -e 's,_pld_arch,_arch,g;s,_ac_idxtype,_type,g;s,_pld_prefix,_prefix,g' \
+		 $D/repos.d/pld.conf
+fi
+exit 0
 
 %files
 %defattr(644,root,root,755)
