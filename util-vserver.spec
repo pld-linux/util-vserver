@@ -323,9 +323,15 @@ Requires:	e2fsprogs
 Requires:	rpm
 Requires:	wget
 
+%description -n vserver-distro-redhat
+VServer build template for RedHat Linux 9.
+
+%description -n vserver-distro-redhat -l pl.UTF-8
+Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
+
 %package -n vserver-distro-pld
 Summary:	VServer build templates for PLD Linux
-Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji PLD Linuxa
+Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji PLD Linux
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	/etc/pld-release
@@ -335,13 +341,7 @@ Requires:	poldek
 VServer build templates for PLD Linux.
 
 %description -n vserver-distro-pld -l pl.UTF-8
-Szablony do tworzenia VServerów dla dystrybucji PLD Linuxa.
-
-%description -n vserver-distro-redhat
-VServer build template for RedHat Linux 9.
-
-%description -n vserver-distro-redhat -l pl.UTF-8
-Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
+Szablony do tworzenia VServerów dla dystrybucji PLD Linux.
 
 %package -n vserver-distro-suse
 Summary:	VServer build template for SuSE 9.1
