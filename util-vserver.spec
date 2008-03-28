@@ -510,7 +510,9 @@ cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
 %define		_ftp_arch	sparc
 %endif
 
+%{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/pld.conf
 %{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/pld.conf
+%{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/pld.conf
 
 cat <<'EOF' > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/defaults/rpm/platform
 # first platform file entry can't contain regexps
@@ -657,12 +659,14 @@ if [ "$1" = "0" ]; then
 fi
 
 %triggerpostun -n vserver-distro-pld -- util-vserver-build < 0.30.215-1.1
-D=%{_sysconfdir}/vservers/.distributions/pld-th/poldek
+for D in ac th ti; do
+	P=%{_sysconfdir}/vservers/.distributions/pld-$D/poldek
 
-if [ -f $D/pld-source.conf.rpmsave ]; then
-	cp -f $D/repos.d/pld.conf{,.rpmnew}
-	mv -f $D/pld-source.conf.rpmsave $D/repos.d/pld.conf
-fi
+	if [ -f $P/pld-source.conf.rpmsave ]; then
+		cp -f $P/repos.d/pld.conf{,.rpmnew}
+		mv -f $P/pld-source.conf.rpmsave $P/repos.d/pld.conf
+	fi
+done
 exit 0
 
 %files
