@@ -512,15 +512,6 @@ cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
 %endif
 %{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/pld.conf
 
-%ifarch %{x8664}
-# ac i686 for x86_64 hosts
-cp -a $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac \
-	$RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac-i686
-cp -a $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac \
-        $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac-i686
-sed -i 's/%{_ftp_arch}/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac-i686/poldek/repos.d/pld.conf
-%endif
-
 # set arch for pld-th in pld.conf
 %ifarch i486 i686 ppc sparc alpha athlon
 %define		_ftp_arch	%{_target_cpu}
@@ -539,15 +530,6 @@ sed -i 's/%{_ftp_arch}/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distribut
 %endif
 %{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/pld.conf
 
-%ifarch %{x8664}
-# th i686 for x86_64 hosts
-cp -a $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th \
-	$RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th-i686
-cp -a $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th \
-        $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th-i686
-sed -i 's/%{_ftp_arch}/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th-i686/poldek/repos.d/pld.conf
-%endif
-
 # set arch for pld-ti in pld.conf
 %ifarch i586 i686
 %define		_ftp_arch	%{_target_cpu}
@@ -559,15 +541,6 @@ sed -i 's/%{_ftp_arch}/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distribut
 %define		_ftp_arch	i686
 %endif
 %{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/pld.conf
-
-%ifarch %{x8664}
-# titanium i686 for x86_64 hosts
-cp -a $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti \
-	$RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti-i686
-cp -a $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti \
-        $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti-i686
-sed -i 's/%{_ftp_arch}/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti-i686/poldek/repos.d/pld.conf
-%endif
 
 cat <<'EOF' > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/defaults/rpm/platform
 # first platform file entry can't contain regexps
@@ -953,20 +926,6 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek
 %dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/*.conf
-%ifarch %{x8664}
-%dir %{_sysconfdir}/vservers/.distributions/pld-ac-i686
-%dir %{_sysconfdir}/vservers/.distributions/pld-ac-i686/poldek
-%dir %{_sysconfdir}/vservers/.distributions/pld-ac-i686/poldek/repos.d
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac-i686/poldek/repos.d/*.conf
-%dir %{_sysconfdir}/vservers/.distributions/pld-th-i686
-%dir %{_sysconfdir}/vservers/.distributions/pld-th-i686/poldek
-%dir %{_sysconfdir}/vservers/.distributions/pld-th-i686/poldek/repos.d
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th-i686/poldek/repos.d/*.conf
-%dir %{_sysconfdir}/vservers/.distributions/pld-ti-i686
-%dir %{_sysconfdir}/vservers/.distributions/pld-ti-i686/poldek
-%dir %{_sysconfdir}/vservers/.distributions/pld-ti-i686/poldek/repos.d
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ti-i686/poldek/repos.d/*.conf
-%endif
 
 %files -n vserver-distro-redhat
 %defattr(644,root,root,755)
