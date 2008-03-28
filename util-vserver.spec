@@ -1,7 +1,6 @@
 # TODO
 # - somewhy empty /var/cache/vservers is needed when building pld vserver
 # - make build create /dev/std{in,out,err} links
-# - f8 subpackage
 # - reject install in %%pretrans if /proc/virtual/info has incompatible version
 # - unpackaged
 #   /etc/rc.d/init.d/util-vserver -- # integrate to our initscript (util-vserver sets the path to vshelper and kills all guest processes)
@@ -710,6 +709,7 @@ exit 0
 %dir %{_sysconfdir}/vservers/.defaults/apps
 %dir %{_sysconfdir}/vservers/.defaults/files
 %{_sysconfdir}/vservers/.defaults/vdirbase
+%{_sysconfdir}/vservers/.defaults/cachebase
 %{_sysconfdir}/vservers/.defaults/run.rev
 /sbin/vshelper
 %attr(755,root,root) %{_sbindir}/chbind
