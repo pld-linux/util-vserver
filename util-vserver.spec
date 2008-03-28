@@ -260,18 +260,17 @@ w interakcję z innymi ani z usługami na głównym serwerze.
 Ten pakiet zawiera narzędzia potrzebne do pracy z Vserwerami mającymi
 konfigurację w starym stylu.
 
-%package -n vserver-distro-debian
-Summary:	VServer build templates for Debian
-Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Debian
+%package -n vserver-distro-alpine
+Summary:	VServer build template for Alpine Linux
+Summary(pl.UTF-8):	Szablon budowania VServerów dla dystrybucji Alpine Linux
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
-Requires:	dpkg
 
-%description -n vserver-distro-debian
-VServer build templates for Debian.
+%description -n vserver-distro-alpine
+VServer build template for Alpine Linux.
 
-%description -n vserver-distro-debian -l pl.UTF-8
-Szablony do tworzenia VServerów dla dystrybucji Debian.
+%description -n vserver-distro-alpine -l pl.UTF-8
+Szablon budowania VServerów dla dystrybucji Alpine Linux.
 
 %package -n vserver-distro-centos
 Summary:	VServer build template for CentOS
@@ -285,6 +284,19 @@ VServer build template for CentOS 4.2 and 5.
 
 %description -n vserver-distro-centos -l pl.UTF-8
 Szablon budowania VServerów dla dystrybucji CentOS 4.2 i 5.
+
+%package -n vserver-distro-debian
+Summary:	VServer build templates for Debian
+Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Debian
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	dpkg
+
+%description -n vserver-distro-debian
+VServer build templates for Debian.
+
+%description -n vserver-distro-debian -l pl.UTF-8
+Szablony do tworzenia VServerów dla dystrybucji Debian.
 
 %package -n vserver-distro-fedora
 Summary:	VServer build templates for Fedora
@@ -316,6 +328,20 @@ VServer build template for Gentoo.
 %description -n vserver-distro-gentoo -l pl.UTF-8
 Szablon budowania VServerów dla Gentoo.
 
+%package -n vserver-distro-pld
+Summary:	VServer build templates for PLD Linux
+Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji PLD Linux
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	/etc/pld-release
+Requires:	poldek >= 0.30-0.20080225.00.1
+
+%description -n vserver-distro-pld
+VServer build templates for PLD Linux.
+
+%description -n vserver-distro-pld -l pl.UTF-8
+Szablony do tworzenia VServerów dla dystrybucji PLD Linux.
+
 %package -n vserver-distro-redhat
 Summary:	VServer build template for Red Hat Linux 9
 Summary(pl.UTF-8):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
@@ -331,20 +357,6 @@ VServer build template for RedHat Linux 9.
 
 %description -n vserver-distro-redhat -l pl.UTF-8
 Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
-
-%package -n vserver-distro-pld
-Summary:	VServer build templates for PLD Linux
-Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji PLD Linux
-Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
-Requires:	/etc/pld-release
-Requires:	poldek >= 0.30-0.20080225.00.1
-
-%description -n vserver-distro-pld
-VServer build templates for PLD Linux.
-
-%description -n vserver-distro-pld -l pl.UTF-8
-Szablony do tworzenia VServerów dla dystrybucji PLD Linux.
 
 %package -n vserver-distro-suse
 Summary:	VServer build template for SuSE 9.1
@@ -821,6 +833,12 @@ exit 0
 %{_mandir}/man8/rebootmgr.8*
 %{_mandir}/man8/vserver-copy.8*
 
+%files -n vserver-distro-alpine
+%defattr(644,root,root,755)
+%dir %{_libdir}/%{name}/distributions/alpine
+%attr(755,root,root) %{_libdir}/%{name}/distributions/alpine/initpost
+%attr(755,root,root) %{_libdir}/%{name}/distributions/alpine/initpre
+
 %files -n vserver-distro-centos
 %defattr(644,root,root,755)
 %{_libdir}/util-vserver/distributions/centos*
@@ -843,6 +861,7 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/fc*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
 %{_libdir}/%{name}/distributions/f7
+%{_libdir}/%{name}/distributions/f8
 %{_libdir}/%{name}/distributions/fc*
 
 %files -n vserver-distro-gentoo
