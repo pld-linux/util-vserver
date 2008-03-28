@@ -336,7 +336,7 @@ Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji PLD Linux
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	/etc/pld-release
-Requires:	poldek >= 0.30-0.20080225.00.1
+Requires:	poldek >= 0.30
 
 %description -n vserver-distro-pld
 VServer build templates for PLD Linux.
