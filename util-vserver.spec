@@ -21,7 +21,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.214
-Release:	3.1
+Release:	4
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -843,7 +843,6 @@ exit 0
 %attr(755,root,root) %{_sbindir}/vpoldek
 %attr(755,root,root) %{_sbindir}/vrpm
 %attr(755,root,root) %{_sbindir}/vyum
-%{_mandir}/man8/vserver-build.8*
 
 %files init
 %defattr(644,root,root,755)
@@ -869,12 +868,6 @@ exit 0
 %{_mandir}/man8/distrib-info.8*
 %{_mandir}/man8/rebootmgr.8*
 %{_mandir}/man8/vserver-copy.8*
-
-%files -n vserver-distro-alpine
-%defattr(644,root,root,755)
-%dir %{_libdir}/%{name}/distributions/alpine
-%attr(755,root,root) %{_libdir}/%{name}/distributions/alpine/initpost
-%attr(755,root,root) %{_libdir}/%{name}/distributions/alpine/initpre
 
 %files -n vserver-distro-centos
 %defattr(644,root,root,755)
