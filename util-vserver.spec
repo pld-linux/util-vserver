@@ -42,8 +42,10 @@ Source10:	%{name}-initpost.sh
 Source11:	http://www.13thfloor.at/vserver/s_release/v1.2.10/vproc-%{_vproc_version}.tar.bz2
 # Source11-md5:	1d030717bdbc958ea4b35fd2410dad85
 Source12:	%{name}-vhashify.cron
-Source13:	ftp://ftp.pld-linux.org/dists/th/PLD-3.0-Th-GPG-key.asc
-# Source13-md5:	08b29584dd349aac9caa7610131a0a88
+Source13:	ftp://ftp.pld-linux.org/dists/ac/PLD-2.0-Ac-GPG-key.asc
+# Source13-md5:	8e7574d1de2fa95c2c54cd2ee03364c1
+Source14:	ftp://ftp.pld-linux.org/dists/th/PLD-3.0-Th-GPG-key.asc
+# Source14-md5:	08b29584dd349aac9caa7610131a0a88
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
 Patch4:		%{name}-m4-diet.patch
@@ -486,8 +488,11 @@ cat > $RPM_BUILD_ROOT/etc/cron.d/vservers << EOF
 02 2 * * 0      root    %{_libdir}/%{name}/vhashify.cron
 EOF
 
+install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pubkeys
+cp -a %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pubkeys/pld-ac.asc
+
 install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
-cp -a %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys/pld-th.asc
+cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys/pld-th.asc
 
 %ifarch i486 i686 ppc sparc alpha athlon
 %define		_ftp_arch	%{_target_cpu}
