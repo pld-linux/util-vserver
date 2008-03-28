@@ -22,7 +22,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	2.4
+Release:	2.5
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -480,7 +480,9 @@ install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld
 install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld/initpost
 ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/initpost
 ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/initpost
+%ifarch i586 i686 %{x8664} athlon pentium2 pentium3 pentium4
 ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti/initpost
+%endif
 install vproc-%{_vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE12} $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 
@@ -530,6 +532,7 @@ cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
 %endif
 %{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/pld.conf
 
+%ifarch i586 i686 %{x8664} athlon pentium2 pentium3 pentium4
 # set arch for pld-ti in pld.conf
 %ifarch i586 i686
 %define		_ftp_arch	%{_target_cpu}
@@ -541,6 +544,7 @@ cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
 %define		_ftp_arch	i686
 %endif
 %{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/pld.conf
+%endif
 
 cat <<'EOF' > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/defaults/rpm/platform
 # first platform file entry can't contain regexps
@@ -922,10 +926,12 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
 %dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/*.conf
+%ifarch i586 i686 %{x8664} athlon pentium2 pentium3 pentium4
 %dir %{_sysconfdir}/vservers/.distributions/pld-ti
 %dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek
 %dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/*.conf
+%endif
 
 %files -n vserver-distro-redhat
 %defattr(644,root,root,755)
