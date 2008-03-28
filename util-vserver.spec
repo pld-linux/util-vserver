@@ -21,7 +21,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.214
-Release:	3
+Release:	3.1
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -41,7 +41,10 @@ Source10:	%{name}-initpost.sh
 Source11:	http://www.13thfloor.at/vserver/s_release/v1.2.10/vproc-%{_vproc_version}.tar.bz2
 # Source11-md5:	1d030717bdbc958ea4b35fd2410dad85
 Source12:	%{name}-vhashify.cron
-Source13:	RPM-GPG-KEY
+Source13:	ftp://ftp.pld-linux.org/dists/ac/PLD-2.0-Ac-GPG-key.asc
+# Source13-md5:	8e7574d1de2fa95c2c54cd2ee03364c1
+Source14:	ftp://ftp.pld-linux.org/dists/th/PLD-3.0-Th-GPG-key.asc
+# Source14-md5:	08b29584dd349aac9caa7610131a0a88
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
 Patch4:		%{name}-m4-diet.patch
@@ -258,18 +261,17 @@ w interakcję z innymi ani z usługami na głównym serwerze.
 Ten pakiet zawiera narzędzia potrzebne do pracy z Vserwerami mającymi
 konfigurację w starym stylu.
 
-%package -n vserver-distro-debian
-Summary:	VServer build templates for Debian
-Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Debian
+%package -n vserver-distro-alpine
+Summary:	VServer build template for Alpine Linux
+Summary(pl.UTF-8):	Szablon budowania VServerów dla dystrybucji Alpine Linux
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
-Requires:	dpkg
 
-%description -n vserver-distro-debian
-VServer build templates for Debian.
+%description -n vserver-distro-alpine
+VServer build template for Alpine Linux.
 
-%description -n vserver-distro-debian -l pl.UTF-8
-Szablony do tworzenia VServerów dla dystrybucji Debian.
+%description -n vserver-distro-alpine -l pl.UTF-8
+Szablon budowania VServerów dla dystrybucji Alpine Linux.
 
 %package -n vserver-distro-centos
 Summary:	VServer build template for CentOS
@@ -283,6 +285,19 @@ VServer build template for CentOS 4.2 and 5.
 
 %description -n vserver-distro-centos -l pl.UTF-8
 Szablon budowania VServerów dla dystrybucji CentOS 4.2 i 5.
+
+%package -n vserver-distro-debian
+Summary:	VServer build templates for Debian
+Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Debian
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	dpkg
+
+%description -n vserver-distro-debian
+VServer build templates for Debian.
+
+%description -n vserver-distro-debian -l pl.UTF-8
+Szablony do tworzenia VServerów dla dystrybucji Debian.
 
 %package -n vserver-distro-fedora
 Summary:	VServer build templates for Fedora
@@ -314,6 +329,20 @@ VServer build template for Gentoo.
 %description -n vserver-distro-gentoo -l pl.UTF-8
 Szablon budowania VServerów dla Gentoo.
 
+%package -n vserver-distro-pld
+Summary:	VServer build templates for PLD Linux
+Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji PLD Linux
+Group:		Applications/System
+Requires:	%{name}-build = %{version}-%{release}
+Requires:	/etc/pld-release
+Requires:	poldek >= 0.21-0.20070703.00.16
+
+%description -n vserver-distro-pld
+VServer build templates for PLD Linux.
+
+%description -n vserver-distro-pld -l pl.UTF-8
+Szablony do tworzenia VServerów dla dystrybucji PLD Linux.
+
 %package -n vserver-distro-redhat
 Summary:	VServer build template for Red Hat Linux 9
 Summary(pl.UTF-8):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
@@ -329,20 +358,6 @@ VServer build template for RedHat Linux 9.
 
 %description -n vserver-distro-redhat -l pl.UTF-8
 Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
-
-%package -n vserver-distro-pld
-Summary:	VServer build templates for PLD Linux
-Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji PLD Linux
-Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
-Requires:	/etc/pld-release
-Requires:	poldek >= 0.21-0.20070703.00.16
-
-%description -n vserver-distro-pld
-VServer build templates for PLD Linux.
-
-%description -n vserver-distro-pld -l pl.UTF-8
-Szablony do tworzenia VServerów dla dystrybucji PLD Linux.
 
 %package -n vserver-distro-suse
 Summary:	VServer build template for SuSE 9.1
@@ -464,7 +479,9 @@ install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld
 install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld/initpost
 ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/initpost
 ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/initpost
+%ifarch i586 i686 %{x8664} athlon pentium2 pentium3 pentium4
 ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti/initpost
+%endif
 install vproc-%{_vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE12} $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 
@@ -475,7 +492,11 @@ EOF
 install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pubkeys
 cp -a %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pubkeys/pld-ac.asc
 
-%ifarch i386 i586 i686 ppc sparc alpha athlon
+install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
+cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys/pld-th.asc
+
+# set arch for pld-ac in pld.conf
+%ifarch i586 i686 ppc sparc alpha athlon
 %define		_ftp_arch	%{_target_cpu}
 %endif
 %ifarch %{x8664}
@@ -490,12 +511,44 @@ cp -a %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pubkeys
 %ifarch sparcv9 sparc64
 %define		_ftp_arch	sparc
 %endif
-
 %{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/pld.conf
+
+# set arch for pld-th in pld.conf
+%ifarch i486 i686 ppc sparc alpha athlon
+%define		_ftp_arch	%{_target_cpu}
+%endif
+%ifarch %{x8664}
+%define		_ftp_arch	x86_64
+%endif
+%ifarch i586
+%define		_ftp_arch	i486
+%endif
+%ifarch pentium2 pentium3 pentium4
+%define		_ftp_arch	i686
+%endif
+%ifarch sparcv9 sparc64
+%define		_ftp_arch	sparc
+%endif
+%{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/pld.conf
+
+%ifarch i586 i686 %{x8664} athlon pentium2 pentium3 pentium4
+# set arch for pld-ti in pld.conf
+%ifarch i586 i686
+%define		_ftp_arch	%{_target_cpu}
+%endif
+%ifarch %{x8664}
+%define		_ftp_arch	x86_64
+%endif
+%ifarch athlon pentium2 pentium3 pentium4
+%define		_ftp_arch	i686
+%endif
+%{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/pld.conf
+%endif
 
 cat <<'EOF' > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/defaults/rpm/platform
 # first platform file entry can't contain regexps
 %{_target_cpu}-%{_target_vendor}-linux
+
 # x86_64 things
 %ifarch x86_64
 amd64-[^-]*-linux(-gnu)?
@@ -637,14 +690,14 @@ if [ "$1" = "0" ]; then
 fi
 
 %triggerpostun -n vserver-distro-pld -- util-vserver-build < 0.30.214-2.3
-D=%{_sysconfdir}/vservers/.distributions/pld-ac/poldek
+for D in ac th ti; do
+	P=%{_sysconfdir}/vservers/.distributions/pld-$D/poldek
 
-if [ -f $D/pld-source.conf.rpmsave ]; then
-	cp -f $D/repos.d/pld.conf{,.rpmnew}
-	mv -f $D/pld-source.conf.rpmsave $D/repos.d/pld.conf
-	%{__sed} -i -e 's,_pld_arch,_arch,g;s,_ac_idxtype,_type,g;s,_pld_prefix,_prefix,g' \
-		 $D/repos.d/pld.conf
-fi
+	if [ -f $P/pld-source.conf.rpmsave ]; then
+		cp -f $P/repos.d/pld.conf{,.rpmnew}
+		mv -f $P/pld-source.conf.rpmsave $P/repos.d/pld.conf
+	fi
+done
 exit 0
 
 %files
@@ -790,6 +843,7 @@ exit 0
 %attr(755,root,root) %{_sbindir}/vpoldek
 %attr(755,root,root) %{_sbindir}/vrpm
 %attr(755,root,root) %{_sbindir}/vyum
+%{_mandir}/man8/vserver-build.8*
 
 %files init
 %defattr(644,root,root,755)
@@ -815,6 +869,12 @@ exit 0
 %{_mandir}/man8/distrib-info.8*
 %{_mandir}/man8/rebootmgr.8*
 %{_mandir}/man8/vserver-copy.8*
+
+%files -n vserver-distro-alpine
+%defattr(644,root,root,755)
+%dir %{_libdir}/%{name}/distributions/alpine
+%attr(755,root,root) %{_libdir}/%{name}/distributions/alpine/initpost
+%attr(755,root,root) %{_libdir}/%{name}/distributions/alpine/initpre
 
 %files -n vserver-distro-centos
 %defattr(644,root,root,755)
@@ -861,10 +921,12 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
 %dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/*.conf
+%ifarch i586 i686 %{x8664} athlon pentium2 pentium3 pentium4
 %dir %{_sysconfdir}/vservers/.distributions/pld-ti
 %dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek
 %dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/*.conf
+%endif
 
 %files -n vserver-distro-redhat
 %defattr(644,root,root,755)
