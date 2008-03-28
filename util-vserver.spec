@@ -504,6 +504,9 @@ cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
 %ifarch pentium2 pentium3 pentium4
 %define		_ftp_arch	i686
 %endif
+%ifarch i486
+%define		_ftp_arch	i386
+%endif
 %ifarch sparcv9 sparc64
 %define		_ftp_arch	sparc
 %endif
