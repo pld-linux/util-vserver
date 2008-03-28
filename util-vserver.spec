@@ -22,7 +22,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	2.3
+Release:	2.4
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -495,17 +495,17 @@ install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
 cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys/pld-th.asc
 
 # set arch for pld-ac in pld.conf
-%ifarch i486 i686 ppc sparc alpha athlon
+%ifarch i586 i686 ppc sparc alpha athlon
 %define		_ftp_arch	%{_target_cpu}
 %endif
 %ifarch %{x8664}
 %define		_ftp_arch	amd64
 %endif
-%ifarch pentium2 pentium3 pentium4
-%define		_ftp_arch	i686
-%endif
 %ifarch i486
 %define		_ftp_arch	i386
+%endif
+%ifarch pentium2 pentium3 pentium4
+%define		_ftp_arch	i686
 %endif
 %ifarch sparcv9 sparc64
 %define		_ftp_arch	sparc
@@ -549,17 +549,14 @@ sed -i 's/%{_ftp_arch}/i686/g' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distribut
 %endif
 
 # set arch for pld-ti in pld.conf
-%ifarch i486 i686 ppc sparc alpha athlon
+%ifarch i586 i686
 %define		_ftp_arch	%{_target_cpu}
 %endif
 %ifarch %{x8664}
 %define		_ftp_arch	x86_64
 %endif
-%ifarch pentium2 pentium3 pentium4
+%ifarch athlon pentium2 pentium3 pentium4
 %define		_ftp_arch	i686
-%endif
-%ifarch sparcv9 sparc64
-%define		_ftp_arch	sparc
 %endif
 %{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/pld.conf
 
