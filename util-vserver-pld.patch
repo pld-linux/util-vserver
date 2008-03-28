@@ -842,12 +842,12 @@
 +
 +	if [ -n "$SETUP_MACHINE" ]; then
 +		say "Using $SETUP_MACHINE as machine"
-+		sed -i -e "s#^\(_arch\s*\)=.*#\1= $SETUP_MACHINE#" "$PKGCFGDIR"/poldek/etc/repos.d/pld.conf
++		sed -i -e "s#^\(_arch\s*\)=.*#\1= $SETUP_MACHINE#" "$PKGCFGDIR"/poldek/etc/repos.d/*.conf
 +	fi
 +
 +	if [ -n "$MIRROR" ]; then
 +		say "Using $MIRROR as mirror URL"
-+		sed -i -e "s#^\(_prefix\s*\)=.*#\1= $MIRROR#" "$PKGCFGDIR"/poldek/etc/repos.d/pld.conf
++		sed -i -e "s#^\(_prefix\s*\)=.*#\1= $MIRROR#" "$PKGCFGDIR"/poldek/etc/repos.d/*.conf
 +	fi
 +
 +#    test -z "$POLDEKCONFDEFAULT" || \
