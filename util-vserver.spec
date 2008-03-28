@@ -22,7 +22,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	2.1
+Release:	2.2
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -494,6 +494,22 @@ cp -a %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pubkeys
 install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
 cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys/pld-th.asc
 
+# set arch for pld-ac in pld.conf
+%ifarch i486 i686 ppc sparc alpha athlon
+%define		_ftp_arch	%{_target_cpu}
+%endif
+%ifarch %{x8664}
+%define		_ftp_arch	amd64
+%endif
+%ifarch pentium2 pentium3 pentium4
+%define		_ftp_arch	i686
+%endif
+%ifarch sparcv9 sparc64
+%define		_ftp_arch	sparc
+%endif
+%{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/pld.conf
+
+# set arch for pld-th in pld.conf
 %ifarch i486 i686 ppc sparc alpha athlon
 %define		_ftp_arch	%{_target_cpu}
 %endif
@@ -509,9 +525,21 @@ cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
 %ifarch sparcv9 sparc64
 %define		_ftp_arch	sparc
 %endif
-
-%{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/pld.conf
 %{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/pld.conf
+
+# set arch for pld-ti in pld.conf
+%ifarch i486 i686 ppc sparc alpha athlon
+%define		_ftp_arch	%{_target_cpu}
+%endif
+%ifarch %{x8664}
+%define		_ftp_arch	x86_64
+%endif
+%ifarch pentium2 pentium3 pentium4
+%define		_ftp_arch	i686
+%endif
+%ifarch sparcv9 sparc64
+%define		_ftp_arch	sparc
+%endif
 %{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/pld.conf
 
 cat <<'EOF' > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/defaults/rpm/platform
