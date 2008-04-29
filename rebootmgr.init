@@ -5,6 +5,8 @@
 #              the /sbin/vreboot command to talk with the reboot manager
 # processname: rebootmgr
 # config: /etc/vservers
+#
+# $Id$
 
 . /etc/init.d/functions
 
@@ -17,18 +19,18 @@ fi
 
 # See how we were called.
 case "$1" in
-    start)
-    	if [ ! -f /var/lock/subsys/rebootmgr ] ; then
+  start)
+	if [ ! -f /var/lock/subsys/rebootmgr ] ; then
 	    show "Starting the legacy vserver reboot manager"
 	    busy
 	    cd $__CONFDIR
 	    VSERVERS=
-	    for serv in *.conf ; do
-		[ -f "$serv" ] || continue
-		serv=`basename $serv .conf`
-		if [ -d $__DEFAULT_VSERVERDIR/$serv ] ; then
-		    VSERVERS="$VSERVERS $serv"
-		fi
+	    for serv in *.conf; do
+			[ -f "$serv" ] || continue
+			serv=`basename $serv .conf`
+			if [ -d $__DEFAULT_VSERVERDIR/$serv ] ; then
+				VSERVERS="$VSERVERS $serv"
+			fi
 	    done
 	    $_REBOOTMGR --pidfile /var/run/rebootmgr.pid $VSERVERS &
 	    touch /var/lock/subsys/rebootmgr
@@ -37,37 +39,34 @@ case "$1" in
 	    msg_already_running "legacy vserver reboot manager"
 	fi
 	;;
-    stop)
-    	if [ -f /var/lock/subsys/rebootmgr ] ; then
-	    show "Stopping the legacy vserver reboot manager"
-	    busy
-	    kill `cat /var/run/rebootmgr.pid`
-	    rm -f /var/lock/subsys/rebootmgr
-	    rm -f /var/run/rebootmgr.pid
-	    ok
+  stop)
+	if [ -f /var/lock/subsys/rebootmgr ] ; then
+		show "Stopping the legacy vserver reboot manager"
+		busy
+		kill $(cat /var/run/rebootmgr.pid)
+		rm -f /var/lock/subsys/rebootmgr
+		rm -f /var/run/rebootmgr.pid
+		ok
 	else
 	    msg_not_running "legacy vserver reboot manager"
 	fi
 	;;
-    restart)
-     	$0 stop
+  restart)
+	$0 stop
 	$0 start
 	;;
-    status)
-    	if [ -f /var/run/rebootmgr.pid ] ; then
-	    if kill -0 `cat /var/run/rebootmgr.pid` ; then
-		echo rebootmgr is running
+  status)
+	if [ -f /var/run/rebootmgr.pid ] ; then
+	    if kill -0 $(cat /var/run/rebootmgr.pid); then
+			echo rebootmgr is running
 	    else
-		echo rebootmgr is NOT running
+			echo rebootmgr is NOT running
 	    fi
 	fi
 	;;
-    *)
-	echo "Usage: $0 {start|stop|restart|status}"
-	exit 1
+  *)
+	msg_usage "$0 {start|stop|restart|status}"
+	exit 3
 esac
 
 exit 0
-
-# This must be last line !
-# vi:syntax=sh:tw=78:ts=8:sw=4

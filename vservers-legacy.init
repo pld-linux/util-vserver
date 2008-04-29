@@ -2,6 +2,8 @@
 # chkconfig: 345 98 02
 # description: The vservers service is used to start and stop all
 #              the virtual servers.
+#
+# $Id$
 
 . /etc/init.d/functions
 
@@ -18,8 +20,7 @@ fi
 sortserver(){
 	(
 	cd $__CONFDIR
-	for serv in *.conf
-	do
+	for serv in *.conf; do
 	        test -f "$serv" || continue
 
 		PRIORITY=100
@@ -32,8 +33,7 @@ sortserver(){
 
 startservers(){
 	cd $__CONFDIR
-	for name in `sortserver`
-	do
+	for name in $(sortserver); do
 		ONBOOT=
 		. $name.conf
 		if [ "$ONBOOT" = "yes" ] ; then
@@ -49,9 +49,9 @@ case "$1" in
 	    show "Starting the virtual servers"
 	    busy
 	    if [ "$BACKGROUND" = "yes" ] ; then
-		startservers >/dev/tty8 </dev/tty8 2>/dev/tty8 &
+			startservers >/dev/tty8 </dev/tty8 2>/dev/tty8 &
 	    else
-		startservers
+			startservers
 	    fi
 	    touch /var/lock/subsys/vservers-legacy
 	    ok
@@ -64,8 +64,8 @@ case "$1" in
 	    show "Stopping the virtual servers"
 	    busy
 	    cd $__CONFDIR
-	    for name in `sortserver -r` ; do
-		$_VSERVER_LEGACY $name stop
+	    for name in $(sortserver -r); do
+			$_VSERVER_LEGACY $name stop
 	    done
 	    rm -f /var/lock/subsys/vservers-legacy
 	    ok
@@ -78,25 +78,22 @@ case "$1" in
 	$0 start
 	;;
   status)
-  	if [ -f /var/lock/subsys/vservers-legacy ] ; then
+  	if [ -f /var/lock/subsys/vservers-legacy ]; then
 	    cd $__CONFDIR
-	    for serv in *.conf ; do
-		ONBOOT=no
-		name=`basename $serv .conf`
-		. $serv
-		echo -n ONBOOT=$ONBOOT " "
-		$_VSERVER_LEGACY $name running
+	    for serv in *.conf; do
+			ONBOOT=no
+			name=$(basename $serv .conf)
+			. $serv
+			echo -n ONBOOT=$ONBOOT " "
+			$_VSERVER_LEGACY $name running
 	    done
 	else
 	    msg_not_running "virtual servers"
 	fi
 	;;
   *)
-	echo "Usage: vservers {start|stop|restart|status}"
-	exit 1
+	msg_usage "$0 {start|stop|restart|status}"
+	exit 3
 esac
 
 exit $RETVAL
-
-# This must be last line !
-# vi:syntax=sh:tw=78:ts=8:sw=4

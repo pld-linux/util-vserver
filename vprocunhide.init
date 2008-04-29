@@ -4,6 +4,8 @@
 #
 # chkconfig: 2345 26 74
 # description: Makes some /proc entries visibly for vservers
+#
+# $Id$
 
 # if kernel not capable, exit early
 if [ ! -d /proc/virtual ]; then
@@ -49,20 +51,20 @@ stop() {
 }
 
 case "$1" in
-start|restart|reload)
+  start|restart|reload)
 	start
 	;;
-stop)
+  stop)
 	stop
 	;;
-status)
-	if [ -f /var/lock/subsys/vprocunhide ] ; then
+  status)
+	if [ -f /var/lock/subsys/vprocunhide ]; then
 		echo "vservers /proc entries were fixed"
 	else
 		echo "vservers /proc entries were not fixed"
 	fi
 	;;
-*)
+  *)
 	msg_usage "$0 {start|stop|reload|restart|status}"
 	exit 3
 	;;

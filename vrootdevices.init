@@ -4,6 +4,8 @@
 #
 # chkconfig:	345 97 03
 # description:	Setup vroot devices for use inside vservers
+#
+# $Id$
 
 # Source function library
 . /etc/rc.d/init.d/functions
@@ -71,12 +73,12 @@ case "$1" in
   stop)
   	stop
 	;;
-  status)
-	echo "There is no way to tell"
-	;;
   restart|force-reload)
 	stop
 	start
+	;;
+  status)
+	echo "There is no way to tell"
 	;;
   *)
 	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
