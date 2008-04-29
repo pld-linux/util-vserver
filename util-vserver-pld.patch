@@ -768,9 +768,9 @@
  	elif test -n "$1"; then
  	    DISTRIBUTION=$1
  	else
---- util-vserver-0.30.214/scripts/vserver-build.functions.poldek	2008-03-25 19:20:07.685144000 +0200
+--- util-vserver-0.30.214/scripts/vserver-build.functions.poldek	2008-03-25 20:37:09.000000000 +0200
 +++ util-vserver-0.30.214/scripts/vserver-build.functions.poldek	2008-03-25 20:37:09.000000000 +0200
-@@ -0,0 +1,82 @@
+@@ -0,0 +1,81 @@
 +# $Id$	--*- sh -*--
 +
 +# Copyright (C) 2003 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
@@ -826,9 +826,8 @@
 +function poldek.initFilesystem
 +{
 +    mkdir -p "$PKGCFGDIR"/poldek/etc/repos.d
-+    mkdir -p "$PKGCFGBASE"/poldek-cache
 +
-+    $_LN_S "$PKGCFGBASE"/poldek-cache "$PKGCFGDIR"/poldek/cache
++    $_LN_S "$__CONFDIR"/.defaults/cachebase/poldek "$PKGCFGDIR"/poldek/cache
 +
 +    populateDirectory "$PKGCFGDIR/poldek/etc" \
 +	"$__DISTRIBDIR/defaults/poldek" \
