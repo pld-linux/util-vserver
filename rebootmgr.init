@@ -17,9 +17,7 @@ if [ ! -e "$UTIL_VSERVER_VARS" ] ; then
 fi
 . "$UTIL_VSERVER_VARS"
 
-# See how we were called.
-case "$1" in
-  start)
+start() {
 	if [ ! -f /var/lock/subsys/rebootmgr ] ; then
 	    show "Starting the legacy vserver reboot manager"
 	    busy
@@ -38,8 +36,9 @@ case "$1" in
 	else
 	    msg_already_running "legacy vserver reboot manager"
 	fi
-	;;
-  stop)
+}
+
+stop() {
 	if [ -f /var/lock/subsys/rebootmgr ] ; then
 		show "Stopping the legacy vserver reboot manager"
 		busy
@@ -50,10 +49,20 @@ case "$1" in
 	else
 	    msg_not_running "legacy vserver reboot manager"
 	fi
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
 	;;
   restart)
-	$0 stop
-	$0 start
+	stop
+	start
 	;;
   status)
 	if [ -f /var/run/rebootmgr.pid ] ; then
@@ -69,4 +78,4 @@ case "$1" in
 	exit 3
 esac
 
-exit 0
+exit $RETVAL
