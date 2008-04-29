@@ -1,5 +1,4 @@
 # TODO
-# - somewhy empty /var/cache/vservers is needed when building pld vserver
 # - make build create /dev/std{in,out,err} links
 # - reject install in %%pretrans if /proc/virtual/info has incompatible version
 # - unpackaged
@@ -21,7 +20,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	3
+Release:	4
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -59,6 +58,7 @@ Patch13:	%{name}-tmpdir.patch
 Patch14:	%{name}-rpmpath.patch
 Patch15:	%{name}-interfaces-ignore-cvs-dir.patch
 Patch16:	%{name}-personalitymachine.patch
+Patch17:	%{name}-backupfiles.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -404,6 +404,7 @@ Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
+%patch17 -p1
 
 install %{SOURCE9} package-management.txt
 
@@ -627,8 +628,7 @@ sparc-[^-]*-linux(-gnu)?
 noarch-[^-]*-.*
 EOF
 
-# XXX baggins check this: needed but seems unused
-install -d $RPM_BUILD_ROOT/var/cache/vservers
+install -d $RPM_BUILD_ROOT/var/cache/vservers/poldek
 
 # we have our own initscript which does the same
 rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
@@ -796,6 +796,7 @@ exit 0
 %dir %{_localstatedir}/run/vservers.rev
 %dir %{_localstatedir}/run/vshelper
 %dir /var/cache/vservers
+%dir /var/cache/vservers/poldek
 
 %files lib
 %defattr(644,root,root,755)
