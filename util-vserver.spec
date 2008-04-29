@@ -19,12 +19,12 @@
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30.215
-Release:	4
+Version:	0.30.214
+Release:	5
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
-# Source0-md5:	befd9b8e5311e87395b67ee381d83649
+# Source0-md5:	8bad879e36a6a1b9b4858d0d6d3c8c76
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -335,7 +335,7 @@ Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji PLD Linux
 Group:		Applications/System
 Requires:	%{name}-build = %{version}-%{release}
 Requires:	/etc/pld-release
-Requires:	poldek >= 0.30
+Requires:	poldek >= 0.21-0.20070703.00.16
 
 %description -n vserver-distro-pld
 VServer build templates for PLD Linux.
@@ -689,7 +689,7 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del vservers-legacy
 fi
 
-%triggerpostun -n vserver-distro-pld -- util-vserver-build < 0.30.215-1.1
+%triggerpostun -n vserver-distro-pld -- util-vserver-build < 0.30.214-2.3
 for D in ac th ti; do
 	P=%{_sysconfdir}/vservers/.distributions/pld-$D/poldek
 
@@ -731,12 +731,9 @@ exit 0
 %attr(755,root,root) %{_sbindir}/vlimit
 %attr(755,root,root) %{_sbindir}/vdevmap
 %attr(755,root,root) %{_sbindir}/vdu
-%attr(755,root,root) %{_sbindir}/vmemctrl
-%attr(755,root,root) %{_sbindir}/vmount
 %attr(755,root,root) %{_sbindir}/vproc
 %attr(755,root,root) %{_sbindir}/vps
 %attr(755,root,root) %{_sbindir}/vpstree
-%attr(755,root,root) %{_sbindir}/vspace
 %attr(755,root,root) %{_sbindir}/vrsetup
 %attr(755,root,root) %{_sbindir}/vsched
 %attr(755,root,root) %{_sbindir}/vserver
@@ -772,7 +769,6 @@ exit 0
 %attr(755,root,root) %{_libdir}/%{name}/secure-mount
 %attr(755,root,root) %{_libdir}/%{name}/sigexec
 %attr(755,root,root) %{_libdir}/%{name}/start-vservers
-%attr(755,root,root) %{_libdir}/%{name}/tunctl
 %attr(755,root,root) %{_libdir}/%{name}/vprocunhide
 %{_libdir}/%{name}/vserver.*
 %attr(755,root,root) %{_libdir}/%{name}/vserver-build
@@ -848,7 +844,6 @@ exit 0
 %attr(755,root,root) %{_sbindir}/vpoldek
 %attr(755,root,root) %{_sbindir}/vrpm
 %attr(755,root,root) %{_sbindir}/vyum
-%{_mandir}/man8/vserver-build.8*
 
 %files init
 %defattr(644,root,root,755)
@@ -875,12 +870,6 @@ exit 0
 %{_mandir}/man8/rebootmgr.8*
 %{_mandir}/man8/vserver-copy.8*
 
-%files -n vserver-distro-alpine
-%defattr(644,root,root,755)
-%dir %{_libdir}/%{name}/distributions/alpine
-%attr(755,root,root) %{_libdir}/%{name}/distributions/alpine/initpost
-%attr(755,root,root) %{_libdir}/%{name}/distributions/alpine/initpre
-
 %files -n vserver-distro-centos
 %defattr(644,root,root,755)
 %{_libdir}/util-vserver/distributions/centos*
@@ -903,7 +892,6 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/fc*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
 %{_libdir}/%{name}/distributions/f7
-%{_libdir}/%{name}/distributions/f8
 %{_libdir}/%{name}/distributions/fc*
 
 %files -n vserver-distro-gentoo
