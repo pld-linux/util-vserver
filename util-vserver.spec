@@ -1,5 +1,4 @@
 # TODO
-# - somewhy empty /var/cache/vservers is needed when building pld vserver
 # - make build create /dev/std{in,out,err} links
 # - reject install in %%pretrans if /proc/virtual/info has incompatible version
 # - unpackaged
@@ -627,8 +626,8 @@ sparc-[^-]*-linux(-gnu)?
 noarch-[^-]*-.*
 EOF
 
-# XXX baggins check this: needed but seems unused
-install -d $RPM_BUILD_ROOT/var/cache/vservers
+install -d $RPM_BUILD_ROOT/var/cache/vservers/poldek
+ln -sf /var/cache/vservers/poldek $RPM_BUILD_ROOT/vservers/.pkg/poldek-cache
 
 # we have our own initscript which does the same
 rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
@@ -788,10 +787,12 @@ exit 0
 %{_mandir}/man8/vtop.8*
 %attr(000,root,root) %dir /vservers
 %dir /vservers/.pkg
+/vservers/.pkg/poldek-cache
 %dir %{_localstatedir}/run/vservers
 %dir %{_localstatedir}/run/vservers.rev
 %dir %{_localstatedir}/run/vshelper
 %dir /var/cache/vservers
+%dir /var/cache/vservers/poldek
 
 %files lib
 %defattr(644,root,root,755)
