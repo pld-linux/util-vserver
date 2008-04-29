@@ -114,13 +114,14 @@
 +path   = %{_pld_main_prefix}/test/%{_arch}/
 +auto   = no
 +autoup = no
---- util-vserver-0.30.214.org/distrib/pld-ac/rpm/macros	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.214/distrib/pld-ac/rpm/macros	2007-11-15 23:20:48.181172125 +0100
-@@ -0,0 +1,4 @@
+--- util-vserver-0.30.214/distrib/pld-ac/rpm/macros	2007-11-15 23:20:48.181172125 +0100
++++ util-vserver-0.30.214/distrib/pld-ac/rpm/macros	2008-04-29 23:36:23.674175489 +0300
+@@ -0,0 +1,5 @@
 +# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
 +%_netsharedpath		/dev
++%_tmppath			/tmp
 --- util-vserver-0.30.214/distrib/pld-th/pkgs/01	2007-11-15 23:20:48.181172125 +0100
 +++ util-vserver-0.30.214/distrib/pld-th/pkgs/01	2008-03-25 23:05:18.538916218 +0200
 @@ -0,0 +1,6 @@
@@ -200,11 +201,12 @@
 +autoup = no
 --- util-vserver-0.30.214.org/distrib/pld-th/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-th/rpm/macros	2007-11-15 23:20:48.184505622 +0100
-@@ -0,0 +1,4 @@
+@@ -0,0 +1,5 @@
 +# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
 +%_netsharedpath		/dev
++%_tmppath			/tmp
 --- util-vserver-0.30.214/distrib/pld-ti/pkgs/01	2007-11-15 23:20:48.181172125 +0100
 +++ util-vserver-0.30.214/distrib/pld-ti/pkgs/01	2008-03-25 23:05:18.538916218 +0200
 @@ -0,0 +1,6 @@
@@ -265,11 +267,12 @@
 +autoup = no
 --- util-vserver-0.30.214.org/distrib/pld-ti/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.214/distrib/pld-ti/rpm/macros	2007-11-15 23:20:48.221174080 +0100
-@@ -0,0 +1,4 @@
+@@ -0,0 +1,5 @@
 +# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
 +%_netsharedpath		/dev
++%_tmppath			/tmp
 --- util-vserver-0.30.214.org/scripts/functions	2007-09-02 22:06:41.000000000 +0200
 +++ util-vserver-0.30.214/scripts/functions	2007-11-15 23:20:48.221174080 +0100
 @@ -403,6 +403,20 @@
