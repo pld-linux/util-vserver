@@ -21,12 +21,12 @@ sortserver(){
 	(
 	cd $__CONFDIR
 	for serv in *.conf; do
-	        test -f "$serv" || continue
+        test -f "$serv" || continue
 
 		PRIORITY=100
 		. $serv
 		test "$ONBOOT" || continue
-		printf "%03d %s\n" $PRIORITY `basename $serv .conf`
+		printf "%03d %s\n" $PRIORITY $(basename $serv .conf)
 	done
 	) | sort $* | (while read a b; do echo $b; done)
 }
@@ -42,9 +42,7 @@ startservers(){
 	done
 }
 
-# See how we were called.
-case "$1" in
-  start)
+start() {
   	if [ ! -f /var/lock/subsys/vservers-legacy ] ; then
 	    show "Starting the virtual servers"
 	    busy
@@ -58,8 +56,9 @@ case "$1" in
 	else
 	    msg_already_running "virtual servers"
 	fi
-	;;
-  stop)
+}
+
+stop() {
   	if [ -f /var/lock/subsys/vservers-legacy ] ; then
 	    show "Stopping the virtual servers"
 	    busy
@@ -72,10 +71,20 @@ case "$1" in
 	else
 	    msg_not_running "virtual servers"
 	fi
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
 	;;
   restart)
-	$0 stop
-	$0 start
+	stop
+	start
 	;;
   status)
   	if [ -f /var/lock/subsys/vservers-legacy ]; then
