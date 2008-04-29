@@ -58,6 +58,7 @@ Patch13:	%{name}-tmpdir.patch
 Patch14:	%{name}-rpmpath.patch
 Patch15:	%{name}-interfaces-ignore-cvs-dir.patch
 Patch16:	%{name}-personalitymachine.patch
+Patch17:	%{name}-backupfiles.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -403,6 +404,7 @@ Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
+%patch17 -p1
 
 install %{SOURCE9} package-management.txt
 
@@ -627,7 +629,6 @@ noarch-[^-]*-.*
 EOF
 
 install -d $RPM_BUILD_ROOT/var/cache/vservers/poldek
-ln -sf /var/cache/vservers/poldek $RPM_BUILD_ROOT/vservers/.pkg/poldek-cache
 
 # we have our own initscript which does the same
 rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
@@ -787,7 +788,6 @@ exit 0
 %{_mandir}/man8/vtop.8*
 %attr(000,root,root) %dir /vservers
 %dir /vservers/.pkg
-/vservers/.pkg/poldek-cache
 %dir %{_localstatedir}/run/vservers
 %dir %{_localstatedir}/run/vservers.rev
 %dir %{_localstatedir}/run/vshelper
