@@ -20,7 +20,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	6
+Release:	7
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -47,6 +47,7 @@ Source14:	ftp://ftp.pld-linux.org/dists/th/PLD-3.0-Th-GPG-key.asc
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
 Patch4:		%{name}-m4-diet.patch
+Patch5:		%{name}-yum-verb-nogpg.patch
 Patch6:		%{name}-build-umask.patch
 Patch7:		%{name}-utmpx.patch
 Patch8:		%{name}-vprocunhide.patch
@@ -89,6 +90,7 @@ BuildRequires:	tetex-metafont
 %endif
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-lib = %{version}-%{release}
+Requires:	diffutils
 Requires:	issue
 Requires:	mktemp >= 1.5-18
 Requires:	rc-scripts
@@ -395,6 +397,7 @@ Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 %patch0 -p1
 %patch1 -p1
 %patch4 -p1
+%patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
@@ -418,6 +421,7 @@ unset LD_SYMBOLIC_FUNCTIONS || :
 %if %{with dietlibc}
 CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1 -U__STRICT_ANSI__"
 %endif
+%{__libtoolize}
 %{__aclocal} -I m4
 %{__automake}
 %{__autoconf}
