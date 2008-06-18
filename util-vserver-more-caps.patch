@@ -1,0 +1,32 @@
+--- util-vserver-0.30.215/lib/bcaps-v13.c~	2008-03-17 09:59:48.000000000 +0100
++++ util-vserver-0.30.215/lib/bcaps-v13.c	2008-06-18 14:35:03.461451575 +0200
+@@ -39,6 +39,19 @@
+ #  define CAP_AUDIT_CONTROL	30
+ #endif
+ 
++#ifndef CAP_SETFCAP
++#  define CAP_SETFCAP		31
++#endif
++
++#ifndef CAP_MAC_OVERRIDE
++#  define CAP_MAC_OVERRIDE	32
++#endif
++
++#ifndef CAP_MAC_ADMIN
++#  define CAP_MAC_ADMIN		33
++#endif
++
++
+ static struct Mapping_uint64 const VALUES[] = {
+   DECL(CHOWN),
+   DECL(DAC_OVERRIDE),
+@@ -71,6 +84,9 @@
+   DECL(LEASE),
+   DECL(AUDIT_WRITE),
+   DECL(AUDIT_CONTROL),
++  DECL(SETFCAP),
++  DECL(MAC_OVERRIDE),
++  DECL(MAC_ADMIN),
+ };
+ 
+ inline static char const *
