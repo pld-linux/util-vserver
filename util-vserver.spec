@@ -20,7 +20,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	8
+Release:	9
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -99,6 +99,11 @@ Requires:	tar
 Requires:	util-linux
 Obsoletes:	util-vserver-core
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%if %{with dietlibc}
+# binaries created with this option have broken segments when using dietlibc
+%define	filterout_ld	-Wl,-z,relro
+%endif
 
 # for adapter
 %define		_usrbin		/usr/bin
