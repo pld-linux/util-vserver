@@ -840,10 +840,14 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/.common/pubkeys
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %dir %{_libdir}/%{name}/distributions
-%attr(-,root,root) %{_libdir}/%{name}/distributions/defaults
+%{_libdir}/%{name}/distributions/defaults
 %dir %{_libdir}/%{name}/distributions/template
-%attr(755,root,root) %{_libdir}/%{name}/distributions/template/init*
-%attr(-,root,root) %{_libdir}/%{name}/distributions/redhat
+%attr(755,root,root) %{_libdir}/%{name}/distributions/template/initpost
+%attr(755,root,root) %{_libdir}/%{name}/distributions/template/initpre
+%dir %{_libdir}/%{name}/distributions/redhat
+%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpost
+%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpre
+%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/rc.sysinit
 %{_libdir}/%{name}/vserver-setup.functions
 %{_libdir}/%{name}/vserver-build.*
 %{_libdir}/%{name}/defaults/fstab
@@ -932,8 +936,13 @@ exit 0
 
 %files -n vserver-distro-pld
 %defattr(644,root,root,755)
-%attr(-,root,root) %{_libdir}/%{name}/distributions/pld
-%attr(-,root,root) %{_libdir}/%{name}/distributions/pld-*
+%dir %{_libdir}/%{name}/distributions/pld
+%attr(755,root,root) %{_libdir}/%{name}/distributions/pld/initpost
+%dir %{_libdir}/%{name}/distributions/pld-*
+%{_libdir}/%{name}/distributions/pld-*/pkgs
+%{_libdir}/%{name}/distributions/pld-*/pubkeys
+%{_libdir}/%{name}/distributions/pld-*/rpm
+%attr(755,root,root) %{_libdir}/%{name}/distributions/pld-*/initpost
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d
