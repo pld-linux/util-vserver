@@ -3,6 +3,11 @@
 # - reject install in %%pretrans if /proc/virtual/info has incompatible version
 # - unpackaged
 #   /etc/rc.d/init.d/util-vserver -- # integrate to our initscript (util-vserver sets the path to vshelper and kills all guest processes)
+# - move to main pkg:
+#  vserver initng delete
+#  /usr/lib64/util-vserver/vserver.delete: line 19: /usr/lib64/util-vserver/vserver-build.functions: No such file or directory
+#  /usr/lib64/util-vserver/vserver.delete: line 20: /usr/lib64/util-vserver/vserver-build.functions.pkgmgmt: No such file or directory
+#  or move the delete func to -build
 #
 # m68k and mips are the only not supported archs
 #
