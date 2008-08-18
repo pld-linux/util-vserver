@@ -8,6 +8,7 @@
 #  /usr/lib64/util-vserver/vserver.delete: line 19: /usr/lib64/util-vserver/vserver-build.functions: No such file or directory
 #  /usr/lib64/util-vserver/vserver.delete: line 20: /usr/lib64/util-vserver/vserver-build.functions.pkgmgmt: No such file or directory
 #  or move the delete func to -build
+# - make pkgmgmnt internalize modify poldek conf to unignore vserver-packages
 #
 # m68k and mips are the only not supported archs
 #
