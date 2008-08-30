@@ -649,6 +649,10 @@ sparc-[^-]*-linux(-gnu)?
 noarch-[^-]*-.*
 EOF
 
+# current debootstrap link
+echo "http://ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.10_all.deb" \
+	> $RPM_BUILD_ROOT%{_libdir}/%{name}/defaults/debootstrap.uri
+
 install -d $RPM_BUILD_ROOT/var/cache/vservers/poldek
 
 # we have our own initscript which does the same
@@ -772,7 +776,11 @@ exit 0
 %dir %{_libdir}/%{name}/defaults
 %{_libdir}/%{name}/FEATURES.txt
 %{_libdir}/%{name}/util-vserver-vars
-%{_libdir}/%{name}/defaults/*
+%{_libdir}/%{name}/defaults/context.start
+%{_libdir}/%{name}/defaults/environment
+%{_libdir}/%{name}/defaults/h2ext.desc
+%{_libdir}/%{name}/defaults/mtab
+%{_libdir}/%{name}/defaults/vprocunhide-files
 %attr(755,root,root) %{_libdir}/%{name}/capchroot
 %attr(755,root,root) %{_libdir}/%{name}/chain-echo
 %attr(755,root,root) %{_libdir}/%{name}/chbind-compat
@@ -857,7 +865,7 @@ exit 0
 %{_libdir}/%{name}/vserver-setup.functions
 %{_libdir}/%{name}/vserver-build.*
 %{_libdir}/%{name}/defaults/fstab
-%{_libdir}/%{name}/defaults/debootstrap.uri
+%{_libdir}/%{name}/defaults/debootstrap.*
 %{_libdir}/%{name}/defaults/vunify-exclude
 %attr(755,root,root) %{_libdir}/%{name}/pkgmgmt
 %attr(755,root,root) %{_libdir}/%{name}/vapt-get-worker
