@@ -9,6 +9,9 @@
 #  /usr/lib64/util-vserver/vserver.delete: line 20: /usr/lib64/util-vserver/vserver-build.functions.pkgmgmt: No such file or directory
 #  or move the delete func to -build
 # - make pkgmgmnt internalize modify poldek conf to unignore vserver-packages
+# - service vservers stop should shutdown all running vservers (respecting
+#   configuration for order) otherwise on shutdown vservers are not nicely
+#   shutdown!
 #
 # m68k and mips are the only not supported archs
 #
