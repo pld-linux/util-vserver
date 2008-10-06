@@ -12,6 +12,7 @@
 # - service vservers stop should shutdown all running vservers (respecting
 #   configuration for order) otherwise on shutdown vservers are not nicely
 #   shutdown!
+# - when building ac quest on th, the platform file for x8664 archidecture is wrong
 #
 # m68k and mips are the only not supported archs
 #
