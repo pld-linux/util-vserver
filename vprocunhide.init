@@ -26,10 +26,11 @@ if [ ! -e "$UTIL_VSERVER_VARS" ] ; then
 fi
 . "$UTIL_VSERVER_VARS"
 
+$_VSERVER_INFO - FEATURE iattr || exit 0
+
 start() {
 	show "Fixing vservers /proc entries visibility"
 	busy
-	${_SETATTR} -Rx --hide /proc 2>/dev/null
 	$_VPROCUNHIDE
 	RETVAL=$?
 	deltext
@@ -42,10 +43,8 @@ start() {
 }
 
 stop() {
-	# XXX why start and stop both do --hide?
 	show "Stopping vservers /proc entries visibility"
 	busy
-	${_SETATTR} -Rx --hide /proc 2>/dev/null
 	rm -f /var/lock/subsys/vprocunhide
 	ok
 }
