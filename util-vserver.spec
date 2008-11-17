@@ -12,7 +12,7 @@
 # - service vservers stop should shutdown all running vservers (respecting
 #   configuration for order) otherwise on shutdown vservers are not nicely
 #   shutdown!
-# - when building ac quest on th, the platform file for x8664 archidecture is wrong
+# - when building ac guest on th, the platform file for x8664 archidecture is wrong
 #
 # m68k and mips are the only not supported archs
 #
@@ -30,7 +30,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	9.2
+Release:	9.4
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -570,136 +570,6 @@ cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
 %endif
 %{__sed} -i -e 's|%%ARCH%%|%{ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/pld.conf
 %endif
-
-cd $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/defaults/rpm
-# first platform file entry can't contain regexps
-echo x86_64-%{_target_vendor}-linux > platform.x86_64
-echo amd64-%{_target_vendor}-linux > platform.amd64
-echo athlon-%{_target_vendor}-linux > platform.athlon
-echo i686-%{_target_vendor}-linux > platform.i686
-echo i486-%{_target_vendor}-linux > platform.i486
-echo i386-%{_target_vendor}-linux > platform.i386
-echo alpha-%{_target_vendor}-linux > platform.alpha
-echo ppc-%{_target_vendor}-linux > platform.ppc
-echo sparc-%{_target_vendor}-linux > platform.sparc
-
-ifarch() {
-	local arch buf=$(cat);
-	for arch in $*; do
-		echo "$buf" | tee -a platform.$arch
-	done
-}
-
-# x86_64 things
-ifarch x86_64 <<endif
-amd64-[^-]*-[Ll]inux(-gnu)?
-x86_64-[^-]*-[Ll]inux(-gnu)?
-endif
-ifarch amd64 <<endif
-amd64-[^-]*-[Ll]inux(-gnu)?
-x86_64-[^-]*-[Ll]inux(-gnu)?
-endif
-ifarch ia32e <<endif
-ia32e-[^-]*-[Ll]inux(-gnu)?
-x86_64-[^-]*-[Ll]inux(-gnu)?
-endif
-
-# x86 things
-ifarch athlon %{x8664} <<endif
-athlon-[^-]*-[Ll]inux(-gnu)?
-endif
-ifarch pentium4 athlon %{x8664} <<endif
-pentium4-[^-]*-[Ll]inux(-gnu)?
-endif
-ifarch pentium3 pentium4 athlon %{x8664} <<endif
-pentium3-[^-]*-[Ll]inux(-gnu)?
-endif
-
-ifarch i686 pentium3 pentium4 athlon %{x8664} <<endif
-i686-[^-]*-[Ll]inux(-gnu)?
-endif
-
-ifarch i586 i686 pentium3 pentium4 athlon %{x8664} <<endif
-i586-[^-]*-[Ll]inux(-gnu)?
-endif
-
-ifarch i486 i586 i686 pentium3 pentium4 athlon %{x8664} <<endif
-i486-[^-]*-[Ll]inux(-gnu)?
-endif
-
-ifarch %{ix86} %{x8664} <<endif
-i386-[^-]*-[Ll]inux(-gnu)?
-endif
-
-ifarch alpha <<endif
-alpha-[^-]*-[Ll]inux(-gnu)?
-endif
-
-ifarch ia64 <<endif
-ia64-[^-]*-[Ll]inux(-gnu)?
-endif
-
-ifarch ppc64 <<endif
-powerpc64-[^-]*-[Ll]inux(-gnu)?
-ppc64-[^-]*-[Ll]inux(-gnu)?
-endif
-ifarch ppc ppc64 <<endif
-powerpc-[^-]*-[Ll]inux(-gnu)?
-ppc-[^-]*-[Ll]inux(-gnu)?
-endif
-
-ifarch s390x <<endif
-s390x-[^-]*-[Ll]inux(-gnu)?
-endif
-ifarch s390 s390x <<endif
-s390-[^-]*-[Ll]inux(-gnu)?
-endif
-
-ifarch sparc64 <<endif
-sparc64-[^-]*-[Ll]inux(-gnu)?
-sparcv8-[^-]*-[Ll]inux(-gnu)?
-sparcv9-[^-]*-[Ll]inux(-gnu)?
-endif
-ifarch sparcv9 <<endif
-sparcv8-[^-]*-[Ll]inux(-gnu)?
-sparcv9-[^-]*-[Ll]inux(-gnu)?
-endif
-ifarch sparc sparcv9 sparc64 <<endif
-sparc-[^-]*-[Ll]inux(-gnu)?
-endif
-
-# noarch
-for a in platform.*; do
-	echo 'noarch-[^-]*-.*' >> $a
-done
-cd -
-
-# now create arch compat lists
-cd $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions
-# ac ftp archs
-ln defaults/rpm/platform.amd64 pld-ac/rpm/platform.amd64
-ln defaults/rpm/platform.alpha pld-ac/rpm/platform.alpha
-ln defaults/rpm/platform.athlon pld-ac/rpm/platform.athlon
-ln defaults/rpm/platform.sparc pld-ac/rpm/platform.sparc
-ln defaults/rpm/platform.ppc pld-ac/rpm/platform.ppc
-ln defaults/rpm/platform.i686 pld-ac/rpm/platform.i686
-ln defaults/rpm/platform.i586 pld-ac/rpm/platform.i586
-ln defaults/rpm/platform.i486 pld-ac/rpm/platform.i486
-ln defaults/rpm/platform.i386 pld-ac/rpm/platform.i386
-# th ftp archs
-ln defaults/rpm/platform.x86_64 pld-th/rpm/platform.x86_64
-ln defaults/rpm/platform.athlon pld-th/rpm/platform.athlon
-ln defaults/rpm/platform.ppc pld-th/rpm/platform.ppc
-ln defaults/rpm/platform.i686 pld-th/rpm/platform.i686
-ln defaults/rpm/platform.i486 pld-th/rpm/platform.i486
-# ti ftp archs
-ln defaults/rpm/platform.x86_64 pld-ti/rpm/platform.x86_64
-ln defaults/rpm/platform.i686 pld-ti/rpm/platform.i686
-ln defaults/rpm/platform.i586 pld-ti/rpm/platform.i586
-cd -
-
-# and get rid of the original files
-rm -f $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/defaults/rpm/platform.*
 
 # current debootstrap link
 echo "http://ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.10_all.deb" \
