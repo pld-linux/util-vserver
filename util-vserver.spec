@@ -22,7 +22,7 @@
 %bcond_without	no_dynamic_context	# disable enforcement of disabled dynamic context
 %bcond_with	xalan			# use the xalan xslt processor
 #
-%define	_vproc_version 0.01
+%define	vproc_version 0.01
 # diet compile fails with ccache in %{__cc}
 %undefine	with_ccache
 #
@@ -30,7 +30,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	9
+Release:	9.1
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -47,7 +47,7 @@ Source8:	vrootdevices.sysconfig
 # http://www.paul.sladen.org/vserver/archives/200505/0078.html
 Source9:	%{name}-pkgmgmt.txt
 Source10:	%{name}-initpost.sh
-Source11:	http://www.13thfloor.at/vserver/s_release/v1.2.10/vproc-%{_vproc_version}.tar.bz2
+Source11:	http://www.13thfloor.at/vserver/s_release/v1.2.10/vproc-%{vproc_version}.tar.bz2
 # Source11-md5:	1d030717bdbc958ea4b35fd2410dad85
 Source12:	%{name}-vhashify.cron
 Source13:	ftp://ftp.pld-linux.org/dists/ac/PLD-2.0-Ac-GPG-key.asc
@@ -463,7 +463,7 @@ CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1 -U__STRICT_ANSI__"
 %{__make} all
 %{?with_doc:%{__make} doc}
 
-%{__make} -C vproc-%{_vproc_version} \
+%{__make} -C vproc-%{vproc_version} \
 	CC="%{__cc}" \
 	CFLAGS="%{rpmcflags}"
 
@@ -508,7 +508,7 @@ ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/ini
 %ifarch i586 i686 %{x8664} athlon pentium2 pentium3 pentium4
 ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti/initpost
 %endif
-install vproc-%{_vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
+install vproc-%{vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE12} $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 
 cat > $RPM_BUILD_ROOT/etc/cron.d/vservers << EOF
@@ -523,55 +523,56 @@ cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
 
 # set arch for pld-ac in pld.conf
 %ifarch i586 i686 ppc sparc alpha athlon
-%define		_ftp_arch	%{_target_cpu}
+%define		ftp_arch	%{_target_cpu}
 %endif
 %ifarch %{x8664}
-%define		_ftp_arch	amd64
+%define		ftp_arch	amd64
 %endif
 %ifarch i486
-%define		_ftp_arch	i386
+%define		ftp_arch	i386
 %endif
 %ifarch pentium2 pentium3 pentium4
-%define		_ftp_arch	i686
+%define		ftp_arch	i686
 %endif
 %ifarch sparcv9 sparc64
-%define		_ftp_arch	sparc
+%define		ftp_arch	sparc
 %endif
-%{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/pld.conf
+%{__sed} -i -e 's|%%ARCH%%|%{ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/pld.conf
 
 # set arch for pld-th in pld.conf
 %ifarch i486 i686 ppc sparc alpha athlon
-%define		_ftp_arch	%{_target_cpu}
+%define		ftp_arch	%{_target_cpu}
 %endif
 %ifarch %{x8664}
-%define		_ftp_arch	x86_64
+%define		ftp_arch	x86_64
 %endif
 %ifarch i586
-%define		_ftp_arch	i486
+%define		ftp_arch	i486
 %endif
 %ifarch pentium2 pentium3 pentium4
-%define		_ftp_arch	i686
+%define		ftp_arch	i686
 %endif
 %ifarch sparcv9 sparc64
-%define		_ftp_arch	sparc
+%define		ftp_arch	sparc
 %endif
-%{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/pld.conf
+%{__sed} -i -e 's|%%ARCH%%|%{ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/pld.conf
 
 %ifarch i586 i686 %{x8664} athlon pentium2 pentium3 pentium4
 # set arch for pld-ti in pld.conf
 %ifarch i586 i686
-%define		_ftp_arch	%{_target_cpu}
+%define		ftp_arch	%{_target_cpu}
 %endif
 %ifarch %{x8664}
-%define		_ftp_arch	x86_64
+%define		ftp_arch	x86_64
 %endif
 %ifarch athlon pentium2 pentium3 pentium4
-%define		_ftp_arch	i686
+%define		ftp_arch	i686
 %endif
-%{__sed} -i -e 's|%%ARCH%%|%{_ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/pld.conf
+%{__sed} -i -e 's|%%ARCH%%|%{ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/pld.conf
 %endif
 
-cat <<'EOF' > $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/defaults/rpm/platform
+cd $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/defaults/rpm
+cat <<'EOF' > platform
 # first platform file entry can't contain regexps
 %{_target_cpu}-%{_target_vendor}-linux
 
@@ -652,6 +653,7 @@ sparc-[^-]*-[Ll]inux(-gnu)?
 # noarch
 noarch-[^-]*-.*
 EOF
+cd -
 
 # current debootstrap link
 echo "http://ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.10_all.deb" \
