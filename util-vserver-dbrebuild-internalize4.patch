@@ -30,7 +30,7 @@
 +    }
 +    test -n "$guest_path" || {
 +	warning "
-+* The vserver does not seem to have the '$guest_tool' program which is required
++* The vserver guest does not seem to have the '$guest_tool' program which is required
 +  for $type package management. It is suggested to install it before
 +  continuing."
 +	res=1
