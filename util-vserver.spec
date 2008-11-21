@@ -2,11 +2,6 @@
 # - reject install in %%pretrans if /proc/virtual/info has incompatible version
 # - unpackaged
 #   /etc/rc.d/init.d/util-vserver -- # integrate to our initscript (util-vserver sets the path to vshelper and kills all guest processes)
-# - move to main pkg:
-#  vserver initng delete
-#  /usr/lib64/util-vserver/vserver.delete: line 19: /usr/lib64/util-vserver/vserver-build.functions: No such file or directory
-#  /usr/lib64/util-vserver/vserver.delete: line 20: /usr/lib64/util-vserver/vserver-build.functions.pkgmgmt: No such file or directory
-#  or move the delete func to -build
 # - make pkgmgmnt internalize modify poldek conf to unignore vserver-packages
 # - service vservers stop should shutdown all running vservers (respecting
 #   configuration for order) otherwise on shutdown vservers are not nicely
@@ -28,7 +23,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	10.1
+Release:	10.2
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -107,6 +102,9 @@ Requires:	mktemp >= 1.5-18
 Requires:	rc-scripts
 Requires:	tar
 Requires:	util-linux
+Requires:	vserver-distro-pld = %{version}-%{release}
+Conflicts:	poldek < 0.18.8-10
+Obsoletes:	util-vserver-build
 Obsoletes:	util-vserver-core
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -131,7 +129,9 @@ This requires a special kernel supporting the new new_s_context and
 set_ipv4root system call.
 
 This package contains utilities which are required to communicate with
-the Linux-Vserver enabled kernel.
+the Linux-Vserver enabled kernel and utilities which assist in building
+Vservers.
+
 
 %description -l pl.UTF-8
 Ten pakiet dostarcza składniki i szkielet do tworzenia wirtualnych
@@ -144,7 +144,8 @@ Wymaga to specjalnego jądra obsługującego nowe wywołania systemowe
 new_s_context i set_ipv4root.
 
 Ten pakiet zawiera narzędzia wymagane do komunikacji z jądrem z
-włączonym mechanizmem Linux-Vserver.
+włączonym mechanizmem Linux-Vserver i narzędzia pomagające przy
+budowaniu Vserwerów.
 
 %package lib
 Summary:	Dynamic libraries for util-vserver
@@ -196,32 +197,6 @@ This package contains the static version of vserver library.
 
 %description static -l pl.UTF-8
 Ten pakiet zawiera statyczną wersję biblioteki vservera.
-
-%package build
-Summary:	Tools which can be used to build vservers
-Summary(pl.UTF-8):	Narzędzia do budowania vserverów
-Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
-Requires:	vserver-distro-pld = %{version}-%{release}
-Conflicts:	poldek < 0.18.8-10
-
-%description build
-util-vserver provides the components and a framework to setup virtual
-servers. A virtual server runs inside a linux server. It is
-nevertheless highly independent. As such, you can run various services
-with normal configuration. The various vservers can't interact with
-each other and can't interact with services in the main server.
-
-This package contains utilities which assist in building Vservers.
-
-%description build -l pl.UTF-8
-util-vserver dostarcza składniki i szkielet do tworzenia wirtualnych
-serwerów. Wirtualny serwer działa wewnątrz serwera linuksowego, lecz
-jest od niego w dużym stopniu niezależny. Jako taki może uruchamiać
-różne usługi z normalną konfiguracją. Różne vserwery nie mogą wchodzić
-w interakcję z innymi ani z usługami na głównym serwerze.
-
-Ten pakiet zawiera narzędzia pomagające przy budowaniu Vserwerów.
 
 %package init
 Summary:	initscripts for vserver
@@ -285,7 +260,7 @@ konfigurację w starym stylu.
 Summary:	VServer build template for Alpine Linux
 Summary(pl.UTF-8):	Szablon budowania VServerów dla dystrybucji Alpine Linux
 Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 
 %description -n vserver-distro-alpine
 VServer build template for Alpine Linux.
@@ -297,7 +272,7 @@ Szablon budowania VServerów dla dystrybucji Alpine Linux.
 Summary:	VServer build template for CentOS
 Summary(pl.UTF-8):	Szablon budowania VServerów dla dystrybucji CentOS
 Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	yum
 
 %description -n vserver-distro-centos
@@ -310,7 +285,7 @@ Szablon budowania VServerów dla dystrybucji CentOS 4.2 i 5.
 Summary:	VServer build templates for Debian
 Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Debian
 Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	dpkg
 
 %description -n vserver-distro-debian
@@ -323,7 +298,7 @@ Szablony do tworzenia VServerów dla dystrybucji Debian.
 Summary:	VServer build templates for Fedora
 Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Fedora
 Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -341,7 +316,7 @@ Szablony do tworzenia VServerów dla dystrybucji Fedora Core
 Summary:	VServer build template for Gentoo
 Summary(pl.UTF-8):	Szablon budowania VServerów dla Gentoo
 Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 
 %description -n vserver-distro-gentoo
 VServer build template for Gentoo.
@@ -353,7 +328,7 @@ Szablon budowania VServerów dla Gentoo.
 Summary:	VServer build templates for PLD Linux
 Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji PLD Linux
 Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	/etc/pld-release
 Requires:	poldek >= 0.30
 
@@ -367,7 +342,7 @@ Szablony do tworzenia VServerów dla dystrybucji PLD Linux.
 Summary:	VServer build template for Red Hat Linux 9
 Summary(pl.UTF-8):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
 Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -383,7 +358,7 @@ Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
 Summary:	VServer build template for SuSE 9.1
 Summary(pl.UTF-8):	Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1
 Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -399,7 +374,7 @@ Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 Summary:	VServer build templates for Ubuntu
 Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Ubuntu
 Group:		Applications/System
-Requires:	%{name}-build = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	dpkg
 
 %description -n vserver-distro-ubuntu
@@ -652,14 +627,20 @@ exit 0
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS THANKS doc/intro.txt
+%doc contrib/yum*.patch package-management.txt
 %{?with_doc:%doc doc/*.html}
 %dir %{_sysconfdir}/vservers
 %dir %{_sysconfdir}/vservers/.defaults
 %dir %{_sysconfdir}/vservers/.defaults/apps
+%dir %{_sysconfdir}/vservers/.defaults/apps/vunify
+%dir %{_sysconfdir}/vservers/.defaults/apps/vunify/hash
 %dir %{_sysconfdir}/vservers/.defaults/files
 %{_sysconfdir}/vservers/.defaults/vdirbase
 %{_sysconfdir}/vservers/.defaults/cachebase
 %{_sysconfdir}/vservers/.defaults/run.rev
+%dir %{_sysconfdir}/vservers/.distributions
+%dir %{_sysconfdir}/vservers/.distributions/.common
+%dir %{_sysconfdir}/vservers/.distributions/.common/pubkeys
 /sbin/vshelper
 %attr(755,root,root) %{_sbindir}/chbind
 %attr(755,root,root) %{_sbindir}/chcontext
@@ -672,44 +653,60 @@ exit 0
 %attr(755,root,root) %{_sbindir}/reducecap
 %attr(755,root,root) %{_sbindir}/setattr
 %attr(755,root,root) %{_sbindir}/showattr
+%attr(755,root,root) %{_sbindir}/vapt-get
 %attr(755,root,root) %{_sbindir}/vattribute
 %attr(755,root,root) %{_sbindir}/vcontext
+%attr(755,root,root) %{_sbindir}/vdevmap
 %attr(755,root,root) %{_sbindir}/vdlimit
-%attr(755,root,root) %{_sbindir}/vnamespace
+%attr(755,root,root) %{_sbindir}/vdu
 %attr(755,root,root) %{_sbindir}/vkill
 %attr(755,root,root) %{_sbindir}/vlimit
-%attr(755,root,root) %{_sbindir}/vdevmap
-%attr(755,root,root) %{_sbindir}/vdu
 %attr(755,root,root) %{_sbindir}/vmemctrl
 %attr(755,root,root) %{_sbindir}/vmount
+%attr(755,root,root) %{_sbindir}/vnamespace
+%attr(755,root,root) %{_sbindir}/vpoldek
 %attr(755,root,root) %{_sbindir}/vproc
 %attr(755,root,root) %{_sbindir}/vps
 %attr(755,root,root) %{_sbindir}/vpstree
-%attr(755,root,root) %{_sbindir}/vspace
+%attr(755,root,root) %{_sbindir}/vrpm
 %attr(755,root,root) %{_sbindir}/vrsetup
 %attr(755,root,root) %{_sbindir}/vsched
 %attr(755,root,root) %{_sbindir}/vserver
 %attr(755,root,root) %{_sbindir}/vserver-info
 %attr(755,root,root) %{_sbindir}/vserver-stat
 %attr(755,root,root) %{_sbindir}/vsomething
+%attr(755,root,root) %{_sbindir}/vspace
 %attr(755,root,root) %{_sbindir}/vtag
 %attr(755,root,root) %{_sbindir}/vtop
 %attr(755,root,root) %{_sbindir}/vuname
 %attr(755,root,root) %{_sbindir}/vwait
+%attr(755,root,root) %{_sbindir}/vyum
 %dir %{_libdir}/%{name}
 %dir %{_libdir}/%{name}/defaults
-%{_libdir}/%{name}/FEATURES.txt
-%{_libdir}/%{name}/util-vserver-vars
+%{_libdir}/%{name}/defaults/fstab
+%{_libdir}/%{name}/defaults/debootstrap.*
+%{_libdir}/%{name}/defaults/vunify-exclude
 %{_libdir}/%{name}/defaults/context.start
 %{_libdir}/%{name}/defaults/environment
 %{_libdir}/%{name}/defaults/h2ext.desc
 %{_libdir}/%{name}/defaults/mtab
 %{_libdir}/%{name}/defaults/vprocunhide-files
+%dir %{_libdir}/%{name}/distributions
+%{_libdir}/%{name}/distributions/defaults
+%dir %{_libdir}/%{name}/distributions/template
+%attr(755,root,root) %{_libdir}/%{name}/distributions/template/initpost
+%attr(755,root,root) %{_libdir}/%{name}/distributions/template/initpre
+%dir %{_libdir}/%{name}/distributions/redhat
+%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpost
+%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpre
+%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/rc.sysinit
+%{_libdir}/%{name}/FEATURES.txt
+%{_libdir}/%{name}/util-vserver-vars
 %attr(755,root,root) %{_libdir}/%{name}/capchroot
 %attr(755,root,root) %{_libdir}/%{name}/chain-echo
 %attr(755,root,root) %{_libdir}/%{name}/chbind-compat
-%attr(755,root,root) %{_libdir}/%{name}/check-unixfile
 %attr(755,root,root) %{_libdir}/%{name}/chcontext-compat
+%attr(755,root,root) %{_libdir}/%{name}/check-unixfile
 %attr(755,root,root) %{_libdir}/%{name}/chroot-sh
 %attr(755,root,root) %{_libdir}/%{name}/exec-ulimit
 %attr(755,root,root) %{_libdir}/%{name}/fakerunlevel
@@ -720,26 +717,39 @@ exit 0
 %attr(755,root,root) %{_libdir}/%{name}/keep-ctx-alive
 %attr(755,root,root) %{_libdir}/%{name}/lockfile
 %attr(755,root,root) %{_libdir}/%{name}/mask2prefix
+%attr(755,root,root) %{_libdir}/%{name}/pkgmgmt
 %attr(755,root,root) %{_libdir}/%{name}/readlink
+%attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
 %attr(755,root,root) %{_libdir}/%{name}/save_ctxinfo
 %attr(755,root,root) %{_libdir}/%{name}/secure-mount
 %attr(755,root,root) %{_libdir}/%{name}/sigexec
 %attr(755,root,root) %{_libdir}/%{name}/start-vservers
 %attr(755,root,root) %{_libdir}/%{name}/tunctl
-%attr(755,root,root) %{_libdir}/%{name}/vprocunhide
-%{_libdir}/%{name}/vserver.*
-%attr(755,root,root) %{_libdir}/%{name}/vserver-build
-%attr(755,root,root) %{_libdir}/%{name}/vservers.grabinfo.sh
+%attr(755,root,root) %{_libdir}/%{name}/vapt-get-worker
+%attr(755,root,root) %{_libdir}/%{name}/vclone
+%attr(755,root,root) %{_libdir}/%{name}/vcopy
 %attr(755,root,root) %{_libdir}/%{name}/vhashify
 %attr(755,root,root) %{_libdir}/%{name}/vhashify.cron
+%attr(755,root,root) %{_libdir}/%{name}/vpkg
+%attr(755,root,root) %{_libdir}/%{name}/vpoldek-worker
+%attr(755,root,root) %{_libdir}/%{name}/vprocunhide
+%attr(755,root,root) %{_libdir}/%{name}/vrpm-*
+%attr(755,root,root) %{_libdir}/%{name}/vserver-build
+%{_libdir}/%{name}/vserver-build.*
+%{_libdir}/%{name}/vserver-setup.functions
+%{_libdir}/%{name}/vserver.*
+%attr(755,root,root) %{_libdir}/%{name}/vservers.grabinfo.sh
 %attr(755,root,root) %{_libdir}/%{name}/vshelper
 %attr(755,root,root) %{_libdir}/%{name}/vshelper-sync
 %attr(755,root,root) %{_libdir}/%{name}/vsysctl
+%attr(755,root,root) %{_libdir}/%{name}/vunify
+%attr(755,root,root) %{_libdir}/%{name}/vyum-worker
 %{_mandir}/man8/chbind.8*
 %{_mandir}/man8/chcontext.8*
 %{_mandir}/man8/reducecap.8*
 %{_mandir}/man8/vps.8*
 %{_mandir}/man8/vpstree.8*
+%{_mandir}/man8/vserver-build.8*
 %{_mandir}/man8/vserver-stat.8*
 %{_mandir}/man8/vserver.8*
 %{_mandir}/man8/vtop.8*
@@ -767,45 +777,6 @@ exit 0
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libvserver.a
-
-%files build
-%defattr(644,root,root,755)
-%doc contrib/yum*.patch package-management.txt
-%dir %{_sysconfdir}/vservers/.defaults/apps/vunify
-%dir %{_sysconfdir}/vservers/.defaults/apps/vunify/hash
-%dir %{_sysconfdir}/vservers/.distributions
-%dir %{_sysconfdir}/vservers/.distributions/.common
-%dir %{_sysconfdir}/vservers/.distributions/.common/pubkeys
-%attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
-%dir %{_libdir}/%{name}/distributions
-%{_libdir}/%{name}/distributions/defaults
-%dir %{_libdir}/%{name}/distributions/template
-%attr(755,root,root) %{_libdir}/%{name}/distributions/template/initpost
-%attr(755,root,root) %{_libdir}/%{name}/distributions/template/initpre
-%dir %{_libdir}/%{name}/distributions/redhat
-%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpost
-%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpre
-%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/rc.sysinit
-%{_libdir}/%{name}/vserver-setup.functions
-%{_libdir}/%{name}/vserver-build.*
-%{_libdir}/%{name}/defaults/fstab
-%{_libdir}/%{name}/defaults/debootstrap.*
-%{_libdir}/%{name}/defaults/vunify-exclude
-%attr(755,root,root) %{_libdir}/%{name}/pkgmgmt
-%attr(755,root,root) %{_libdir}/%{name}/vapt-get-worker
-%attr(755,root,root) %{_libdir}/%{name}/vclone
-%attr(755,root,root) %{_libdir}/%{name}/vcopy
-%attr(755,root,root) %{_libdir}/%{name}/vpkg
-%attr(755,root,root) %{_libdir}/%{name}/vpoldek-worker
-%attr(755,root,root) %{_libdir}/%{name}/vrpm-*
-%attr(755,root,root) %{_libdir}/%{name}/vserver-build
-%attr(755,root,root) %{_libdir}/%{name}/vunify
-%attr(755,root,root) %{_libdir}/%{name}/vyum-worker
-%attr(755,root,root) %{_sbindir}/vapt-get
-%attr(755,root,root) %{_sbindir}/vpoldek
-%attr(755,root,root) %{_sbindir}/vrpm
-%attr(755,root,root) %{_sbindir}/vyum
-%{_mandir}/man8/vserver-build.8*
 
 %files init
 %defattr(644,root,root,755)
