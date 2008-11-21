@@ -1,0 +1,109 @@
+--- util-vserver-0.30.215/scripts/pkgmgmt	2008-11-17 20:58:47.120292384 +0200
++++ util-vserver-0.30.215/scripts/pkgmgmt	2008-11-17 22:47:02.486514626 +0200
+@@ -185,6 +185,43 @@
+     test -n "$is_ok"
+ }
+ 
++## Usage: verifyDBTools <vdir> <type> <host_tool> <guest_tool>
++function verifyDBTools
++{
++    local vdir="$1"
++    local type="$2"
++    local host_tool="$3"
++    local guest_tool="$4"
++    local res=0
++
++    local i host_path guest_path
++    for i in /bin /usr/bin /usr/lib/rpm /usr/local/bin; do
++	test ! -x "$i"/$host_tool || { host_path="$i"/$host_tool; break; }
++    done
++    for i in /bin /usr/bin /usr/lib/rpm /usr/local/bin; do
++	test ! -x "$vdir$i"/$guest_tool || { guest_path="$i"/$guest_tool; break; }
++    done
++
++    test -n "$host_path" || {
++	warning "
++* The host does not seem to have the '$host_tool' program which is required
++  for $type package management. It is suggested to install it before
++  continuing."
++	res=1
++    }
++    test -n "$guest_path" || {
++	warning "
++* The vserver does not seem to have the '$guest_tool' program which is required
++  for $type package management. It is suggested to install it before
++  continuing."
++	res=1
++    }
++
++    eval $host_tool=$host_path
++    eval $guest_tool=$guest_path
++    return $res
++}
++
+ # Usage: verifyInternalPackages <vserver> <style>
+ function verifyInternalPackages()
+ {
+@@ -392,7 +429,12 @@
+ 	verifyInternalPackages "$vserver" RH || test -n "$IS_FORCE" ||
+ 	    panic "
+ Can not continue; use '--force' to override this check"
++
++	verifyDBTools "$vdir" 'internal' db_dump db_load || test -n "$IS_FORCE" ||
++	    panic "
++Can not continue; use '--force' to override this check"
+     
++
+ 	pushd "$vdir" >/dev/null
+ 
+ 	test ! -L var/lib/rpm || {
+@@ -416,6 +458,10 @@
+ 	findDir RPMETCDIR   "$cfgdir"/rpmetc   "$cfgdir"/base/rpm/etc    /etc/rpm /
+ 	findDir RPMSTATEDIR "$cfgdir"/rpmstate "$cfgdir"/base/rpm/state
+     else
++	verifyDBTools "$vdir" 'external' db_load db_dump || test -n "$IS_FORCE" ||
++	    panic "
++Can not continue; use '--force' to override this check"
++
+ 	mkdir -m755 -p "$cfgdir"
+ 	local need_base=
+ 
+@@ -460,8 +506,38 @@
+ 	pushd "$vdir" >/dev/null
+ 	    ## remove %_dbpath settings
+ 	    _substFile /etc/rpm/macros '/^%_dbpath[ \t].*/D'
++
++	    # dump and reload rpmdb to overcome db version mismatch problems
++	    if [ "$db_load" -a "$db_dump" ]; then
++		# dump with host db_dump
++		$db_dump var/lib/rpm/Packages > var/lib/rpm/.Packages.dump
++
++		# load with guest db_load.
++		$_RM -f var/lib/rpm/__db.*
++		mv var/lib/rpm/{Packages,.Packages.ORIG}
++		chroot . $db_load var/lib/rpm/Packages < var/lib/rpm/.Packages.dump
++		chroot . bin/rpm --rebuilddb 2>/dev/null
++		rm -f var/lib/rpm/.Packages.*
++	    fi
++
+ 	popd >/dev/null
+     else
++
++	pushd "$vdir" >/dev/null
++	    if [ "$db_load" -a "$db_dump" ]; then
++		# dump and reload rpmdb to overcome db version mismatch problems
++
++		# dump with guest db_dump
++		$_RM -f var/lib/rpm/__db.*
++		chroot . $db_dump var/lib/rpm/Packages > var/lib/rpm/.Packages.dump
++
++		# load with host db_load
++		mv var/lib/rpm/{Packages,.Packages.ORIG}
++		$db_load var/lib/rpm/Packages < var/lib/rpm/.Packages.dump
++		rm -f var/lib/rpm/.Packages.*
++	    fi
++	popd >/dev/null
++
+ 	if test -n "$have_poldek"; then
+ 	    _copySecureRev "$vdir" /etc/poldek "$POLDEKETCDIR"
+ 	    _unhashAuto "$POLDEKETCDIR"/poldek.conf '/'
