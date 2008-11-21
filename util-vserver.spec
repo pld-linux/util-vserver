@@ -12,7 +12,6 @@
 # - service vservers stop should shutdown all running vservers (respecting
 #   configuration for order) otherwise on shutdown vservers are not nicely
 #   shutdown!
-# - when building ac guest on th, the platform file for x8664 archidecture is wrong
 #
 # m68k and mips are the only not supported archs
 #
@@ -30,7 +29,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	9.4
+Release:	10
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -73,6 +72,7 @@ Patch17:	%{name}-backupfiles.patch
 Patch18:	%{name}-trunk_fixes.patch
 Patch19:	%{name}-vprocunhide-net.patch
 Patch20:	%{name}-more-caps.patch
+Patch21:	http://glen.alkohol.ee/pld/util-vserver-dbrebuild-internalize4.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -429,6 +429,7 @@ Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 %patch18 -p1
 %patch19 -p1
 %patch20 -p1
+%patch21 -p1
 
 install %{SOURCE9} package-management.txt
 
