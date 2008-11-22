@@ -32,14 +32,14 @@ stop()
 {
 	run_cmd "Stopping all running guests" $_START_VSERVERS -j 1 --all --stop
 
-	xids=$(cd /proc/virtual ; ls [0-9]* 2>/dev/null)
+	xids=$(cd /proc/virtual ; ls -1 | egrep -v 'info|status')
 	if [ -n "$xids" ]; then
 		show "Sending all contexts the TERM signal"
 		for xid in $xids; do
 			$_VATTRIBUTE --xid $xid --set --flag ~persistent
 			$_VKILL --xid $xid -s 15
 		done
-		xids=$(cd /proc/virtual ; ls [0-9]* 2>/dev/null)
+		xids=$(cd /proc/virtual ; ls -1 | egrep -v 'info|status')
 		if [ -n "$xids" ]; then
 			fail
 		else
@@ -53,7 +53,7 @@ stop()
 			$_VATTRIBUTE --xid $xid --set --flag ~persistent
 			$_VKILL --xid $xid -s 9
 		done
-		xids=$(cd /proc/virtual ; ls [0-9]* 2>/dev/null)
+		xids=$(cd /proc/virtual ; ls -1 | egrep -v 'info|status')
 		if [ -n "$xids" ]; then
 			fail
 		else
