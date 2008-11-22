@@ -1,0 +1,103 @@
+#!/bin/sh
+#
+# util-vserver:	sets the path to vshelper and kills all guest processes
+#
+# chkconfig:	2345 10 99
+# description:	Sets the path to vshelper and kills all guest processes
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+[ -n "$UTIL_VSERVER_VARS" ] || UTIL_VSERVER_VARS=/usr/lib/util-vserver/util-vserver-vars
+if [ ! -e "$UTIL_VSERVER_VARS" ] ; then
+	echo "Can not find util-vserver installation (the file '$UTIL_VSERVER_VARS' would be expected); aborting..." >&2
+	exit 1
+fi
+. "$UTIL_VSERVER_VARS"
+
+start()
+{
+	show "Setting path to vshelper"
+	if [ -e /proc/sys/kernel/vshelper ]; then
+		echo "$_VSHELPER" >/proc/sys/kernel/vshelper
+		ok
+	else
+		fail
+	fi
+	run_cmd "Loading default device map" $__PKGLIBDIR/bash-wrapper "handleDeviceMap --set 0 $__CONFDIR/.defaults/apps/vdevmap"
+}
+
+# Stop all running, but non-default guests"
+stop()
+{
+	run_cmd "Stopping all running guests" $_START_VSERVERS -j 1 --all --stop
+
+	xids=$(cd /proc/virtual ; echo [0-9]*)
+	if [ -n "$xids" ]; then
+		show "Sending all contexts the TERM signal"
+		for xid in $xids; do
+			$_VATTRIBUTE --xid $xid --set --flag ~persistent
+			$_VKILL --xid $xid -s 15
+		done
+		xids=$(cd /proc/virtual ; echo [0-9]*)
+		if [ -n "$xids" ]; then
+			fail
+		else
+			ok
+		fi
+	fi
+	if [ -n "$xids" ]; then
+		sleep 5
+		show "Sending all contexts the KILL signal"
+		for xid in $xids; do
+			$_VATTRIBUTE --xid $xid --set --flag ~persistent
+			$_VKILL --xid $xid -s 9
+		done
+		xids=$(cd /proc/virtual ; echo [0-9]*)
+		if [ -n "$xids" ]; then
+			fail
+		else
+			ok
+		fi
+	fi
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart)
+	stop
+	start
+	;;
+  reload|force-reload)
+	start
+	[ $? -ne 0 ] && RETVAL=7
+	;;
+  status)
+	if [ -e /proc/sys/kernel/vshelper ]; then
+		read _vsh </proc/sys/kernel/vshelper
+		show "Path to vshelper: $_vsh, expected: $_VSHELPER"
+		if [ "$_vsh" = "$_VSHELPER" ]; then
+			ok
+			RETVAL=0
+		else
+			fail
+			RETVAL=1
+		fi
+	else
+		RETVAL=1
+	fi
+	;;
+  *)
+	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
+	exit 3
+	;;
+esac
+
+exit $RETVAL
