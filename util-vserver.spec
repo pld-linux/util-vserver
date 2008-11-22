@@ -1,11 +1,7 @@
 # TODO
+# - merge -init subpackage with main?
 # - reject install in %%pretrans if /proc/virtual/info has incompatible version
-# - unpackaged
-#   /etc/rc.d/init.d/util-vserver -- # integrate to our initscript (util-vserver sets the path to vshelper and kills all guest processes)
 # - make pkgmgmnt internalize modify poldek conf to unignore vserver-packages
-# - service vservers stop should shutdown all running vservers (respecting
-#   configuration for order) otherwise on shutdown vservers are not nicely
-#   shutdown!
 #
 # m68k and mips are the only not supported archs
 #
@@ -23,7 +19,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	10.2
+Release:	10.3
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -47,6 +43,7 @@ Source13:	ftp://ftp.pld-linux.org/dists/ac/PLD-2.0-Ac-GPG-key.asc
 # Source13-md5:	8e7574d1de2fa95c2c54cd2ee03364c1
 Source14:	ftp://ftp.pld-linux.org/dists/th/PLD-3.0-Th-GPG-key.asc
 # Source14-md5:	08b29584dd349aac9caa7610131a0a88
+Source15:	%{name}.init
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
 Patch4:		%{name}-m4-diet.patch
@@ -446,8 +443,8 @@ CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1 -U__STRICT_ANSI__"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/vservers,/etc/{sysconfig,rc.d/init.d,cron.d},/dev/pts} \
-	$RPM_BUILD_ROOT{%{_sysconfdir}/vservices,/vservers/.pkg}
+install -d $RPM_BUILD_ROOT{/vservers/.pkg,/etc/{sysconfig,rc.d/init.d,cron.d}} \
+	$RPM_BUILD_ROOT%{_sysconfdir}/vservices
 
 %{__make} -j1 install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -471,6 +468,8 @@ sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE3} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
 sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE4} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/rebootmgr
+sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE15} > \
+	$RPM_BUILD_ROOT/etc/rc.d/init.d/util-vserver
 sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE5} > \
 	$RPM_BUILD_ROOT/etc/sysconfig/vservers
 
@@ -487,6 +486,7 @@ ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti/ini
 %endif
 install vproc-%{vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE12} $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
+install gentoo/bash-wrapper $RPM_BUILD_ROOT%{_libdir}/%{name}
 
 cat > $RPM_BUILD_ROOT/etc/cron.d/vservers << EOF
 02 2 * * 0      root    %{_libdir}/%{name}/vhashify.cron
@@ -555,11 +555,10 @@ echo "http://ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.10_al
 install -d $RPM_BUILD_ROOT/var/cache/vservers/poldek
 
 # we have our own initscript which does the same
-rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
-rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/util-vserver
 rm -rf $RPM_BUILD_ROOT/dev
 rm -f $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-wrapper
 rm -f $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-init.functions
+rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
 rm -f $RPM_BUILD_ROOT%{_sysconfdir}/vservers.conf
 
 %clean
@@ -575,6 +574,7 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/chkconfig --add vrootdevices
 /sbin/chkconfig --add vprocunhide
 /sbin/chkconfig --add vservers
+/sbin/chkconfig --add util-vserver
 if [ ! -f /var/lock/subsys/vrootdevices ]; then
 	echo "Type \"/sbin/service vrootdevices start\" to assign virtual root devices" 1>&2
 fi
@@ -590,9 +590,11 @@ if [ "$1" = "0" ]; then
 	%service vservers stop
 	%service vprocunhide stop
 	%service vrootdevices stop
+	%service util-vserver stop
 	/sbin/chkconfig --del vservers
 	/sbin/chkconfig --del vprocunhide
 	/sbin/chkconfig --del vrootdevices
+	/sbin/chkconfig --del util-vserver
 fi
 
 %post legacy
@@ -632,6 +634,7 @@ exit 0
 %dir %{_sysconfdir}/vservers
 %dir %{_sysconfdir}/vservers/.defaults
 %dir %{_sysconfdir}/vservers/.defaults/apps
+%dir %{_sysconfdir}/vservers/.defaults/apps/vdevmap
 %dir %{_sysconfdir}/vservers/.defaults/apps/vunify
 %dir %{_sysconfdir}/vservers/.defaults/apps/vunify/hash
 %dir %{_sysconfdir}/vservers/.defaults/files
@@ -702,6 +705,7 @@ exit 0
 %attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/rc.sysinit
 %{_libdir}/%{name}/FEATURES.txt
 %{_libdir}/%{name}/util-vserver-vars
+%attr(755,root,root) %{_libdir}/%{name}/bash-wrapper
 %attr(755,root,root) %{_libdir}/%{name}/capchroot
 %attr(755,root,root) %{_libdir}/%{name}/chain-echo
 %attr(755,root,root) %{_libdir}/%{name}/chbind-compat
@@ -786,6 +790,7 @@ exit 0
 %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/vservers
 %attr(754,root,root) /etc/rc.d/init.d/vprocunhide
 %attr(754,root,root) /etc/rc.d/init.d/vrootdevices
+%attr(754,root,root) /etc/rc.d/init.d/util-vserver
 %attr(754,root,root) /etc/rc.d/init.d/vservers
 
 %files legacy
