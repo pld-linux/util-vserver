@@ -1,5 +1,4 @@
 # TODO
-# - merge -init subpackage with main?
 # - reject install in %%pretrans if /proc/virtual/info has incompatible version
 # - make pkgmgmnt internalize modify poldek conf to unignore vserver-packages
 #
@@ -19,7 +18,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	10.4
+Release:	10.5
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -92,6 +91,7 @@ BuildRequires:	tetex-metafont
 %{?with_xalan:BuildRequires:	xalan-j}
 %endif
 Requires(post,preun):	/sbin/chkconfig
+Requires(triggerun,triggerpostun):	/bin/chmod
 Requires:	%{name}-lib = %{version}-%{release}
 Requires:	diffutils
 Requires:	issue
@@ -104,6 +104,7 @@ Requires:	vserver-distro-pld = %{version}-%{release}
 Conflicts:	poldek < 0.18.8-10
 Obsoletes:	util-vserver-build
 Obsoletes:	util-vserver-core
+Obsoletes:	util-vserver-init
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %if %{with dietlibc}
@@ -127,9 +128,9 @@ This requires a special kernel supporting the new new_s_context and
 set_ipv4root system call.
 
 This package contains utilities which are required to communicate with
-the Linux-Vserver enabled kernel and utilities which assist in building
-Vservers.
-
+the Linux-Vserver enabled kernel, utilities which assist in building
+Vservers and SysV initscripts which start and stop Vservers and related
+tools.
 
 %description -l pl.UTF-8
 Ten pakiet dostarcza składniki i szkielet do tworzenia wirtualnych
@@ -142,8 +143,9 @@ Wymaga to specjalnego jądra obsługującego nowe wywołania systemowe
 new_s_context i set_ipv4root.
 
 Ten pakiet zawiera narzędzia wymagane do komunikacji z jądrem z
-włączonym mechanizmem Linux-Vserver i narzędzia pomagające przy
-budowaniu Vserwerów.
+włączonym mechanizmem Linux-Vserver, narzędzia pomagające przy
+budowaniu Vserwerów i skrypty inicjalizujące SysV uruchamiające i
+zatrzymujące Vserwery oraz powiązane narzędzia.
 
 %package lib
 Summary:	Dynamic libraries for util-vserver
@@ -195,36 +197,6 @@ This package contains the static version of vserver library.
 
 %description static -l pl.UTF-8
 Ten pakiet zawiera statyczną wersję biblioteki vservera.
-
-%package init
-Summary:	initscripts for vserver
-Summary(pl.UTF-8):	Skrypty inicjalizujące dla vserwera
-Group:		Applications/System
-Requires(post,preun):	/sbin/chkconfig
-Requires:	%{name} = %{version}-%{release}
-Requires:	diffutils
-Requires:	make
-Requires:	rc-scripts
-
-%description init
-util-vserver provides the components and a framework to setup virtual
-servers. A virtual server runs inside a linux server. It is
-nevertheless highly independent. As such, you can run various services
-with normal configuration. The various vservers can't interact with
-each other and can't interact with services in the main server.
-
-This package contains the SysV initscripts which start and stop
-Vservers and related tools.
-
-%description init -l pl.UTF-8
-util-vserver dostarcza składniki i szkielet do tworzenia wirtualnych
-serwerów. Wirtualny serwer działa wewnątrz serwera linuksowego, lecz
-jest od niego w dużym stopniu niezależny. Jako taki może uruchamiać
-różne usługi z normalną konfiguracją. Różne vserwery nie mogą wchodzić
-w interakcję z innymi ani z usługami na głównym serwerze.
-
-Ten pakiet zawiera skrypty inicjalizujące SysV uruchamiające i
-zatrzymujące Vserwery oraz powiązane narzędzia.
 
 %package legacy
 Summary:	Legacy utilities for util-vserver
@@ -565,26 +537,30 @@ rm -f $RPM_BUILD_ROOT%{_sysconfdir}/vservers.conf
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-%{_sbindir}/setattr --barrier /vservers || :
-/sbin/chkconfig --add util-vserver
-if [ ! -f /var/lock/subsys/util-vserver ]; then
-	echo "Type \"/sbin/service util-vserver start\" to set up vshelper path" 1>&2
-fi
+%triggerun -- util-vserver-init
+# Prevent preun from util-vserver-init from working
+chmod a-x /etc/rc.d/init.d/vprocunhide
+chmod a-x /etc/rc.d/init.d/vrootdevices
+chmod a-x /etc/rc.d/init.d/vservers
 
-%preun
-if [ "$1" = "0" ]; then
-	%service util-vserver stop
-	/sbin/chkconfig --del util-vserver
-fi
-
-%post	lib -p /sbin/ldconfig
-%postun	lib -p /sbin/ldconfig
-
-%post init
+%triggerpostun -- util-vserver--init
+# Restore what preun from util-vserver-init removed
+chmod ug+x /etc/rc.d/init.d/vprocunhide
+chmod ug+x /etc/rc.d/init.d/vrootdevices
+chmod ug+x /etc/rc.d/init.d/vservers
 /sbin/chkconfig --add vrootdevices
 /sbin/chkconfig --add vprocunhide
 /sbin/chkconfig --add vservers
+
+%post
+%{_sbindir}/setattr --barrier /vservers || :
+/sbin/chkconfig --add util-vserver
+/sbin/chkconfig --add vrootdevices
+/sbin/chkconfig --add vprocunhide
+/sbin/chkconfig --add vservers
+if [ ! -f /var/lock/subsys/util-vserver ]; then
+	echo "Type \"/sbin/service util-vserver start\" to set up vshelper path" 1>&2
+fi
 if [ ! -f /var/lock/subsys/vrootdevices ]; then
 	echo "Type \"/sbin/service vrootdevices start\" to assign virtual root devices" 1>&2
 fi
@@ -595,15 +571,20 @@ if [ ! -f /var/lock/subsys/vservers ]; then
 	echo "Type \"/sbin/service vservers start\" to start vservers" 1>&2
 fi
 
-%preun init
+%preun
 if [ "$1" = "0" ]; then
+	%service util-vserver stop
 	%service vservers stop
 	%service vprocunhide stop
 	%service vrootdevices stop
+	/sbin/chkconfig --del util-vserver
 	/sbin/chkconfig --del vservers
 	/sbin/chkconfig --del vprocunhide
 	/sbin/chkconfig --del vrootdevices
 fi
+
+%post	lib -p /sbin/ldconfig
+%postun	lib -p /sbin/ldconfig
 
 %post legacy
 /sbin/chkconfig --add rebootmgr
@@ -639,6 +620,13 @@ exit 0
 %doc AUTHORS ChangeLog NEWS THANKS doc/intro.txt
 %doc contrib/yum*.patch package-management.txt
 %{?with_doc:%doc doc/*.html}
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vrootdevices
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers
+%config(noreplace) %verify(not md5 mtime size) /etc/cron.d/vservers
+%attr(754,root,root) /etc/rc.d/init.d/vprocunhide
+%attr(754,root,root) /etc/rc.d/init.d/vrootdevices
+%attr(754,root,root) /etc/rc.d/init.d/util-vserver
+%attr(754,root,root) /etc/rc.d/init.d/vservers
 %dir %{_sysconfdir}/vservers
 %dir %{_sysconfdir}/vservers/.defaults
 %dir %{_sysconfdir}/vservers/.defaults/apps
@@ -754,6 +742,7 @@ exit 0
 %attr(755,root,root) %{_libdir}/%{name}/vshelper
 %attr(755,root,root) %{_libdir}/%{name}/vshelper-sync
 %attr(755,root,root) %{_libdir}/%{name}/vsysctl
+%attr(755,root,root) %{_libdir}/%{name}/vsysvwrapper
 %attr(755,root,root) %{_libdir}/%{name}/vunify
 %attr(755,root,root) %{_libdir}/%{name}/vyum-worker
 %{_mandir}/man8/chbind.8*
@@ -789,17 +778,6 @@ exit 0
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libvserver.a
-
-%files init
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/%{name}/vsysvwrapper
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vrootdevices
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers
-%config(noreplace) %verify(not md5 mtime size) /etc/cron.d/vservers
-%attr(754,root,root) /etc/rc.d/init.d/vprocunhide
-%attr(754,root,root) /etc/rc.d/init.d/vrootdevices
-%attr(754,root,root) /etc/rc.d/init.d/util-vserver
-%attr(754,root,root) /etc/rc.d/init.d/vservers
 
 %files legacy
 %defattr(644,root,root,755)
