@@ -19,7 +19,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	10.3
+Release:	10.4
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -95,6 +95,7 @@ Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-lib = %{version}-%{release}
 Requires:	diffutils
 Requires:	issue
+Requires:	make
 Requires:	mktemp >= 1.5-18
 Requires:	rc-scripts
 Requires:	tar
@@ -566,6 +567,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 %{_sbindir}/setattr --barrier /vservers || :
+/sbin/chkconfig --add util-vserver
+if [ ! -f /var/lock/subsys/util-vserver ]; then
+	echo "Type \"/sbin/service util-vserver start\" to set up vshelper path" 1>&2
+fi
+
+%preun
+if [ "$1" = "0" ]; then
+	%service util-vserver stop
+	/sbin/chkconfig --del util-vserver
+fi
 
 %post	lib -p /sbin/ldconfig
 %postun	lib -p /sbin/ldconfig
@@ -574,7 +585,6 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/chkconfig --add vrootdevices
 /sbin/chkconfig --add vprocunhide
 /sbin/chkconfig --add vservers
-/sbin/chkconfig --add util-vserver
 if [ ! -f /var/lock/subsys/vrootdevices ]; then
 	echo "Type \"/sbin/service vrootdevices start\" to assign virtual root devices" 1>&2
 fi
@@ -590,11 +600,9 @@ if [ "$1" = "0" ]; then
 	%service vservers stop
 	%service vprocunhide stop
 	%service vrootdevices stop
-	%service util-vserver stop
 	/sbin/chkconfig --del vservers
 	/sbin/chkconfig --del vprocunhide
 	/sbin/chkconfig --del vrootdevices
-	/sbin/chkconfig --del util-vserver
 fi
 
 %post legacy
