@@ -417,7 +417,8 @@ CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1 -U__STRICT_ANSI__"
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{/vservers/.pkg,/etc/{sysconfig,rc.d/init.d,cron.d}} \
-	$RPM_BUILD_ROOT%{_sysconfdir}/vservices
+	$RPM_BUILD_ROOT%{_sysconfdir}/vservices \
+	$RPM_BUILD_ROOT%{_sysconfdir}/vservers/.defaults/apps/vdevmap
 
 %{__make} -j1 install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -543,7 +544,7 @@ chmod a-x /etc/rc.d/init.d/vprocunhide
 chmod a-x /etc/rc.d/init.d/vrootdevices
 chmod a-x /etc/rc.d/init.d/vservers
 
-%triggerpostun -- util-vserver--init
+%triggerpostun -- util-vserver-init
 # Restore what preun from util-vserver-init removed
 chmod ug+x /etc/rc.d/init.d/vprocunhide
 chmod ug+x /etc/rc.d/init.d/vrootdevices
