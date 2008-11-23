@@ -91,8 +91,8 @@ BuildRequires:	tetex-metafont
 %{?with_xalan:BuildRequires:	xalan-j}
 %endif
 Requires(post,preun):	/sbin/chkconfig
-Requires(triggerun,triggerpostun):	/bin/chmod
 Requires:	%{name}-lib = %{version}-%{release}
+Requires:	coreutils
 Requires:	diffutils
 Requires:	issue
 Requires:	make
