@@ -5,6 +5,15 @@
 # chkconfig:	2345 10 99
 # description:	Sets the path to vshelper and kills all guest processes
 
+# if kernel not capable, exit early
+if [ ! -d /proc/virtual ]; then
+	case "$1" in
+	start|stop|reload|force-reload|restart)
+		exit 0
+		;;
+	esac
+fi
+
 # Source function library
 . /etc/rc.d/init.d/functions
 
@@ -21,10 +30,14 @@ start()
 	if [ -e /proc/sys/kernel/vshelper ]; then
 		echo "$_VSHELPER" >/proc/sys/kernel/vshelper
 		ok
+		RETVAL1=0
 	else
 		fail
+		RETVAL1=1
 	fi
 	run_cmd "Loading default device map" $__PKGLIBDIR/bash-wrapper "handleDeviceMap --set 0 $__CONFDIR/.defaults/apps/vdevmap"
+	RETVAL=$?
+	[ "$RETVAL" -eq 0 -a "$RETVAL1" -eq 0 ] && touch /var/lock/subsys/util-vserver
 }
 
 # Stop all running, but non-default guests"
@@ -60,6 +73,7 @@ stop()
 			ok
 		fi
 	fi
+	rm -f /var/lock/subsys/util-vserver >/dev/null 2>&1
 }
 
 RETVAL=0
@@ -71,11 +85,7 @@ case "$1" in
   stop)
 	stop
 	;;
-  restart)
-	stop
-	start
-	;;
-  reload|force-reload)
+  restart|reload|force-reload)
 	start
 	[ $? -ne 0 ] && RETVAL=7
 	;;
