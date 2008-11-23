@@ -552,6 +552,20 @@ chmod ug+x /etc/rc.d/init.d/vservers
 /sbin/chkconfig --add vrootdevices
 /sbin/chkconfig --add vprocunhide
 /sbin/chkconfig --add vservers
+if [ ! -f /etc/sysconfig/vrootdevices ]; then
+	if [ ! -f /etc/sysconfig/vrootdevices.rpmsave ]; then
+		mv -f /etc/sysconfig/vrootdevices.rpmsave /etc/sysconfig/vrootdevices
+	else
+		mv -f /etc/sysconfig/vrootdevices.rpmnew /etc/sysconfig/vrootdevices
+	fi
+fi
+if [ ! -f /etc/sysconfig/vservers ]; then
+	if [ -f /etc/sysconfig/vservers.rpmsave ]; then
+		mv -f /etc/sysconfig/vservers.rpmsave /etc/sysconfig/vservers
+	else
+		mv -f /etc/sysconfig/vservers.rpmnew /etc/sysconfig/vservers
+	fi
+fi
 
 %post
 %{_sbindir}/setattr --barrier /vservers || :
