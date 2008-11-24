@@ -545,26 +545,20 @@ chmod a-x /etc/rc.d/init.d/vrootdevices
 chmod a-x /etc/rc.d/init.d/vservers
 
 %triggerpostun -- util-vserver-init
-# Restore what preun from util-vserver-init removed
+# Restore what triggerun from removed
 chmod ug+x /etc/rc.d/init.d/vprocunhide
 chmod ug+x /etc/rc.d/init.d/vrootdevices
 chmod ug+x /etc/rc.d/init.d/vservers
 /sbin/chkconfig --add vrootdevices
 /sbin/chkconfig --add vprocunhide
 /sbin/chkconfig --add vservers
-if [ ! -f /etc/sysconfig/vrootdevices ]; then
-	if [ -f /etc/sysconfig/vrootdevices.rpmsave ]; then
-		mv -f /etc/sysconfig/vrootdevices.rpmsave /etc/sysconfig/vrootdevices
-	else
-		mv -f /etc/sysconfig/vrootdevices.rpmnew /etc/sysconfig/vrootdevices
-	fi
+if [ -f /etc/sysconfig/vrootdevices.rpmsave ]; then
+	cp -f /etc/sysconfig/vrootdevices{,.rpmnew}
+	mv -f /etc/sysconfig/vrootdevices{.rpmsave,}
 fi
-if [ ! -f /etc/sysconfig/vservers ]; then
-	if [ -f /etc/sysconfig/vservers.rpmsave ]; then
-		mv -f /etc/sysconfig/vservers.rpmsave /etc/sysconfig/vservers
-	else
-		mv -f /etc/sysconfig/vservers.rpmnew /etc/sysconfig/vservers
-	fi
+if [ -f /etc/sysconfig/vservers.rpmsave ]; then
+	cp -f /etc/sysconfig/vservers{,.rpmnew}
+	mv -f /etc/sysconfig/vservers{.rpmsave,}
 fi
 
 %post
