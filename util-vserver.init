@@ -85,6 +85,8 @@ case "$1" in
   stop)
 	stop
 	;;
+# restart behaves like reload because a stop-start sequence
+# would kill all running vservers AND would not start them
   restart|reload|force-reload)
 	start
 	[ $? -ne 0 ] && RETVAL=7
