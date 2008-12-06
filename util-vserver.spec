@@ -18,7 +18,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	10.6
+Release:	10.7
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -92,20 +92,19 @@ BuildRequires:	tetex-metafont
 %endif
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-lib = %{version}-%{release}
-Requires:	/etc/pld-release
 Requires:	coreutils
 Requires:	diffutils
 Requires:	issue
 Requires:	make
 Requires:	mktemp >= 1.5-18
-Requires:	poldek >= 0.30
 Requires:	rc-scripts
 Requires:	tar
 Requires:	util-linux
+Requires:	vserver-distro-pld = %{version}-%{release}
+Conflicts:	poldek < 0.18.8-10
 Obsoletes:	util-vserver-build
 Obsoletes:	util-vserver-core
 Obsoletes:	util-vserver-init
-Obsoletes:	vserver-distro-pld
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %if %{with dietlibc}
@@ -294,6 +293,20 @@ VServer build template for Gentoo.
 
 %description -n vserver-distro-gentoo -l pl.UTF-8
 Szablon budowania VServerów dla Gentoo.
+
+%package -n vserver-distro-pld
+Summary:	VServer build templates for PLD Linux
+Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji PLD Linux
+Group:		Applications/System
+Requires:	%{name} = %{version}-%{release}
+Requires:	/etc/pld-release
+Requires:	poldek >= 0.30
+
+%description -n vserver-distro-pld
+VServer build templates for PLD Linux.
+
+%description -n vserver-distro-pld -l pl.UTF-8
+Szablony do tworzenia VServerów dla dystrybucji PLD Linux.
 
 %package -n vserver-distro-redhat
 Summary:	VServer build template for Red Hat Linux 9
@@ -548,17 +561,6 @@ if [ -f /etc/sysconfig/vservers.rpmsave ]; then
 	mv -f /etc/sysconfig/vservers{.rpmsave,}
 fi
 
-%triggerpostun -- util-vserver-build < 0.30.215-1.1
-for D in ac th ti; do
-	P=%{_sysconfdir}/vservers/.distributions/pld-$D/poldek
-
-	if [ -f $P/pld-source.conf.rpmsave ]; then
-		cp -f $P/repos.d/pld.conf{,.rpmnew}
-		mv -f $P/pld-source.conf.rpmsave $P/repos.d/pld.conf
-	fi
-done
-exit 0
-
 %post
 %{_sbindir}/setattr --barrier /vservers || :
 /sbin/chkconfig --add util-vserver
@@ -610,6 +612,17 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del rebootmgr
 	/sbin/chkconfig --del vservers-legacy
 fi
+
+%triggerpostun -n vserver-distro-pld -- util-vserver-build < 0.30.215-1.1
+for D in ac th ti; do
+	P=%{_sysconfdir}/vservers/.distributions/pld-$D/poldek
+
+	if [ -f $P/pld-source.conf.rpmsave ]; then
+		cp -f $P/repos.d/pld.conf{,.rpmnew}
+		mv -f $P/pld-source.conf.rpmsave $P/repos.d/pld.conf
+	fi
+done
+exit 0
 
 %files
 %defattr(644,root,root,755)
@@ -758,30 +771,6 @@ fi
 %dir /var/cache/vservers
 %dir /var/cache/vservers/poldek
 
-#%files -n vserver-distro-pld
-#%defattr(644,root,root,755)
-%dir %{_libdir}/%{name}/distributions/pld
-%attr(755,root,root) %{_libdir}/%{name}/distributions/pld/initpost
-%dir %{_libdir}/%{name}/distributions/pld-*
-%{_libdir}/%{name}/distributions/pld-*/pkgs
-%{_libdir}/%{name}/distributions/pld-*/pubkeys
-%{_libdir}/%{name}/distributions/pld-*/rpm
-%attr(755,root,root) %{_libdir}/%{name}/distributions/pld-*/initpost
-%dir %{_sysconfdir}/vservers/.distributions/pld-ac
-%dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
-%dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/*.conf
-%dir %{_sysconfdir}/vservers/.distributions/pld-th
-%dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
-%dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/*.conf
-%ifarch i586 i686 %{x8664} athlon pentium2 pentium3 pentium4
-%dir %{_sysconfdir}/vservers/.distributions/pld-ti
-%dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek
-%dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/*.conf
-%endif
-
 %files lib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libvserver.so.*.*.*
@@ -853,6 +842,30 @@ fi
 %attr(755,root,root) %{_sbindir}/vemerge
 %attr(755,root,root) %{_sbindir}/vesync
 %attr(755,root,root) %{_sbindir}/vupdateworld
+
+%files -n vserver-distro-pld
+%defattr(644,root,root,755)
+%dir %{_libdir}/%{name}/distributions/pld
+%attr(755,root,root) %{_libdir}/%{name}/distributions/pld/initpost
+%dir %{_libdir}/%{name}/distributions/pld-*
+%{_libdir}/%{name}/distributions/pld-*/pkgs
+%{_libdir}/%{name}/distributions/pld-*/pubkeys
+%{_libdir}/%{name}/distributions/pld-*/rpm
+%attr(755,root,root) %{_libdir}/%{name}/distributions/pld-*/initpost
+%dir %{_sysconfdir}/vservers/.distributions/pld-ac
+%dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
+%dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d/*.conf
+%dir %{_sysconfdir}/vservers/.distributions/pld-th
+%dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
+%dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/*.conf
+%ifarch i586 i686 %{x8664} athlon pentium2 pentium3 pentium4
+%dir %{_sysconfdir}/vservers/.distributions/pld-ti
+%dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek
+%dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/*.conf
+%endif
 
 %files -n vserver-distro-redhat
 %defattr(644,root,root,755)
