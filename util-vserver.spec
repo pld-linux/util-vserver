@@ -18,7 +18,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	10.7
+Release:	10.8
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -62,7 +62,8 @@ Patch17:	%{name}-backupfiles.patch
 Patch18:	%{name}-trunk_fixes.patch
 Patch19:	%{name}-vprocunhide-net.patch
 Patch20:	%{name}-more-caps.patch
-Patch21:	http://glen.alkohol.ee/pld/util-vserver-dbrebuild-internalize4.patch
+# http://glen.alkohol.ee/pld/util-vserver-dbrebuild-internalize4.patch
+Patch21:	%{name}-dbrebuild-internalize4.patch
 Patch22:	%{name}-dev-stdfd.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
