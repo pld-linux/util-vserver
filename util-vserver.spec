@@ -545,7 +545,7 @@ chmod a-x /etc/rc.d/init.d/vrootdevices
 chmod a-x /etc/rc.d/init.d/vservers
 
 %triggerpostun -- util-vserver-init
-# Restore what triggerun from removed
+# Restore what triggerun removed
 chmod ug+x /etc/rc.d/init.d/vprocunhide
 chmod ug+x /etc/rc.d/init.d/vrootdevices
 chmod ug+x /etc/rc.d/init.d/vservers
