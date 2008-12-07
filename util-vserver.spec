@@ -18,7 +18,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	12
+Release:	13
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -449,6 +449,8 @@ sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE15} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/util-vserver
 sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE5} > \
 	$RPM_BUILD_ROOT/etc/sysconfig/vservers
+sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' gentoo/bash-wrapper > \
+	$RPM_BUILD_ROOT%{_libdir}/%{name}/bash-wrapper
 
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 
@@ -463,7 +465,6 @@ ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti/ini
 %endif
 install vproc-%{vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE12} $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
-install gentoo/bash-wrapper $RPM_BUILD_ROOT%{_libdir}/%{name}
 
 cat > $RPM_BUILD_ROOT/etc/cron.d/vservers << EOF
 02 2 * * 0      root    %{_libdir}/%{name}/vhashify.cron
