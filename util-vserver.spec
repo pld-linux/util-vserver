@@ -18,7 +18,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.215
-Release:	13
+Release:	14
 License:	GPL
 Group:		Applications/System
 Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -45,6 +45,7 @@ Source14:	ftp://ftp.pld-linux.org/dists/th/PLD-3.0-Th-GPG-key.asc
 Source15:	%{name}.init
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
+Patch2:		%{name}-centos.patch
 Patch4:		%{name}-m4-diet.patch
 Patch5:		%{name}-yum-verb-nogpg.patch
 Patch6:		%{name}-build-umask.patch
@@ -359,6 +360,7 @@ Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 %setup -q -a11
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
