@@ -14,15 +14,17 @@
 # diet compile fails with ccache in %{__cc}
 %undefine	with_ccache
 #
+%define		pre	r2834
+#
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30.215
-Release:	14
+Version:	0.30.216
+Release:	0.%{pre}.1
 License:	GPL
 Group:		Applications/System
-Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
-# Source0-md5:	befd9b8e5311e87395b67ee381d83649
+Source0:	%{name}-%{version}-%{pre}.tar.bz2
+# Source0-md5:	db3b6d35b4f9764a376997e659ce418c
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -60,13 +62,12 @@ Patch14:	%{name}-rpmpath.patch
 Patch15:	%{name}-interfaces-ignore-cvs-dir.patch
 Patch16:	%{name}-personalitymachine.patch
 Patch17:	%{name}-backupfiles.patch
-Patch18:	%{name}-trunk_fixes.patch
-Patch19:	%{name}-vprocunhide-net.patch
-Patch20:	%{name}-more-caps.patch
+Patch18:	%{name}-vprocunhide-net.patch
 # http://glen.alkohol.ee/pld/util-vserver-dbrebuild-internalize4.patch
-Patch21:	%{name}-dbrebuild-internalize4.patch
-Patch22:	%{name}-dev-stdfd.patch
-Patch23:	%{name}-bash-wrapper.patch
+Patch19:	%{name}-dbrebuild-internalize4.patch
+Patch20:	%{name}-dev-stdfd.patch
+Patch21:	%{name}-bash-wrapper.patch
+Patch22:	%{name}-distros.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -357,7 +358,7 @@ VServer build templates for Ubuntu.
 Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 
 %prep
-%setup -q -a11
+%setup -q -n %{name}-%{version}-%{pre} -a11
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -380,7 +381,6 @@ Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 %patch20 -p1
 %patch21 -p1
 %patch22 -p1
-%patch23 -p1
 
 install %{SOURCE9} package-management.txt
 
@@ -632,7 +632,7 @@ exit 0
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog NEWS THANKS doc/intro.txt
+%doc AUTHORS NEWS THANKS doc/intro.txt
 %doc contrib/yum*.patch package-management.txt
 %{?with_doc:%doc doc/*.html}
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vrootdevices
@@ -822,7 +822,6 @@ exit 0
 %files -n vserver-distro-debian
 %defattr(644,root,root,755)
 %dir %{_libdir}/%{name}/distributions/debian
-%{_libdir}/%{name}/distributions/debian/debootstrap.script
 %attr(755,root,root) %{_libdir}/%{name}/distributions/debian/initpost
 %{_libdir}/%{name}/distributions/etch
 %{_libdir}/%{name}/distributions/lenny
@@ -838,6 +837,8 @@ exit 0
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
 %{_libdir}/%{name}/distributions/f7
 %{_libdir}/%{name}/distributions/f8
+%{_libdir}/%{name}/distributions/f9
+%{_libdir}/%{name}/distributions/f10
 %{_libdir}/%{name}/distributions/fc*
 
 %files -n vserver-distro-gentoo
@@ -875,10 +876,11 @@ exit 0
 
 %files -n vserver-distro-redhat
 %defattr(644,root,root,755)
-%dir %{_sysconfdir}/vservers/.distributions/rh*
-%dir %{_sysconfdir}/vservers/.distributions/rh*/apt
+%dir %{_sysconfdir}/vservers/.distributions/rh9
+%dir %{_sysconfdir}/vservers/.distributions/rh9/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/rh*/apt/sources.list
-%{_libdir}/%{name}/distributions/rh*
+%{_libdir}/%{name}/distributions/rh9
+%{_libdir}/%{name}/distributions/redhat
 
 %files -n vserver-distro-suse
 %defattr(644,root,root,755)
@@ -887,12 +889,12 @@ exit 0
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/suse*/apt/sources.list
 %{_libdir}/%{name}/distributions/suse*
 
-%files -n vserver-distro-ubuntu
-%defattr(644,root,root,755)
-%{_libdir}/%{name}/distributions/breezy
-%{_libdir}/%{name}/distributions/dapper
-%{_libdir}/%{name}/distributions/edgy
-%{_libdir}/%{name}/distributions/feisty
-%{_libdir}/%{name}/distributions/gutsy
-%{_libdir}/%{name}/distributions/hoary
-%{_libdir}/%{name}/distributions/warty
+#%files -n vserver-distro-ubuntu
+#%defattr(644,root,root,755)
+#%{_libdir}/%{name}/distributions/breezy
+#%{_libdir}/%{name}/distributions/dapper
+#%{_libdir}/%{name}/distributions/edgy
+#%{_libdir}/%{name}/distributions/feisty
+#%{_libdir}/%{name}/distributions/gutsy
+#%{_libdir}/%{name}/distributions/hoary
+#%{_libdir}/%{name}/distributions/warty
