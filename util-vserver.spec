@@ -247,6 +247,7 @@ Summary:	VServer build template for CentOS
 Summary(pl.UTF-8):	Szablon budowania VServerów dla dystrybucji CentOS
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
+Requires:	vserver-distro-redhat = %{version}-%{release}
 Requires:	yum
 
 %description -n vserver-distro-centos
@@ -277,6 +278,7 @@ Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
 Requires:	wget
+Requires:	vserver-distro-redhat = %{version}-%{release}
 Requires:	yum
 
 %description -n vserver-distro-fedora
@@ -723,6 +725,7 @@ exit 0
 %attr(755,root,root) %{_libdir}/%{name}/chcontext-compat
 %attr(755,root,root) %{_libdir}/%{name}/check-unixfile
 %attr(755,root,root) %{_libdir}/%{name}/chroot-sh
+%attr(755,root,root) %{_libdir}/%{name}/exec-remount
 %attr(755,root,root) %{_libdir}/%{name}/exec-ulimit
 %attr(755,root,root) %{_libdir}/%{name}/fakerunlevel
 %attr(755,root,root) %{_libdir}/%{name}/filetime
@@ -880,7 +883,11 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/rh9/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/rh*/apt/sources.list
 %{_libdir}/%{name}/distributions/rh9
-%{_libdir}/%{name}/distributions/redhat
+%dir %{_libdir}/%{name}/distributions/redhat
+%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initctl
+%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpost
+%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpre
+%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/rc.sysinit
 
 %files -n vserver-distro-suse
 %defattr(644,root,root,755)
