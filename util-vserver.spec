@@ -257,11 +257,13 @@ VServer build template for CentOS 4.2 and 5.
 Szablon budowania VServerów dla dystrybucji CentOS 4.2 i 5.
 
 %package -n vserver-distro-debian
-Summary:	VServer build templates for Debian
-Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Debian
+Summary:	VServer build templates for Debian and Ubuntu
+Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Debian i Ubuntu
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
+Requires:	debootstrap
 Requires:	dpkg
+Obsoletes:	vserver-distro-ubuntu
 
 %description -n vserver-distro-debian
 VServer build templates for Debian.
@@ -345,19 +347,6 @@ VServer build template for SuSE Linux 9.1.
 
 %description -n vserver-distro-suse -l pl.UTF-8
 Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
-
-%package -n vserver-distro-ubuntu
-Summary:	VServer build templates for Ubuntu
-Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Ubuntu
-Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
-Requires:	dpkg
-
-%description -n vserver-distro-ubuntu
-VServer build templates for Ubuntu.
-
-%description -n vserver-distro-ubuntu -l pl.UTF-8
-Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 
 %prep
 %setup -q -n %{name}-%{version}-%{pre} -a11
@@ -895,13 +884,3 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/suse*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/suse*/apt/sources.list
 %{_libdir}/%{name}/distributions/suse*
-
-#%files -n vserver-distro-ubuntu
-#%defattr(644,root,root,755)
-#%{_libdir}/%{name}/distributions/breezy
-#%{_libdir}/%{name}/distributions/dapper
-#%{_libdir}/%{name}/distributions/edgy
-#%{_libdir}/%{name}/distributions/feisty
-#%{_libdir}/%{name}/distributions/gutsy
-#%{_libdir}/%{name}/distributions/hoary
-#%{_libdir}/%{name}/distributions/warty
