@@ -1,6 +1,7 @@
 # TODO
 # - reject install in %%pretrans if /proc/virtual/info has incompatible version
 # - make pkgmgmnt internalize modify poldek conf to unignore vserver-packages
+# - make pkgmgmnt internalize undo RPM_SKIP_AUTO_RESTART=yes in /etc/sysconfig/rpm (or drop it in vserver create?)
 #
 # m68k and mips are the only not supported archs
 #
