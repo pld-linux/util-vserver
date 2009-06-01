@@ -10,15 +10,17 @@
 # diet compile fails with ccache in %{__cc}
 %undefine	with_ccache
 #
+%define	snap pre2833
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
-Version:	0.30.215
-Release:	14
+Version:	0.30.216
+Release:	0.%{snap}.1
 License:	GPL
 Group:		Applications/System
-Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
-# Source0-md5:	befd9b8e5311e87395b67ee381d83649
+#Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
+Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.bz2
+# Source0-md5:	9654293ab0899f2ee3174545881caf5f
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -56,13 +58,11 @@ Patch14:	%{name}-rpmpath.patch
 Patch15:	%{name}-interfaces-ignore-cvs-dir.patch
 Patch16:	%{name}-personalitymachine.patch
 Patch17:	%{name}-backupfiles.patch
-Patch18:	%{name}-trunk_fixes.patch
-Patch19:	%{name}-vprocunhide-net.patch
-Patch20:	%{name}-more-caps.patch
+Patch18:	%{name}-vprocunhide-net.patch
 # http://glen.alkohol.ee/pld/util-vserver-dbrebuild-internalize4.patch
-Patch21:	%{name}-dbrebuild-internalize4.patch
-Patch22:	%{name}-dev-stdfd.patch
-Patch23:	%{name}-bash-wrapper.patch
+Patch19:	%{name}-dbrebuild-internalize4.patch
+Patch20:	%{name}-dev-stdfd.patch
+Patch21:	%{name}-bash-wrapper.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -79,14 +79,11 @@ BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	doxygen
 BuildRequires:	graphviz
 BuildRequires:	libxslt-progs
-BuildRequires:	tetex-format-pdflatex
-BuildRequires:	tetex-makeindex
-# To be removed when tetex-format-pdflatex, tetex-pdftex...
-# ...and graphviz packages get fixed
-BuildRequires:	ghostscript
-BuildRequires:	ghostscript-fonts-std
-BuildRequires:	tetex-fonts-jknappen
-BuildRequires:	tetex-metafont
+BuildRequires:	texlive-fonts-type1-urw
+BuildRequires:	texlive-format-pdflatex
+BuildRequires:	texlive-makeindex
+BuildRequires:	texlive-pdftex
+BuildRequires:	texlive-xetex
 %{?with_xalan:BuildRequires:	xalan-j}
 %endif
 Requires(post,preun):	/sbin/chkconfig
@@ -353,7 +350,8 @@ VServer build templates for Ubuntu.
 Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 
 %prep
-%setup -q -a11
+%setup -q -a11 -n %{name}-%{version}-%{snap}
+#%setup -q -a11
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -375,8 +373,6 @@ Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
-%patch22 -p1
-%patch23 -p1
 
 install %{SOURCE9} package-management.txt
 
@@ -719,6 +715,7 @@ exit 0
 %attr(755,root,root) %{_libdir}/%{name}/chcontext-compat
 %attr(755,root,root) %{_libdir}/%{name}/check-unixfile
 %attr(755,root,root) %{_libdir}/%{name}/chroot-sh
+%attr(755,root,root) %{_libdir}/%{name}/exec-remount
 %attr(755,root,root) %{_libdir}/%{name}/exec-ulimit
 %attr(755,root,root) %{_libdir}/%{name}/fakerunlevel
 %attr(755,root,root) %{_libdir}/%{name}/filetime
@@ -832,8 +829,7 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/fc*
 %dir %{_sysconfdir}/vservers/.distributions/fc*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
-%{_libdir}/%{name}/distributions/f7
-%{_libdir}/%{name}/distributions/f8
+%{_libdir}/%{name}/distributions/f*
 %{_libdir}/%{name}/distributions/fc*
 
 %files -n vserver-distro-gentoo
