@@ -14,7 +14,7 @@
 # diet compile fails with ccache in %{__cc}
 %undefine	with_ccache
 #
-%define		pre	r2834
+%define		pre	r2837
 #
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
@@ -24,7 +24,7 @@ Release:	0.%{pre}.1
 License:	GPL
 Group:		Applications/System
 Source0:	%{name}-%{version}-%{pre}.tar.bz2
-# Source0-md5:	db3b6d35b4f9764a376997e659ce418c
+# Source0-md5:	30f60696dddefedd9e14faf520e8ef15
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -371,7 +371,7 @@ Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
-%patch22 -p1
+#%patch22 -p1
 
 install %{SOURCE9} package-management.txt
 
@@ -831,6 +831,7 @@ exit 0
 %{_libdir}/%{name}/distributions/f8
 %{_libdir}/%{name}/distributions/f9
 %{_libdir}/%{name}/distributions/f10
+%{_libdir}/%{name}/distributions/f11
 %{_libdir}/%{name}/distributions/fc*
 
 %files -n vserver-distro-gentoo
