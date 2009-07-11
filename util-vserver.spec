@@ -413,7 +413,7 @@ CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1 -U__STRICT_ANSI__"
 	WGET=%{_usrbin}/wget \
 
 %{__make} all
-%{?with_doc:strace -o /tmp/WYNIK -f -F -s 200 %{__make} doc}
+%{?with_doc:%{__make} doc}
 
 %{__make} -C vproc-%{vproc_version} \
 	CC="%{__cc}" \
