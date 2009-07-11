@@ -838,7 +838,6 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/fc*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
 %{_libdir}/%{name}/distributions/f*
-%{_libdir}/%{name}/distributions/fc*
 
 %files -n vserver-distro-gentoo
 %defattr(644,root,root,755)
