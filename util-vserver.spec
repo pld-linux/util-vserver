@@ -16,17 +16,17 @@
 %endif
 
 #
-%define	snap pre2833
+%define	snap pre2841
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.216
-Release:	0.%{snap}.3
+Release:	0.%{snap}.1
 License:	GPL
 Group:		Applications/System
 #Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
 Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	9654293ab0899f2ee3174545881caf5f
+# Source0-md5:	71c3f2012d0159aac22fee098be063e9
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -342,19 +342,6 @@ VServer build template for SuSE Linux 9.1.
 
 %description -n vserver-distro-suse -l pl.UTF-8
 Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
-
-%package -n vserver-distro-ubuntu
-Summary:	VServer build templates for Ubuntu
-Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Ubuntu
-Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
-Requires:	dpkg
-
-%description -n vserver-distro-ubuntu
-VServer build templates for Ubuntu.
-
-%description -n vserver-distro-ubuntu -l pl.UTF-8
-Szablony do tworzenia VServerów dla dystrybucji Ubuntu.
 
 %prep
 %setup -q -a11 -n %{name}-%{version}-%{snap}
@@ -711,6 +698,7 @@ exit 0
 %attr(755,root,root) %{_libdir}/%{name}/distributions/template/initpost
 %attr(755,root,root) %{_libdir}/%{name}/distributions/template/initpre
 %dir %{_libdir}/%{name}/distributions/redhat
+%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initctl
 %attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpost
 %attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpre
 %attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/rc.sysinit
@@ -823,7 +811,6 @@ exit 0
 %files -n vserver-distro-debian
 %defattr(644,root,root,755)
 %dir %{_libdir}/%{name}/distributions/debian
-%{_libdir}/%{name}/distributions/debian/debootstrap.script
 %attr(755,root,root) %{_libdir}/%{name}/distributions/debian/initpost
 %{_libdir}/%{name}/distributions/etch
 %{_libdir}/%{name}/distributions/lenny
@@ -885,13 +872,3 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/suse*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/suse*/apt/sources.list
 %{_libdir}/%{name}/distributions/suse*
-
-%files -n vserver-distro-ubuntu
-%defattr(644,root,root,755)
-%{_libdir}/%{name}/distributions/breezy
-%{_libdir}/%{name}/distributions/dapper
-%{_libdir}/%{name}/distributions/edgy
-%{_libdir}/%{name}/distributions/feisty
-%{_libdir}/%{name}/distributions/gutsy
-%{_libdir}/%{name}/distributions/hoary
-%{_libdir}/%{name}/distributions/warty

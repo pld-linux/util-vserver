@@ -8,12 +8,12 @@
  			   template/initpost template/initpre \
  			   rh9/apt/rpmpriorities    rh9/pkgs/01    rh9/pkgs/02 \
  			   fc1/apt/rpmpriorities    fc1/pkgs/01    fc1/pkgs/02 \
-@@ -73,7 +74,10 @@
- 			   breezy/debootstrap.script dapper/debootstrap.script \
- 			   edgy/debootstrap.script   feisty/debootstrap.script \
- 			   gutsy/debootstrap.script  hoary/debootstrap.script \
--			   warty/debootstrap.script
-+			   warty/debootstrap.script \
+@@ -85,7 +85,10 @@
+ 			   suse91/apt/rpmpriorities suse91/pkgs/01 suse91/pkgs/02 \
+ 			   suse91/rpm/macros \
+ 			   gentoo/init-vserver.sh gentoo/net.vserver \
+-			   gentoo/reboot.sh gentoo/shutdown.sh
++			   gentoo/reboot.sh gentoo/shutdown.sh \
 +			   pld-ac/pkgs/01 pld-ac/rpm/macros \
 +			   pld-th/pkgs/01 pld-th/rpm/macros \
 +			   pld-ti/pkgs/01 pld-ti/rpm/macros
