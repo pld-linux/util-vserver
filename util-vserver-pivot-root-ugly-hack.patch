@@ -51,7 +51,7 @@ diff -ur util-vserver-0.30.216-pre2833/lib/issupported.c util-vserver-0.30.216-p
 +   // patches with recent kernels
 +    case vcFEATURE_PIVOT_ROOT	:  return (ver >= 0x00020304) &&
 +				  ((kver >= 0x02062723 && kver < 0x02062800) ||
-+				   (kver >= 0x02062810 && kver < 0x02062900) ||
++				   (kver >= 0x02062811 && kver < 0x02062900) ||
 +				   (kver >= 0x02062901));
      case vcFEATURE_PIDSPACE	:  return ver >= 0x00020305;
      default			:  assert(false); 
