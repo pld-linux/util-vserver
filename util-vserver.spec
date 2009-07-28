@@ -86,6 +86,8 @@ BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	doxygen
 BuildRequires:	graphviz
 BuildRequires:	libxslt-progs
+BuildRequires:	python-devel
+BuildRequires:	rpm-pythonprov
 BuildRequires:	texlive-fonts-type1-urw
 BuildRequires:	texlive-format-pdflatex
 BuildRequires:	texlive-makeindex
@@ -104,10 +106,10 @@ Requires:	rc-scripts
 Requires:	tar
 Requires:	util-linux
 Requires:	vserver-distro-pld = %{version}-%{release}
-Conflicts:	poldek < 0.18.8-10
 Obsoletes:	util-vserver-build
 Obsoletes:	util-vserver-core
 Obsoletes:	util-vserver-init
+Conflicts:	poldek < 0.18.8-10
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %if %{with dietlibc}
@@ -132,8 +134,8 @@ set_ipv4root system call.
 
 This package contains utilities which are required to communicate with
 the Linux-Vserver enabled kernel, utilities which assist in building
-Vservers and SysV initscripts which start and stop Vservers and related
-tools.
+Vservers and SysV initscripts which start and stop Vservers and
+related tools.
 
 %description -l pl.UTF-8
 Ten pakiet dostarcza składniki i szkielet do tworzenia wirtualnych
@@ -228,6 +230,18 @@ w interakcję z innymi ani z usługami na głównym serwerze.
 
 Ten pakiet zawiera narzędzia potrzebne do pracy z Vserwerami mającymi
 konfigurację w starym stylu.
+
+%package -n python-util-vserver
+Summary:	Python interface to libutil-vserver library
+Summary(pl.UTF-8):	Pythonowy interfejs do biblioteki libutil-vserver
+License:	LGPL v2.1+
+Group:		Libraries/Python
+
+%description -n python-util-vserver
+Python interface to libutil-vserver library.
+
+%description -n python-util-vserver -l pl.UTF-8
+Pythonowy interfejs do biblioteki libutil-vserver.
 
 %package -n vserver-distro-alpine
 Summary:	VServer build template for Alpine Linux
@@ -798,6 +812,10 @@ exit 0
 %{_mandir}/man8/rebootmgr.8*
 %{_mandir}/man8/vserver-copy.8*
 
+%files -n python-util-vserver
+%defattr(644,root,root,755)
+%attr(755,root,root) %{py_sitedir}/_libvserver.so
+
 %files -n vserver-distro-alpine
 %defattr(644,root,root,755)
 %dir %{_libdir}/%{name}/distributions/alpine
@@ -812,7 +830,7 @@ exit 0
 %defattr(644,root,root,755)
 %dir %{_libdir}/%{name}/distributions/debian
 %attr(755,root,root) %{_libdir}/%{name}/distributions/debian/initpost
-%{_libdir}/%{name}/distributions/etch
+%{_libdir}/%{name}/distributions%{_sysconfdir}h
 %{_libdir}/%{name}/distributions/lenny
 %{_libdir}/%{name}/distributions/sid
 
