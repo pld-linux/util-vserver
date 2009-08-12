@@ -21,7 +21,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.216
-Release:	0.%{snap}.3
+Release:	0.%{snap}.4
 License:	GPL
 Group:		Applications/System
 #Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
@@ -110,6 +110,7 @@ Requires:	vserver-distro-pld = %{version}-%{release}
 Obsoletes:	util-vserver-build
 Obsoletes:	util-vserver-core
 Obsoletes:	util-vserver-init
+Obsoletes:	vserver-distro-ubuntu
 Conflicts:	poldek < 0.18.8-10
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
