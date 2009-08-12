@@ -64,10 +64,13 @@ Patch18:	%{name}-vprocunhide-net.patch
 Patch19:	%{name}-dbrebuild-internalize4.patch
 Patch20:	%{name}-dev-stdfd.patch
 Patch21:	%{name}-bash-wrapper.patch
+Patch22:	%{name}-pivot-root-ugly-hack.patch
+Patch23:	%{name}-ac.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
 BuildRequires:	beecrypt-devel
+BuildRequires:	ctags
 %{?with_dietlibc:BuildRequires:	dietlibc-static >= 2:0.29}
 BuildRequires:	e2fsprogs-devel
 BuildRequires:	libstdc++-devel
@@ -381,6 +384,8 @@ Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
+%patch22 -p1
+%patch23 -p0
 
 install %{SOURCE9} package-management.txt
 
