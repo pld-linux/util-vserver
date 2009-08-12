@@ -85,14 +85,14 @@ BuildRequires:	graphviz
 BuildRequires:	libxslt-progs
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
-BuildRequires:	tetex-format-pdflatex
-BuildRequires:	tetex-makeindex
 # To be removed when tetex-format-pdflatex, tetex-pdftex...
 # ...and graphviz packages get fixed
 BuildRequires:	ghostscript
 BuildRequires:	ghostscript-fonts-std
 %if "%{pld_release}" == "ti"
 BuildRequires:	tetex-fonts-jknappen
+BuildRequires:	tetex-format-pdflatex
+BuildRequires:	tetex-makeindex
 BuildRequires:	tetex-metafont
 %else
 BuildRequires:	texlive-fonts-type1-urw
