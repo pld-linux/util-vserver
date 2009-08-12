@@ -91,8 +91,16 @@ BuildRequires:	tetex-makeindex
 # ...and graphviz packages get fixed
 BuildRequires:	ghostscript
 BuildRequires:	ghostscript-fonts-std
+%if "%{pld_release}" == "ti"
 BuildRequires:	tetex-fonts-jknappen
 BuildRequires:	tetex-metafont
+%else
+BuildRequires:	texlive-fonts-type1-urw
+BuildRequires:	texlive-format-pdflatex
+BuildRequires:	texlive-makeindex
+BuildRequires:	texlive-pdftex
+BuildRequires:	texlive-xetex
+%endif
 %{?with_xalan:BuildRequires:	xalan-j}
 %endif
 Requires(post,preun):	/sbin/chkconfig
