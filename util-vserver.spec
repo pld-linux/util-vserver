@@ -14,7 +14,7 @@
 # diet compile fails with ccache in %{__cc}
 %undefine	with_ccache
 #
-%define		pre	r2837
+%define		pre	r2844
 #
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
@@ -24,7 +24,7 @@ Release:	0.%{pre}.1
 License:	GPL
 Group:		Applications/System
 Source0:	%{name}-%{version}-%{pre}.tar.bz2
-# Source0-md5:	30f60696dddefedd9e14faf520e8ef15
+# Source0-md5:	e7a0b28e935bfce9f6db1dc5d93dc7b5
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
