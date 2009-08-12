@@ -10,24 +10,23 @@
 %define	vproc_version 0.01
 # diet compile fails with ccache in %{__cc}
 %undefine	with_ccache
-
+#
 %ifarch ppc
 # pdflatex: refman: Invalid argument
 %undefine	with_doc
 %endif
-
 #
-%define	snap pre2841
+%define		snap	r2844
+#
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.216
-Release:	0.%{snap}.4
+Release:	0.%{snap}.1
 License:	GPL
 Group:		Applications/System
-#Source0:	http://ftp.linux-vserver.org/pub/utils/util-vserver/%{name}-%{version}.tar.bz2
-Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	71c3f2012d0159aac22fee098be063e9
+Source0:	%{name}-%{version}-%{snap}.tar.bz2
+# Source0-md5:	e7a0b28e935bfce9f6db1dc5d93dc7b5
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
