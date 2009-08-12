@@ -110,10 +110,10 @@ Requires:	rc-scripts
 Requires:	tar
 Requires:	util-linux
 Requires:	vserver-distro-pld = %{version}-%{release}
-Conflicts:	poldek < 0.18.8-10
 Obsoletes:	util-vserver-build
 Obsoletes:	util-vserver-core
 Obsoletes:	util-vserver-init
+Conflicts:	poldek < 0.18.8-10
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %if %{with dietlibc}
@@ -138,8 +138,8 @@ set_ipv4root system call.
 
 This package contains utilities which are required to communicate with
 the Linux-Vserver enabled kernel, utilities which assist in building
-Vservers and SysV initscripts which start and stop Vservers and related
-tools.
+Vservers and SysV initscripts which start and stop Vservers and
+related tools.
 
 %description -l pl.UTF-8
 Ten pakiet dostarcza składniki i szkielet do tworzenia wirtualnych
@@ -641,7 +641,7 @@ exit 0
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS NEWS THANKS doc/intro.txt
+%doc AUTHORS ChangeLog NEWS THANKS doc/intro.txt
 %doc contrib/yum*.patch package-management.txt
 %{?with_doc:%doc doc/*.html}
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vrootdevices
