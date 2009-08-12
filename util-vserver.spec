@@ -119,7 +119,6 @@ Requires:	vserver-distro-pld = %{version}-%{release}
 Obsoletes:	util-vserver-build
 Obsoletes:	util-vserver-core
 Obsoletes:	util-vserver-init
-Obsoletes:	vserver-distro-ubuntu
 Conflicts:	poldek < 0.18.8-10
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -271,6 +270,7 @@ Summary:	VServer build template for CentOS
 Summary(pl.UTF-8):	Szablon budowania VServerów dla dystrybucji CentOS
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
+Requires:	vserver-distro-redhat = %{version}-%{release}
 Requires:	yum
 
 %description -n vserver-distro-centos
@@ -280,11 +280,13 @@ VServer build template for CentOS 4.2 and 5.
 Szablon budowania VServerów dla dystrybucji CentOS 4.2 i 5.
 
 %package -n vserver-distro-debian
-Summary:	VServer build templates for Debian
-Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Debian
+Summary:	VServer build templates for Debian and Ubuntu
+Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Debian i Ubuntu
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
+Requires:	debootstrap
 Requires:	dpkg
+Obsoletes:	vserver-distro-ubuntu
 
 %description -n vserver-distro-debian
 VServer build templates for Debian.
@@ -301,6 +303,7 @@ Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
 Requires:	wget
+Requires:	vserver-distro-redhat = %{version}-%{release}
 Requires:	yum
 
 %description -n vserver-distro-fedora
@@ -724,7 +727,6 @@ exit 0
 %attr(755,root,root) %{_libdir}/%{name}/distributions/template/initpost
 %attr(755,root,root) %{_libdir}/%{name}/distributions/template/initpre
 %dir %{_libdir}/%{name}/distributions/redhat
-%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initctl
 %attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpost
 %attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpre
 %attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/rc.sysinit
@@ -854,7 +856,12 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/fc*
 %dir %{_sysconfdir}/vservers/.distributions/fc*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
-%{_libdir}/%{name}/distributions/f*
+%{_libdir}/%{name}/distributions/f7
+%{_libdir}/%{name}/distributions/f8
+%{_libdir}/%{name}/distributions/f9
+%{_libdir}/%{name}/distributions/f10
+%{_libdir}/%{name}/distributions/f11
+%{_libdir}/%{name}/distributions/fc*
 
 %files -n vserver-distro-gentoo
 %defattr(644,root,root,755)
@@ -891,10 +898,15 @@ exit 0
 
 %files -n vserver-distro-redhat
 %defattr(644,root,root,755)
-%dir %{_sysconfdir}/vservers/.distributions/rh*
-%dir %{_sysconfdir}/vservers/.distributions/rh*/apt
+%dir %{_sysconfdir}/vservers/.distributions/rh9
+%dir %{_sysconfdir}/vservers/.distributions/rh9/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/rh*/apt/sources.list
-%{_libdir}/%{name}/distributions/rh*
+%{_libdir}/%{name}/distributions/rh9
+%dir %{_libdir}/%{name}/distributions/redhat
+%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initctl
+%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpost
+%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpre
+%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/rc.sysinit
 
 %files -n vserver-distro-suse
 %defattr(644,root,root,755)
