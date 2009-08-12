@@ -372,8 +372,7 @@ VServer build template for SuSE Linux 9.1.
 Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 
 %prep
-%setup -q -a11 -n %{name}-%{version}-%{snap}
-#%setup -q -a11
+%setup -q -n %{name}-%{version}-%{snap} -a11
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
