@@ -85,10 +85,6 @@ BuildRequires:	graphviz
 BuildRequires:	libxslt-progs
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
-# To be removed when tetex-format-pdflatex, tetex-pdftex...
-# ...and graphviz packages get fixed
-BuildRequires:	ghostscript
-BuildRequires:	ghostscript-fonts-std
 %if "%{pld_release}" == "ti"
 BuildRequires:	tetex-fonts-jknappen
 BuildRequires:	tetex-format-pdflatex
