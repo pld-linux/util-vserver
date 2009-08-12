@@ -854,7 +854,12 @@ exit 0
 %{_libdir}/%{name}/distributions/f9
 %{_libdir}/%{name}/distributions/f10
 %{_libdir}/%{name}/distributions/f11
-%{_libdir}/%{name}/distributions/fc*
+%{_libdir}/%{name}/distributions/fc1
+%{_libdir}/%{name}/distributions/fc2
+%{_libdir}/%{name}/distributions/fc3
+%{_libdir}/%{name}/distributions/fc4
+%{_libdir}/%{name}/distributions/fc5
+%{_libdir}/%{name}/distributions/fc6
 
 %files -n vserver-distro-gentoo
 %defattr(644,root,root,755)
