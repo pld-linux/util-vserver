@@ -1,3 +1,4 @@
+#
 # m68k and mips are the only not supported archs
 #
 # Conditional build:
@@ -75,6 +76,7 @@ URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
 BuildRequires:	beecrypt-devel
+BuildRequires:	ctags
 %{?with_dietlibc:BuildRequires:	dietlibc-static >= 2:0.29}
 BuildRequires:	e2fsprogs-devel
 BuildRequires:	libstdc++-devel
