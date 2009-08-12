@@ -91,11 +91,18 @@ BuildRequires:	graphviz
 BuildRequires:	libxslt-progs
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
+%if "%{pld_release}" == "ti"
+BuildRequires:	tetex-fonts-jknappen
+BuildRequires:	tetex-format-pdflatex
+BuildRequires:	tetex-makeindex
+BuildRequires:	tetex-metafont
+%else
 BuildRequires:	texlive-fonts-type1-urw
 BuildRequires:	texlive-format-pdflatex
 BuildRequires:	texlive-makeindex
 BuildRequires:	texlive-pdftex
 BuildRequires:	texlive-xetex
+%endif
 %{?with_xalan:BuildRequires:	xalan-j}
 %endif
 Requires(post,preun):	/sbin/chkconfig
@@ -835,7 +842,7 @@ exit 0
 %defattr(644,root,root,755)
 %dir %{_libdir}/%{name}/distributions/debian
 %attr(755,root,root) %{_libdir}/%{name}/distributions/debian/initpost
-%{_libdir}/%{name}/distributions%{_sysconfdir}h
+%{_libdir}/%{name}/distributions/etch
 %{_libdir}/%{name}/distributions/lenny
 %{_libdir}/%{name}/distributions/sid
 
