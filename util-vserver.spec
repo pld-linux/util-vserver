@@ -11,6 +11,11 @@
 # diet compile fails with ccache in %{__cc}
 %undefine	with_ccache
 #
+%ifarch ppc
+# pdflatex: refman: Invalid argument
+%undefine	with_doc
+%endif
+#
 %define		snap	r2844
 #
 Summary:	Linux virtual server utilities
