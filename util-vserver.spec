@@ -285,13 +285,14 @@ Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	debootstrap
 Requires:	dpkg
+Provides:	vserver-distro-ubuntu
 Obsoletes:	vserver-distro-ubuntu
 
 %description -n vserver-distro-debian
-VServer build templates for Debian.
+VServer build templates for Debian and Ubuntu.
 
 %description -n vserver-distro-debian -l pl.UTF-8
-Szablony do tworzenia VServerów dla dystrybucji Debian.
+Szablony do tworzenia VServerów dla dystrybucji Debian i Ubuntu.
 
 %package -n vserver-distro-fedora
 Summary:	VServer build templates for Fedora
