@@ -125,7 +125,7 @@ diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-ac/rpm/macros util-vserve
 +# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
-+%_netsharedpath		/dev
++%_netsharedpath		/dev:/proc
 +%_tmppath			/tmp
 +%_host_os			%_os
 diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-th/pkgs/01 util-vserver-0.30.216-r2837/distrib/pld-th/pkgs/01
@@ -214,7 +214,7 @@ diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-th/rpm/macros util-vserve
 +# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
-+%_netsharedpath		/dev
++%_netsharedpath		/dev:/proc
 +%_tmppath			/tmp
 +%_host_os			%_os
 diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-ti/pkgs/01 util-vserver-0.30.216-r2837/distrib/pld-ti/pkgs/01
@@ -284,7 +284,7 @@ diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-ti/rpm/macros util-vserve
 +# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
-+%_netsharedpath		/dev
++%_netsharedpath		/dev:/proc
 +%_tmppath			/tmp
 +%_host_os			%_os
 diff -urN util-vserver-0.30.216-r2837.orig/scripts/functions util-vserver-0.30.216-r2837/scripts/functions
