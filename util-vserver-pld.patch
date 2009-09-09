@@ -120,7 +120,7 @@
 +# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
-+%_netsharedpath		/dev
++%_netsharedpath		/dev:/proc
 +%_tmppath			/tmp
 --- util-vserver-0.30.214/distrib/pld-th/pkgs/01	2007-11-15 23:20:48.181172125 +0100
 +++ util-vserver-0.30.214/distrib/pld-th/pkgs/01	2008-03-25 23:05:18.538916218 +0200
@@ -205,7 +205,7 @@
 +# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
-+%_netsharedpath		/dev
++%_netsharedpath		/dev:/proc
 +%_tmppath			/tmp
 --- util-vserver-0.30.214/distrib/pld-ti/pkgs/01	2007-11-15 23:20:48.181172125 +0100
 +++ util-vserver-0.30.214/distrib/pld-ti/pkgs/01	2008-03-25 23:05:18.538916218 +0200
@@ -271,7 +271,7 @@
 +# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
-+%_netsharedpath		/dev
++%_netsharedpath		/dev:/proc
 +%_tmppath			/tmp
 --- util-vserver-0.30.214.org/scripts/functions	2007-09-02 22:06:41.000000000 +0200
 +++ util-vserver-0.30.214/scripts/functions	2007-11-15 23:20:48.221174080 +0100
