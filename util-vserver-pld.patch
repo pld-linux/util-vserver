@@ -57,9 +57,11 @@
 +vserver-packages
 --- util-vserver-0.30.214/distrib/pld-ac/poldek/repos.d/pld.conf	2007-11-15 23:20:48.181172125 +0100
 +++ util-vserver-0.30.214/distrib/pld-ac/poldek/repos.d/pld.conf	2008-03-25 20:34:12.000000000 +0200
-@@ -0,0 +1,56 @@
+@@ -0,0 +1,64 @@
 +# $Id$
 +# PLD Linux Distribution <http://www.pld-linux.org/>.
++#
++# Main sources for PLD Linux 2.0 (Ac)
 +
 +# specify our packages architecture
 +_arch   = %ARCH%
@@ -71,20 +73,19 @@
 +## You can use them if you have better connection there
 +# CI TASK:
 +#_prefix = ftp://ftp.task.pld-linux.org/dists/ac
-+#_prefix = %{_pld_main_prefix}
 +_prefix = %{_pld_main_prefix}
 +
 +_type = pndir
 +
-+# PLD 2.0 (Ac)
++# PLD Linux 2.0 (Ac)
 +[source]
 +type   = %{_type}
-+name   = ac
++name   = ac-main
 +path   = %{_prefix}/PLD/%{_arch}/PLD/RPMS/
 +signed = yes
-+# buggy deps -- use one from updates instead
-+ignore = msmtp-sendmail*
 +pri    = 1
++# msmtp-sendmail is broken, yum noarch is older than in updates
++ignore = msmtp-sendmail* yum*
 +
 +[source]
 +type   = %{_type}
@@ -97,14 +98,15 @@
 +type   = %{_type}
 +name   = ac-supported
 +path   = %{_prefix}/supported/%{_arch}/
++signed = yes
 +auto   = no
 +autoup = no
-+signed = yes
 +
 +[source]
 +type   = %{_type}
 +name   = ac-ready
 +path   = %{_pld_main_prefix}/ready/%{_arch}/
++#signed = yes
 +auto   = no
 +autoup = no
 +
@@ -114,6 +116,12 @@
 +path   = %{_pld_main_prefix}/test/%{_arch}/
 +auto   = no
 +autoup = no
++
++# ac-main + ac-updates
++[source]
++type   = group
++name   = ac
++sources = ac-main ac-updates
 --- util-vserver-0.30.214/distrib/pld-ac/rpm/macros	2007-11-15 23:20:48.181172125 +0100
 +++ util-vserver-0.30.214/distrib/pld-ac/rpm/macros	2008-04-29 23:36:23.674175489 +0300
 @@ -0,0 +1,5 @@
@@ -133,70 +141,76 @@
 +vserver-packages
 --- util-vserver-0.30.214/distrib/pld-th/poldek/repos.d/pld.conf	2007-11-15 23:20:48.181172125 +0100
 +++ util-vserver-0.30.214/distrib/pld-th/poldek/repos.d/pld.conf	2008-03-26 00:27:05.335185240 +0200
-@@ -0,0 +1,65 @@
+@@ -0,0 +1,71 @@
 +# PLD Linux Distribution <http://www.pld-linux.org/>.
++#
++# Main sources for PLD Linux 3.0 (Th)
 +
++# specify our packages architecture
 +_arch   = %ARCH%
-+_prefix = ftp://ftp.th.pld-linux.org/dists/th
++
++# main PLD-site for often changed things (test, ready):
++_pld_main_prefix = ftp://ftp.th.pld-linux.org/dists/th
++
 +## Some mirrors
 +## You can use them if you have better connection there
 +# CI TASK:
 +#_prefix = ftp://ftp.task.pld-linux.org/dists/th
++_prefix = %{_pld_main_prefix}
 +
-+_type = pndir
-+
-+# PLD 3.0 (Th)
++# PLD Linux 3.0 (Th): main sources
 +[source]
-+type   = %{_type}
++type   = pndir
 +name   = th
 +path   = %{_prefix}/PLD/%{_arch}/RPMS/
 +
 +[source]
-+type   = %{_type}
++type   = pndir
 +name   = th
 +path   = %{_prefix}/PLD/noarch/RPMS/
 +
-+#[source]
-+#type   = %{_type}
-+#name   = th-updates
-+#path   = %{_prefix}/updates/%{_arch}/RPMS/
-+#
-+#[source]
-+#type   = %{_type}
-+#name   = th-updates
-+#path   = %{_prefix}/updates/noarch/RPMS/
-+
-+#[source]
-+#type   = %{_type}
-+#name   = th-supported
-+#path   = %{_prefix}/supported/%{_arch}/
-+#auto   = no
++# PLD Linux 3.0 (Th): obsolete sources (kde3, ...)
++[source]
++type   = pndir
++name   = th-obsolete
++path   = %{_prefix}/obsolete/%{_arch}/RPMS/
++auto   = no
++autoup = no
 +
 +[source]
-+type   = %{_type}
++type   = pndir
++name   = th-obsolete
++path   = %{_prefix}/obsolete/noarch/RPMS/
++auto   = no
++autoup = no
++
++# PLD Linux 3.0 (Th): ready sources (testing stage before moved to main)
++[source]
++type   = pndir
 +name   = th-ready
-+path   = %{_prefix}/ready/%{_arch}/RPMS/
++path   = %{_pld_main_prefix}/ready/%{_arch}/RPMS/
 +auto   = no
 +autoup = no
 +
 +[source]
-+type   = %{_type}
++type   = pndir
 +name   = th-ready
-+path   = %{_prefix}/ready/noarch/RPMS/
++path   = %{_pld_main_prefix}/ready/noarch/RPMS/
++auto   = no
++autoup = no
++
++# PLD Linux 3.0 (Th): test sources (built packages to be moved to ready)
++[source]
++type   = pndir
++name   = th-test
++path   = %{_pld_main_prefix}/test/%{_arch}/RPMS/
 +auto   = no
 +autoup = no
 +
 +[source]
-+type   = %{_type}
++type   = pndir
 +name   = th-test
-+path   = %{_prefix}/test/%{_arch}/RPMS/
-+auto   = no
-+autoup = no
-+
-+[source]
-+type   = %{_type}
-+name   = th-test
-+path   = %{_prefix}/test/noarch/RPMS/
++path   = %{_pld_main_prefix}/test/noarch/RPMS/
 +auto   = no
 +autoup = no
 --- util-vserver-0.30.214.org/distrib/pld-th/rpm/macros	1970-01-01 01:00:00.000000000 +0100
