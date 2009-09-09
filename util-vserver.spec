@@ -1,3 +1,5 @@
+# TODO
+# - %install is not re-entrant
 #
 # m68k and mips are the only not supported archs
 #
@@ -302,8 +304,8 @@ Requires:	%{name} = %{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
-Requires:	wget
 Requires:	vserver-distro-redhat = %{version}-%{release}
+Requires:	wget
 Requires:	yum
 
 %description -n vserver-distro-fedora
@@ -446,7 +448,7 @@ install -d $RPM_BUILD_ROOT{/vservers/.pkg,/etc/{sysconfig,rc.d/init.d,cron.d}} \
 chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
 
 for i in $RPM_BUILD_ROOT/etc/rc.d/init.d/v_* ; do
-	s=`basename $i | sed s/v_//`
+	s=$(basename $i | sed s/v_//)
 	cat >$RPM_BUILD_ROOT%{_sysconfdir}/vservices/$s << EOF
 # IP addresses/interfaces to bound $s service to
 #IP=10.0.0.1
@@ -549,8 +551,10 @@ echo "http://ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.10_al
 
 install -d $RPM_BUILD_ROOT/var/cache/vservers/poldek
 
-# we have our own initscript which does the same
+# cleanups
 rm -rf $RPM_BUILD_ROOT/dev
+rm -rf $RPM_BUILD_ROOT%{py_sitedir}/_libvserver.la
+# we have our own initscript which does the same
 rm -f $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-wrapper
 rm -f $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-init.functions
 rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
