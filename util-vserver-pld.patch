@@ -1,4 +1,3 @@
-diff -urN util-vserver-0.30.216-r2837.orig/distrib/defaults/poldek/poldek.conf util-vserver-0.30.216-r2837/distrib/defaults/poldek/poldek.conf
 --- util-vserver-0.30.216-r2837.orig/distrib/defaults/poldek/poldek.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/distrib/defaults/poldek/poldek.conf	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,11 @@
@@ -13,7 +12,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/distrib/defaults/poldek/poldek.conf u
 +
 +#hold =
 +ignore = kernel* udev devfs
-diff -urN util-vserver-0.30.216-r2837.orig/distrib/Makefile.am util-vserver-0.30.216-r2837/distrib/Makefile.am
 --- util-vserver-0.30.216-r2837.orig/distrib/Makefile.am	2009-06-22 17:36:52.000000000 +0200
 +++ util-vserver-0.30.216-r2837/distrib/Makefile.am	2009-06-22 17:49:36.000000000 +0200
 @@ -45,6 +45,7 @@
@@ -48,7 +46,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/distrib/Makefile.am util-vserver-0.30
  
  AM_INSTALLCHECK_STD_OPTIONS_EXEMPT \
  			=  $(nobase_distrib_SCRIPTS)
-diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-ac/pkgs/01 util-vserver-0.30.216-r2837/distrib/pld-ac/pkgs/01
 --- util-vserver-0.30.216-r2837.orig/distrib/pld-ac/pkgs/01	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/distrib/pld-ac/pkgs/01	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,6 @@
@@ -58,7 +55,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-ac/pkgs/01 util-vserver-0
 +issue
 +rpm-base
 +vserver-packages
-diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-ac/poldek/repos.d/pld.conf util-vserver-0.30.216-r2837/distrib/pld-ac/poldek/repos.d/pld.conf
 --- util-vserver-0.30.216-r2837.orig/distrib/pld-ac/poldek/repos.d/pld.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/distrib/pld-ac/poldek/repos.d/pld.conf	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,56 @@
@@ -118,7 +114,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-ac/poldek/repos.d/pld.con
 +path   = %{_pld_main_prefix}/test/%{_arch}/
 +auto   = no
 +autoup = no
-diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-ac/rpm/macros util-vserver-0.30.216-r2837/distrib/pld-ac/rpm/macros
 --- util-vserver-0.30.216-r2837.orig/distrib/pld-ac/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/distrib/pld-ac/rpm/macros	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,6 @@
@@ -128,7 +123,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-ac/rpm/macros util-vserve
 +%_netsharedpath		/dev:/proc
 +%_tmppath			/tmp
 +%_host_os			%_os
-diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-th/pkgs/01 util-vserver-0.30.216-r2837/distrib/pld-th/pkgs/01
 --- util-vserver-0.30.216-r2837.orig/distrib/pld-th/pkgs/01	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/distrib/pld-th/pkgs/01	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,6 @@
@@ -138,7 +132,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-th/pkgs/01 util-vserver-0
 +issue
 +rpm-base
 +vserver-packages
-diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-th/poldek/repos.d/pld.conf util-vserver-0.30.216-r2837/distrib/pld-th/poldek/repos.d/pld.conf
 --- util-vserver-0.30.216-r2837.orig/distrib/pld-th/poldek/repos.d/pld.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/distrib/pld-th/poldek/repos.d/pld.conf	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,65 @@
@@ -207,7 +200,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-th/poldek/repos.d/pld.con
 +path   = %{_prefix}/test/noarch/RPMS/
 +auto   = no
 +autoup = no
-diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-th/rpm/macros util-vserver-0.30.216-r2837/distrib/pld-th/rpm/macros
 --- util-vserver-0.30.216-r2837.orig/distrib/pld-th/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/distrib/pld-th/rpm/macros	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,6 @@
@@ -217,7 +209,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-th/rpm/macros util-vserve
 +%_netsharedpath		/dev:/proc
 +%_tmppath			/tmp
 +%_host_os			%_os
-diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-ti/pkgs/01 util-vserver-0.30.216-r2837/distrib/pld-ti/pkgs/01
 --- util-vserver-0.30.216-r2837.orig/distrib/pld-ti/pkgs/01	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/distrib/pld-ti/pkgs/01	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,6 @@
@@ -227,7 +218,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-ti/pkgs/01 util-vserver-0
 +issue
 +rpm-base
 +vserver-packages
-diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-ti/poldek/repos.d/pld.conf util-vserver-0.30.216-r2837/distrib/pld-ti/poldek/repos.d/pld.conf
 --- util-vserver-0.30.216-r2837.orig/distrib/pld-ti/poldek/repos.d/pld.conf	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/distrib/pld-ti/poldek/repos.d/pld.conf	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,46 @@
@@ -277,7 +267,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-ti/poldek/repos.d/pld.con
 +path   = %{_prefix}/test/noarch/RPMS/
 +auto   = no
 +autoup = no
-diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-ti/rpm/macros util-vserver-0.30.216-r2837/distrib/pld-ti/rpm/macros
 --- util-vserver-0.30.216-r2837.orig/distrib/pld-ti/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/distrib/pld-ti/rpm/macros	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,6 @@
@@ -287,7 +276,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/distrib/pld-ti/rpm/macros util-vserve
 +%_netsharedpath		/dev:/proc
 +%_tmppath			/tmp
 +%_host_os			%_os
-diff -urN util-vserver-0.30.216-r2837.orig/scripts/functions util-vserver-0.30.216-r2837/scripts/functions
 --- util-vserver-0.30.216-r2837.orig/scripts/functions	2009-06-22 17:36:35.000000000 +0200
 +++ util-vserver-0.30.216-r2837/scripts/functions	2009-06-22 17:48:26.000000000 +0200
 @@ -403,6 +403,20 @@
@@ -356,7 +344,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/scripts/functions util-vserver-0.30.2
  
  function vshelper.doSanityCheck
  {
-diff -urN util-vserver-0.30.216-r2837.orig/scripts/Makefile-files util-vserver-0.30.216-r2837/scripts/Makefile-files
 --- util-vserver-0.30.216-r2837.orig/scripts/Makefile-files	2009-06-22 17:36:35.000000000 +0200
 +++ util-vserver-0.30.216-r2837/scripts/Makefile-files	2009-06-22 17:48:26.000000000 +0200
 @@ -21,6 +21,7 @@
@@ -397,7 +384,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/scripts/Makefile-files util-vserver-0
  				scripts/vdispatch-conf \
  				scripts/vemerge \
  				scripts/vesync \
-diff -urN util-vserver-0.30.216-r2837.orig/scripts/pkgmgmt util-vserver-0.30.216-r2837/scripts/pkgmgmt
 --- util-vserver-0.30.216-r2837.orig/scripts/pkgmgmt	2009-06-22 17:36:34.000000000 +0200
 +++ util-vserver-0.30.216-r2837/scripts/pkgmgmt	2009-06-22 17:48:26.000000000 +0200
 @@ -195,7 +195,7 @@
@@ -561,7 +547,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/scripts/pkgmgmt util-vserver-0.30.216
  	(debian)		processVserver_Debian "$vserver" "$IS_INTERNALIZE";;
  	(*)
  	    echo $"Vserver style '$style' is not supported for packagemanagment" >&2
-diff -urN util-vserver-0.30.216-r2837.orig/scripts/util-vserver-vars.pathsubst util-vserver-0.30.216-r2837/scripts/util-vserver-vars.pathsubst
 --- util-vserver-0.30.216-r2837.orig/scripts/util-vserver-vars.pathsubst	2009-06-22 17:36:34.000000000 +0200
 +++ util-vserver-0.30.216-r2837/scripts/util-vserver-vars.pathsubst	2009-06-22 17:48:26.000000000 +0200
 @@ -54,6 +54,7 @@
@@ -581,7 +566,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/scripts/util-vserver-vars.pathsubst u
  
  _AWK="@AWK@"
  _BZIP2="@BZIP2@"
-diff -urN util-vserver-0.30.216-r2837.orig/scripts/vpkg util-vserver-0.30.216-r2837/scripts/vpkg
 --- util-vserver-0.30.216-r2837.orig/scripts/vpkg	2009-06-22 17:36:34.000000000 +0200
 +++ util-vserver-0.30.216-r2837/scripts/vpkg	2009-06-22 17:48:26.000000000 +0200
 @@ -115,6 +115,44 @@
@@ -629,7 +613,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/scripts/vpkg util-vserver-0.30.216-r2
      (debian)
  	case "$tag" in
  	    (get-conffiles)
-diff -urN util-vserver-0.30.216-r2837.orig/scripts/vpoldek util-vserver-0.30.216-r2837/scripts/vpoldek
 --- util-vserver-0.30.216-r2837.orig/scripts/vpoldek	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/scripts/vpoldek	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,74 @@
@@ -707,7 +690,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/scripts/vpoldek util-vserver-0.30.216
 +
 +test ${#poldek_opts[@]} -eq 0 || poldek_opts=( "${poldek_opts[@]}" -- )
 +exec $_VSOMETHING "${send_through[@]}" poldek "${poldek_opts[@]}" "$@"
-diff -urN util-vserver-0.30.216-r2837.orig/scripts/vpoldek-worker util-vserver-0.30.216-r2837/scripts/vpoldek-worker
 --- util-vserver-0.30.216-r2837.orig/scripts/vpoldek-worker	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/scripts/vpoldek-worker	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,45 @@
@@ -756,7 +738,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/scripts/vpoldek-worker util-vserver-0
 +	--conf=$POLDEK_CONFIG \
 +	--pmcmd=$RPM_BINARY \
 +	"$@"
-diff -urN util-vserver-0.30.216-r2837.orig/scripts/vserver-build util-vserver-0.30.216-r2837/scripts/vserver-build
 --- util-vserver-0.30.216-r2837.orig/scripts/vserver-build	2009-06-22 17:36:34.000000000 +0200
 +++ util-vserver-0.30.216-r2837/scripts/vserver-build	2009-06-22 17:48:26.000000000 +0200
 @@ -57,6 +57,9 @@
@@ -778,7 +759,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/scripts/vserver-build util-vserver-0.
  		. $__PKGLIBDIR/vserver-build.$method
  		;;
      (x)		panic $"No build-method specified";;
-diff -urN util-vserver-0.30.216-r2837.orig/scripts/vserver-build.functions util-vserver-0.30.216-r2837/scripts/vserver-build.functions
 --- util-vserver-0.30.216-r2837.orig/scripts/vserver-build.functions	2009-06-22 17:36:35.000000000 +0200
 +++ util-vserver-0.30.216-r2837/scripts/vserver-build.functions	2009-06-22 17:48:26.000000000 +0200
 @@ -170,6 +170,12 @@
@@ -794,7 +774,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/scripts/vserver-build.functions util-
  	elif test -n "$1"; then
  	    DISTRIBUTION=$1
  	else
-diff -urN util-vserver-0.30.216-r2837.orig/scripts/vserver-build.functions.poldek util-vserver-0.30.216-r2837/scripts/vserver-build.functions.poldek
 --- util-vserver-0.30.216-r2837.orig/scripts/vserver-build.functions.poldek	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/scripts/vserver-build.functions.poldek	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,81 @@
@@ -879,7 +858,6 @@ diff -urN util-vserver-0.30.216-r2837.orig/scripts/vserver-build.functions.polde
 +#    test -z "$POLDEKCONFDEFAULT" || \
 +#	$_LN_S "$POLDEKCONFDEFAULT" "$PKGCFGDIR"/poldek/etc/
 +}
-diff -urN util-vserver-0.30.216-r2837.orig/scripts/vserver-build.poldek util-vserver-0.30.216-r2837/scripts/vserver-build.poldek
 --- util-vserver-0.30.216-r2837.orig/scripts/vserver-build.poldek	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/scripts/vserver-build.poldek	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,65 @@
