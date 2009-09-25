@@ -1,0 +1,18 @@
+--- util-vserver-0.30.216-pre2833/distrib/misc/vunify-exclude~	2009-04-10 22:24:16.000000000 +0200
++++ util-vserver-0.30.216-pre2833/distrib/misc/vunify-exclude	2009-09-25 10:21:37.464001825 +0200
+@@ -10,6 +10,7 @@
+ /etc/*
+ /home
+ /proc
++/media
+ /mnt
+ +/root/.ssh
+ ~/root/.ssh/id*
+@@ -19,6 +20,7 @@
+ -/root/.gnupg/*
+ -/root/*
+ /selinux
++/srv
+ /sys
+ ~/tmp/*
+ /tmp
