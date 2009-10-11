@@ -18,7 +18,7 @@
 %undefine	with_doc
 %endif
 #
-%define		snap	r2844
+%define		snap	pre2849
 #
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
@@ -27,8 +27,8 @@ Version:	0.30.216
 Release:	0.%{snap}.1
 License:	GPL
 Group:		Applications/System
-Source0:	%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	e7a0b28e935bfce9f6db1dc5d93dc7b5
+Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.bz2
+# Source0-md5:	af4c22b420320bdd94a1756f3c90de20
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
