@@ -24,7 +24,7 @@ Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.216
-Release:	0.%{snap}.1
+Release:	0.%{snap}.2
 License:	GPL
 Group:		Applications/System
 Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.bz2
@@ -69,7 +69,6 @@ Patch17:	%{name}-backupfiles.patch
 Patch18:	%{name}-vprocunhide-net.patch
 # http://glen.alkohol.ee/pld/util-vserver-dbrebuild-internalize4.patch
 Patch19:	%{name}-dbrebuild-internalize4.patch
-Patch20:	%{name}-dev-stdfd.patch
 Patch21:	%{name}-bash-wrapper.patch
 Patch22:	%{name}-pivot-root-ugly-hack.patch
 Patch23:	%{name}-ac.patch
@@ -396,7 +395,6 @@ Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 %patch17 -p1
 %patch18 -p1
 %patch19 -p1
-%patch20 -p1
 %patch21 -p1
 %patch22 -p1
 %patch23 -p0
