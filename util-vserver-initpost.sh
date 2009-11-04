@@ -41,16 +41,13 @@ pushd "$cfgdir" &>/dev/null
 popd >/dev/null
 
 pushd "$vdir" &>/dev/null
+	if [ -f etc/sysconfig/rpm ]; then
+		subst etc/sysconfig/rpm 's!^#RPM_SKIP_AUTO_RESTART=.*!RPM_SKIP_AUTO_RESTART=yes!'
+	fi
+
 	# for future. right now SysVinit is not created at build stage
 	if [ -f etc/inittab ]; then
 		# disable mingetty respawn
 		subst etc/inittab 's!^\([^#].*:respawn:.* tty\)!#\1!'
 	fi
-
-	# pam_limits causes problems
-	# http://linux-vserver.org/Frequently_Asked_Questions#When_using_nice_and_su_.28for_example.2C_in_the_updatedb_cron_job.29.2C_I_get:_su:_Permission_denied._What_does_it_mean.3F
-	for file in /etc/pam.d/*; do
-		subst ${file} 's!^\([^#].*pam_limits.so\)!#\1!'
-	done
-
 popd >/dev/null
