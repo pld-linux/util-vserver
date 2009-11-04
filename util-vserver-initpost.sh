@@ -41,9 +41,6 @@ pushd "$cfgdir" &>/dev/null
 popd >/dev/null
 
 pushd "$vdir" &>/dev/null
-	if [ -f etc/sysconfig/rpm ]; then
-		subst etc/sysconfig/rpm 's!^#RPM_SKIP_AUTO_RESTART=.*!RPM_SKIP_AUTO_RESTART=yes!'
-	fi
 
 	# for future. right now SysVinit is not created at build stage
 	if [ -f etc/inittab ]; then
