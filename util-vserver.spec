@@ -653,7 +653,7 @@ exit 0
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS NEWS THANKS doc/intro.txt
-%doc contrib/yum*.patch package-management.txt
+%doc package-management.txt
 %{?with_doc:%doc doc/*.html}
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vrootdevices
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers
