@@ -8,18 +8,18 @@
 %bcond_without	doc			# don't build documentation which needed LaTeX
 %bcond_without	no_dynamic_context	# disable enforcement of disabled dynamic context
 %bcond_with	xalan			# use the xalan xslt processor
-#
+
 %define	vproc_version 0.01
 # diet compile fails with ccache in %{__cc}
 %undefine	with_ccache
-#
+
 %ifarch ppc
 # pdflatex: refman: Invalid argument
 %undefine	with_doc
 %endif
 
 %define		snap	pre2849
-%define		rel		4
+%define		rel		5
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -484,7 +484,8 @@ ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/ini
 ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti/initpost
 %endif
 install vproc-%{vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
-install %{SOURCE12} $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
+sed -i -e 's,/usr/lib,%{_libdir},' %{SOURCE12} > $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
+chmod +x $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 
 cat > $RPM_BUILD_ROOT/etc/cron.d/vservers << EOF
 02 2 * * 0      root    %{_libdir}/%{name}/vhashify.cron
