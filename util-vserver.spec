@@ -18,8 +18,8 @@
 %undefine	with_doc
 %endif
 
-%define		snap	pre2849
-%define		rel		5
+%define		snap	pre2864
+%define		rel		1
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -28,7 +28,7 @@ Release:	0.%{snap}.%{rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	af4c22b420320bdd94a1756f3c90de20
+# Source0-md5:	f686d72b39399fba96bbabd7debab549
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -71,7 +71,6 @@ Patch18:	%{name}-vprocunhide-net.patch
 Patch19:	%{name}-dbrebuild-internalize4.patch
 Patch21:	%{name}-bash-wrapper.patch
 Patch22:	%{name}-pivot-root-ugly-hack.patch
-Patch23:	%{name}-ac.patch
 Patch24:	vunify-more-exclude.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
@@ -397,7 +396,6 @@ Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 %patch19 -p1
 %patch21 -p1
 %patch22 -p1
-%patch23 -p0
 %patch24 -p1
 
 install %{SOURCE9} package-management.txt
@@ -484,7 +482,7 @@ ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/ini
 ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti/initpost
 %endif
 install vproc-%{vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
-sed -i -e 's,/usr/lib,%{_libdir},' %{SOURCE12} > $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
+sed -e 's,/usr/lib,%{_libdir},' %{SOURCE12} > $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 chmod +x $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 
 cat > $RPM_BUILD_ROOT/etc/cron.d/vservers << EOF
