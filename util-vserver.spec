@@ -100,6 +100,7 @@ BuildRequires:	tetex-metafont
 %else
 BuildRequires:	texlive-fonts-type1-urw
 BuildRequires:	texlive-format-pdflatex
+BuildRequires:	texlive-latex-ucs
 BuildRequires:	texlive-makeindex
 BuildRequires:	texlive-pdftex
 BuildRequires:	texlive-xetex
