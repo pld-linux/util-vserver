@@ -81,11 +81,10 @@ BuildRequires:	ctags
 BuildRequires:	e2fsprogs-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 1.5.14
-%ifarch %{x8664}
-BuildRequires:	sed >= 4.0
-%endif
+BuildRequires:	pkgconfig
 BuildRequires:	python-devel
 BuildRequires:	rpmbuild(macros) >= 1.268
+BuildRequires:	sed >= 4.0
 %if %{with doc}
 BuildRequires:	doxygen
 BuildRequires:	graphviz
