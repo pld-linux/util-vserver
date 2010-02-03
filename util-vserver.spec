@@ -83,6 +83,8 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 1.5.14
 BuildRequires:	pkgconfig
 BuildRequires:	python-devel
+BuildRequires:	python-modules
+BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	sed >= 4.0
 %if %{with doc}
@@ -90,7 +92,6 @@ BuildRequires:	doxygen
 BuildRequires:	graphviz
 BuildRequires:	libxslt-progs
 BuildRequires:	python-devel
-BuildRequires:	rpm-pythonprov
 %if "%{pld_release}" == "ti"
 BuildRequires:	tetex-fonts-jknappen
 BuildRequires:	tetex-format-pdflatex
@@ -99,7 +100,6 @@ BuildRequires:	tetex-metafont
 %else
 BuildRequires:	texlive-fonts-type1-urw
 BuildRequires:	texlive-format-pdflatex
-BuildRequires:	texlive-latex-ucs
 BuildRequires:	texlive-makeindex
 BuildRequires:	texlive-pdftex
 BuildRequires:	texlive-xetex
@@ -416,17 +416,23 @@ CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1 -U__STRICT_ANSI__"
 	--enable-apis=NOLEGACY \
 	--with-initscripts=sysv \
 	--%{?with_dietlibc:en}%{!?with_dietlibc:dis}able-dietlibc \
-	MKTEMP=/bin/mktemp \
-	MOUNT=/bin/mount \
-	PS=/bin/ps \
-	UMOUNT=/bin/umount \
+	FSCK=/sbin/fsck \
+	IONICE=%{_usrbin}/ionice \
 	IP=/sbin/ip \
 	IPTABLES=%{_usrsbin}/iptables \
+	MKTEMP=/bin/mktemp \
 	MODPROBE=/sbin/modprobe \
+	MOUNT=/bin/mount \
 	NAMEIF=/sbin/nameif \
+	PS=/bin/ps \
+	RESTORE=/sbin/restore \
 	RMMOD=/sbin/rmmod \
+	RSYNC=%{_usrbin}/rsync \
+	STRACE=%{_usrbin}/strace \
+	UMOUNT=/bin/umount \
 	VCONFIG=/sbin/vconfig \
 	WGET=%{_usrbin}/wget \
+# end
 
 %{__make} all
 %{?with_doc:%{__make} doc}
