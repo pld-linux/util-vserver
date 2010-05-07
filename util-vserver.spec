@@ -92,7 +92,7 @@ BuildRequires:	doxygen
 BuildRequires:	graphviz
 BuildRequires:	libxslt-progs
 BuildRequires:	python-devel
-%if "%{pld_release}" == "ti"
+%if "%{pld_release}" != "th"
 BuildRequires:	tetex-fonts-jknappen
 BuildRequires:	tetex-format-pdflatex
 BuildRequires:	tetex-makeindex
@@ -116,7 +116,7 @@ Requires:	make
 Requires:	mktemp >= 1.5-18
 Requires:	rc-scripts
 Requires:	tar
-Requires:	util-linux
+Requires:	util-linux >= 2.13
 Requires:	vserver-distro-pld = %{version}-%{release}
 Obsoletes:	util-vserver-build
 Obsoletes:	util-vserver-core
