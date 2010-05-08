@@ -19,12 +19,13 @@
 %endif
 
 %define		snap	pre2883
-%define		rel		1
+%define		rel		2
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
 Version:	0.30.216
 Release:	0.%{snap}.%{rel}
+Epoch:		1
 License:	GPL
 Group:		Applications/System
 Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.bz2
