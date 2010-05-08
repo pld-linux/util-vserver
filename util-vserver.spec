@@ -19,7 +19,7 @@
 %endif
 
 %define		snap	pre2883
-%define		rel		2
+%define		rel		3
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -109,7 +109,7 @@ BuildRequires:	texlive-xetex
 %{?with_xalan:BuildRequires:	xalan-j}
 %endif
 Requires(post,preun):	/sbin/chkconfig
-Requires:	%{name}-lib = %{version}-%{release}
+Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 Requires:	coreutils
 Requires:	diffutils
 Requires:	issue
@@ -118,7 +118,7 @@ Requires:	mktemp >= 1.5-18
 Requires:	rc-scripts
 Requires:	tar
 Requires:	util-linux >= 2.13
-Requires:	vserver-distro-pld = %{version}-%{release}
+Requires:	vserver-distro-pld = %{epoch}:%{version}-%{release}
 Obsoletes:	util-vserver-build
 Obsoletes:	util-vserver-core
 Obsoletes:	util-vserver-init
@@ -194,7 +194,7 @@ podpakiety util-vserver.
 Summary:	Development files for Linux vserver libraries
 Summary(pl.UTF-8):	Pliki programistyczne dla bibliotek linuksowego vserwera
 Group:		Development/Libraries
-Requires:	%{name}-lib = %{version}-%{release}
+Requires:	%{name}-lib = %{epoch}:%{version}-%{release}
 
 %description devel
 This package contains the development files necessary for developing
@@ -208,7 +208,7 @@ programów używających biblioteki vserver.
 Summary:	Static vserver library
 Summary(pl.UTF-8):	Biblioteka statyczna vservera
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
 This package contains the static version of vserver library.
@@ -221,7 +221,7 @@ Summary:	Legacy utilities for util-vserver
 Summary(pl.UTF-8):	Stare narzędzia dla util-vserver
 Group:		Applications/System
 Requires(post,preun):	/sbin/chkconfig
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	rc-scripts
 
 %description legacy
@@ -260,7 +260,7 @@ Pythonowy interfejs do biblioteki libutil-vserver.
 Summary:	VServer build template for Alpine Linux
 Summary(pl.UTF-8):	Szablon budowania VServerów dla dystrybucji Alpine Linux
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description -n vserver-distro-alpine
 VServer build template for Alpine Linux.
@@ -272,8 +272,8 @@ Szablon budowania VServerów dla dystrybucji Alpine Linux.
 Summary:	VServer build template for CentOS
 Summary(pl.UTF-8):	Szablon budowania VServerów dla dystrybucji CentOS
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
-Requires:	vserver-distro-redhat = %{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	vserver-distro-redhat = %{epoch}:%{version}-%{release}
 Requires:	yum
 
 %description -n vserver-distro-centos
@@ -286,7 +286,7 @@ Szablon budowania VServerów dla dystrybucji CentOS 4.2 i 5.
 Summary:	VServer build templates for Debian and Ubuntu
 Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Debian i Ubuntu
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	debootstrap
 Requires:	dpkg
 Provides:	vserver-distro-ubuntu
@@ -302,11 +302,11 @@ Szablony do tworzenia VServerów dla dystrybucji Debian i Ubuntu.
 Summary:	VServer build templates for Fedora
 Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Fedora
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
-Requires:	vserver-distro-redhat = %{version}-%{release}
+Requires:	vserver-distro-redhat = %{epoch}:%{version}-%{release}
 Requires:	wget
 Requires:	yum
 
@@ -321,7 +321,7 @@ Szablony do tworzenia VServerów dla dystrybucji Fedora Core
 Summary:	VServer build template for Gentoo
 Summary(pl.UTF-8):	Szablon budowania VServerów dla Gentoo
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description -n vserver-distro-gentoo
 VServer build template for Gentoo.
@@ -333,7 +333,7 @@ Szablon budowania VServerów dla Gentoo.
 Summary:	VServer build templates for PLD Linux
 Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji PLD Linux
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	/etc/pld-release
 Requires:	poldek >= 0.30
 
@@ -347,7 +347,7 @@ Szablony do tworzenia VServerów dla dystrybucji PLD Linux.
 Summary:	VServer build template for Red Hat Linux 9
 Summary(pl.UTF-8):	Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
@@ -363,7 +363,7 @@ Szablon do tworzenia VServerów dla dystrybucji Red Hat Linux 9.
 Summary:	VServer build template for SuSE 9.1
 Summary(pl.UTF-8):	Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
