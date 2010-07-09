@@ -1,0 +1,72 @@
+--- util-vserver-0.30.216-pre2883/lib/syscall_getiattr-fscompat.hc.wiget	2010-03-31 15:54:19.000000000 +0200
++++ util-vserver-0.30.216-pre2883/lib/syscall_getiattr-fscompat.hc	2010-07-09 19:53:55.753080496 +0200
+@@ -25,6 +25,8 @@
+ #include "ioctl-getxflg.hc"
+ 
+ #include <fcntl.h>
++#include <sys/stat.h>
++#include <unistd.h>
+ static inline ALWAYSINLINE int
+ vc_get_iattr_fscompat(char const *filename,
+ 		      xid_t    * /*@null@*/ xid,
+--- util-vserver-0.30.216-pre2883/src/vdu.c.wiget	2010-07-09 19:55:04.723075232 +0200
++++ util-vserver-0.30.216-pre2883/src/vdu.c	2010-07-09 19:56:53.613746027 +0200
+@@ -29,6 +29,7 @@
+ #include <stdint.h>
+ #include <errno.h>
+ #include <sys/stat.h>
++#include <unistd.h>
+ #include <dirent.h>
+ #include <fcntl.h>
+ 
+--- util-vserver-0.30.216-pre2883/src/vhashify-init.hc.wiget	2010-07-09 19:55:04.733072573 +0200
++++ util-vserver-0.30.216-pre2883/src/vhashify-init.hc	2010-07-09 19:57:19.233889103 +0200
+@@ -19,6 +19,8 @@
+ #include "lib_internal/util-dotfile.h"
+ 
+ #include <sys/param.h>
++#include <sys/stat.h>
++#include <unistd.h>
+ 
+ static UNUSED void
+ freeHashList(HashDirCollection *hash_vec)
+--- util-vserver-0.30.216-pre2883/src/vcopy.c.wiget	2010-07-09 19:55:04.719740922 +0200
++++ util-vserver-0.30.216-pre2883/src/vcopy.c	2010-07-09 19:56:39.626797004 +0200
+@@ -26,6 +26,7 @@
+ #include "lib_internal/matchlist.h"
+ #include "lib_internal/unify.h"
+ 
++#include <sys/stat.h>
+ #include <unistd.h>
+ #include <getopt.h>
+ #include <fcntl.h>
+--- util-vserver-0.30.216-pre2883/src/fstool.c.wiget	2010-07-09 19:55:04.703076916 +0200
++++ util-vserver-0.30.216-pre2883/src/fstool.c	2010-07-09 19:55:54.496636810 +0200
+@@ -28,6 +28,7 @@
+ #include <getopt.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <sys/stat.h>
+ #include <unistd.h>
+ #include <dirent.h>
+ #include <errno.h>
+--- util-vserver-0.30.216-pre2883/src/parserpmdump.c.wiget	2010-07-09 19:55:04.709739390 +0200
++++ util-vserver-0.30.216-pre2883/src/parserpmdump.c	2010-07-09 19:56:07.780566555 +0200
+@@ -25,6 +25,7 @@
+ #include <string.h>
+ #include <stdlib.h>
+ #include <sys/stat.h>
++#include <unistd.h>
+ #include <alloca.h>
+ 
+ 
+--- util-vserver-0.30.216-pre2883/src/vclone.c.wiget	2010-07-09 19:55:04.713078170 +0200
++++ util-vserver-0.30.216-pre2883/src/vclone.c	2010-07-09 19:56:26.839729752 +0200
+@@ -27,6 +27,7 @@
+ #include "lib_internal/unify.h"
+ #include "lib_internal/matchlist.h"
+ 
++#include <sys/stat.h>
+ #include <unistd.h>
+ #include <getopt.h>
+ #include <fcntl.h>
