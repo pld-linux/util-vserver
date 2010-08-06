@@ -1,14 +1,3 @@
---- util-vserver-0.30.216-pre2883/lib/syscall_getiattr-fscompat.hc.wiget	2010-03-31 15:54:19.000000000 +0200
-+++ util-vserver-0.30.216-pre2883/lib/syscall_getiattr-fscompat.hc	2010-07-09 19:53:55.753080496 +0200
-@@ -25,6 +25,8 @@
- #include "ioctl-getxflg.hc"
- 
- #include <fcntl.h>
-+#include <sys/stat.h>
-+#include <unistd.h>
- static inline ALWAYSINLINE int
- vc_get_iattr_fscompat(char const *filename,
- 		      xid_t    * /*@null@*/ xid,
 --- util-vserver-0.30.216-pre2883/src/vdu.c.wiget	2010-07-09 19:55:04.723075232 +0200
 +++ util-vserver-0.30.216-pre2883/src/vdu.c	2010-07-09 19:56:53.613746027 +0200
 @@ -29,6 +29,7 @@
