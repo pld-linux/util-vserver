@@ -18,11 +18,13 @@
  . "$UTIL_VSERVER_VARS"
  
  if [ $# = 0 ] ; then
-@@ -40,6 +41,5 @@
+@@ -46,6 +46,6 @@
  	do
  		IPOPT="$IPOPT --ip $oneip"
  	done
--	echo exec $_CHBIND $IPOPT /etc/init.d/$SERVICE "$@"
--	exec $_CHBIND $IPOPT /etc/init.d/$SERVICE "$@"
-+	exec $_CHBIND $IPOPT /etc/rc.d/init.d/$SERVICE "$@"
+-	echo exec $_CHBIND ${NID:+--nid $NID} $IPOPT /etc/init.d/$SERVICE "$@"
+-	exec $_CHBIND ${NID:+--nid $NID} $IPOPT /etc/init.d/$SERVICE "$@"
++	echo exec $_CHBIND ${NID:+--nid $NID} $IPOPT /etc/rc.d/init.d/$SERVICE "$@"
++	exec $_CHBIND ${NID:+--nid $NID} $IPOPT /etc/rc.d/init.d/$SERVICE "$@"
  fi
+
