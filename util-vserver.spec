@@ -19,7 +19,7 @@
 %endif
 
 %define		snap	pre2921
-%define		rel	1
+%define		rel	2
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -115,7 +115,7 @@ Requires:	diffutils
 Requires:	issue
 Requires:	make
 Requires:	mktemp >= 1.5-18
-Requires:	rc-scripts
+Requires:	rc-scripts >= 0.4.3.4
 Requires:	tar
 Requires:	util-linux >= 2.13
 Requires:	vserver-distro-pld = %{version}-%{release}
