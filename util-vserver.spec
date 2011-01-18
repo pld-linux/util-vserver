@@ -19,7 +19,7 @@
 %endif
 
 %define		snap	pre2926
-%define		rel	1
+%define		rel	2
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -73,6 +73,7 @@ Patch21:	%{name}-bash-wrapper.patch
 Patch22:	%{name}-pivot-root-ugly-hack.patch
 Patch24:	vunify-more-exclude.patch
 Patch25:	stat.patch
+Patch26:	%{name}-usersystime.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -400,6 +401,7 @@ Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 %patch22 -p1
 %patch24 -p1
 %patch25 -p1
+%patch26 -p1
 
 install %{SOURCE9} package-management.txt
 

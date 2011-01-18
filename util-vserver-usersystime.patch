@@ -1,0 +1,57 @@
+--- util-vserver-0.30.216-pre2926/src/vserver-stat.c	2010-12-02 16:30:12.000000000 +0100
++++ util-vserver-0.30.216-pre2926.new/src/vserver-stat.c	2011-01-18 20:32:23.465389530 +0100
+@@ -309,6 +309,7 @@
+     unsigned long long		rss;
+     char			*endptr;
+     size_t			len;
++    uint64_t			stime_total, utime_total;
+ 
+     if (vc_virt_stat(xid, &vstat) == -1) {
+       perror("vc_virt_stat()");
+@@ -402,6 +403,24 @@
+       return;
+     }
+ 
++    strcpy(filename, cgroup);
++    strcpy(filename + cgroup_len, "/cpuacct.stat");
++
++    if ((fd = open(filename, O_RDONLY)) == -1) {
++      perror("open(cpuacct.stat)");
++      return;
++    }
++    if (read(fd, buf, sizeof(buf)) == -1) {
++      perror("read(cpuacct.stat)");
++      return;
++    }
++    close(fd);
++
++    if (sscanf(buf, "user %lu\nsystem %lu\n", &utime_total, &stime_total) != 2) {
++      perror("sscanf(cpuacct.stat)");
++      return;
++    }
++
+     res			= Vector_insert(vec, &xid, cmpData);
+     res->xid		= xid;
+ 
+@@ -409,18 +428,8 @@
+     res->VmRSS_total	= rss / 4096;
+     res->start_time_oldest= getUptime() - vstat.uptime/1000000;
+ 
+-    res->utime_total	= 0;
+-    res->stime_total	= 0;
+-    // XXX: arbitrary CPU limit.
+-    for (cpu = 0; cpu < 1024; cpu++) {
+-      sched.cpu_id = cpu;
+-      sched.bucket_id = 0;
+-      if (vc_sched_info(xid, &sched) == -1)
+-        break;
+-
+-      res->utime_total	+= sched.user_msec;
+-      res->stime_total	+= sched.sys_msec;
+-    }
++    res->utime_total	= utime_total * 100 /* USER_HZ */;
++    res->stime_total	= stime_total * 100 /* USER_HZ */;
+   }
+   
+   res->VmSize_total	+= process->VmSize;
+
