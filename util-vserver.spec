@@ -19,7 +19,7 @@
 %endif
 
 %define		snap	pre2926
-%define		rel	2
+%define		rel	3
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -100,6 +100,7 @@ BuildRequires:	tetex-format-pdflatex
 BuildRequires:	tetex-makeindex
 BuildRequires:	tetex-metafont
 %else
+BuildRequires:	texlive-fonts-rsfs
 BuildRequires:	texlive-fonts-type1-urw
 BuildRequires:	texlive-format-pdflatex
 BuildRequires:	texlive-latex-ucs
