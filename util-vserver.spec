@@ -19,7 +19,7 @@
 %endif
 
 %define		snap	pre2926
-%define		rel	3
+%define		rel	4
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -880,6 +880,7 @@ exit 0
 %{_libdir}/%{name}/distributions/f11
 %{_libdir}/%{name}/distributions/f12
 %{_libdir}/%{name}/distributions/f13
+%{_libdir}/%{name}/distributions/f14
 %{_libdir}/%{name}/distributions/fc1
 %{_libdir}/%{name}/distributions/fc2
 %{_libdir}/%{name}/distributions/fc3

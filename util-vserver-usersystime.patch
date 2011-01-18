@@ -49,8 +49,8 @@
 -      res->utime_total	+= sched.user_msec;
 -      res->stime_total	+= sched.sys_msec;
 -    }
-+    res->utime_total	= utime_total * 100 /* USER_HZ */;
-+    res->stime_total	= stime_total * 100 /* USER_HZ */;
++    res->utime_total	= utime_total * sysconf(_SC_CLK_TCK) /* USER_HZ */;
++    res->stime_total	= stime_total * sysconf(_SC_CLK_TCK) /* USER_HZ */;
    }
    
    res->VmSize_total	+= process->VmSize;
