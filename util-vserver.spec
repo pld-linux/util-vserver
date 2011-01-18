@@ -19,7 +19,7 @@
 %endif
 
 %define		snap	pre2926
-%define		rel	5
+%define		rel	6
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -90,7 +90,7 @@ BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	sed >= 4.0
 %if %{with doc}
-BuildRequires:	doxygen
+BuildRequires:	doxygen >= 1:1.7.3
 BuildRequires:	graphviz
 BuildRequires:	libxslt-progs
 BuildRequires:	python-devel
@@ -103,6 +103,7 @@ BuildRequires:	tetex-metafont
 BuildRequires:	texlive-fonts-rsfs
 BuildRequires:	texlive-fonts-type1-urw
 BuildRequires:	texlive-format-pdflatex
+BuildRequires:	texlive-latex-extend
 BuildRequires:	texlive-latex-ucs
 BuildRequires:	texlive-makeindex
 BuildRequires:	texlive-pdftex
