@@ -2,7 +2,7 @@
 #
 # util-vserver:	sets the path to vshelper and kills all guest processes
 #
-# chkconfig:	2345 10 99
+# chkconfig:	2345 10 70
 # description:	Sets the path to vshelper and kills all guest processes
 
 # if kernel not capable, exit early

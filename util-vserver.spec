@@ -19,7 +19,7 @@
 %endif
 
 %define		snap	pre2926
-%define		rel	6
+%define		rel	7
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
