@@ -18,8 +18,8 @@
 %undefine	with_doc
 %endif
 
-%define		snap	pre2926
-%define		rel	7
+%define		snap	pre2933
+%define		rel	1
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -28,7 +28,7 @@ Release:	1.%{snap}.%{rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	236c0ef54b94f8c116afaf7b78396a58
+# Source0-md5:	478a699a154c2823ad2606c50b5f55e4
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -73,7 +73,6 @@ Patch21:	%{name}-bash-wrapper.patch
 Patch22:	%{name}-pivot-root-ugly-hack.patch
 Patch24:	vunify-more-exclude.patch
 Patch25:	stat.patch
-Patch26:	%{name}-usersystime.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -403,7 +402,6 @@ Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 %patch22 -p1
 %patch24 -p1
 %patch25 -p1
-%patch26 -p1
 
 install %{SOURCE9} package-management.txt
 
