@@ -1,59 +1,11 @@
-diff -ur util-vserver-0.30.216-pre2833/lib/issupported.c util-vserver-0.30.216-pre2833-uname/lib/issupported.c
---- util-vserver-0.30.216-pre2833/lib/issupported.c	2009-04-10 22:24:15.000000000 +0200
-+++ util-vserver-0.30.216-pre2833-uname/lib/issupported.c	2009-06-15 17:45:06.335273350 +0200
-@@ -20,17 +20,39 @@
- #  include <config.h>
- #endif
- 
-+#include <string.h>
-+#include <sys/utsname.h>
- #include "vserver.h"
- #include "assert.h"
- 
- bool
- vc_isSupported(vcFeatureSet feature)
- {
-+  int kver = 0, i, j = 24, k = 0;
-+  struct utsname uts;
-   int		ver = vc_get_version();
-   vc_vci_t	conf = vc_get_vci();
-   if (ver==-1) return false;
-   if (conf==(vc_vci_t)-1) conf = 0;
- 
-+  if (uname(&uts)==-1) {
-+    return false;
-+  } else {
-+    for (i=0; i<strlen(uts.release); i++) {
-+      if (uts.release[i] >= '0' && uts.release[i] <= '9') {
-+	k <<= 4;
-+	k |= uts.release[i] - '0';
-+      } else if (uts.release[i] == '.') {
-+	kver |= (k << j);
-+	j -= 8;
-+	k = 0;
-+      } else
-+	      break;
-+    }
-+    if (k != 0 && j >= 0)
-+      kver |= (k << j);
-+  }
-+
-   switch (feature) {
-     case vcFEATURE_COMPAT	:  return true;
-     case vcFEATURE_VSHELPER0	:  return ver >= 0x00010000 && ver < 0x00010010;
-@@ -71,7 +71,13 @@
+--- util-vserver-0.30.216-pre2955/lib/issupported.c~	2011-03-18 19:45:34.000000000 +0100
++++ util-vserver-0.30.216-pre2955/lib/issupported.c	2011-03-28 18:44:52.846690580 +0200
+@@ -50,7 +50,7 @@
      case vcFEATURE_VSTAT	:  return ver >= 0x00020103 && ver < 0x00020306;
      case vcFEATURE_PPTAG	:  return conf & VC_VCI_PPTAG;
      case vcFEATURE_SPACES	:  return conf & VC_VCI_SPACES;
 -    case vcFEATURE_PIVOT_ROOT	:  return ver >= 0x00020304;
-+    // Now THIS is really ugly hack, only vs2.3 patches for kernels below
-+    // have pivot_root working for vservers, so we assume people use recent
-+    // patches with recent kernels
-+    case vcFEATURE_PIVOT_ROOT	:  return (ver >= 0x00020304) &&
-+				   ((kver >= 0x02062723 && kver < 0x02062800) ||
-+				    (kver >= 0x02062811 && kver < 0x02062900) ||
-+				    (kver >= 0x02062901));
++    case vcFEATURE_PIVOT_ROOT	:  return (ver >= 0x00020304 && linux_ver >= 0x0002061f);
      case vcFEATURE_PIDSPACE	:  return false;
      case vcFEATURE_MEMCG	:  return ver >= 0x00020306 && conf & VC_VCI_MEMCG;
      case vcFEATURE_DYNAMIC	:  return ver <  0x00020300 || !(conf & VC_VCI_NO_DYNAMIC);
-
