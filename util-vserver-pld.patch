@@ -314,9 +314,9 @@
  function _pkgMountBase
  {
 @@ -476,6 +490,7 @@
- 	    rpm)	_pkgSetVarsRPM;;
  	    apt)	_pkgSetVarsApt;;
  	    yum)	_pkgSetVarsYum;;
+ 	    urpmi)	_pkgSetVarsUrpmi;;
 +	    poldek)	_pkgSetVarsPoldek;;
  	    *)		echo "Unknown packaging flavor" >&2; exit 1;;
  	esac
@@ -404,8 +404,8 @@
  "
      
      case $2 in
--	(RH)	pkgs=$(vrpm "$1" -- -q --qf '---%{NAME}---\n' rpm apt yum "${YUM_RELEASEPKGS[@]}")
-+	(RH)	pkgs=$(vrpm "$1" -- -q --qf '---%{NAME}---\n' rpm apt yum poldek "${YUM_RELEASEPKGS[@]}")
+-	(RH)	pkgs=$(vrpm "$1" -- -q --qf '---%{NAME}---\n' rpm apt yum urpmi "${YUM_RELEASEPKGS[@]}")
++	(RH)	pkgs=$(vrpm "$1" -- -q --qf '---%{NAME}---\n' rpm apt yum urpmi poldek "${YUM_RELEASEPKGS[@]}")
  		hasSubstring "$pkgs" ---rpm--- || {
  		    warning "$ERR
  * The vserver does not seem to have the 'rpm' package which is required
@@ -413,8 +413,8 @@
  		    ERR=
  		}
  		
--		hasSubstring "$pkgs"  ---apt--- ---yum--- || {
-+		hasSubstring "$pkgs"  ---apt--- ---yum--- ---poldek--- || {
+-		hasSubstring "$pkgs"  ---apt--- ---yum--- ---urpmi--- || {
++		hasSubstring "$pkgs"  ---apt--- ---yum--- ---urpmi--- ---poldek--- || {
  		    warning "$ERR
 -* The vserver does not seem to have a depsolver like 'apt' or 'yum'
 +* The vserver does not seem to have a depsolver like 'apt', 'yum' or 'poldek'
@@ -755,9 +755,9 @@
 --- util-vserver-0.30.216-r2837.orig/scripts/vserver-build	2009-06-22 17:36:34.000000000 +0200
 +++ util-vserver-0.30.216-r2837/scripts/vserver-build	2009-06-22 17:48:26.000000000 +0200
 @@ -57,6 +57,9 @@
-     yum         ... -- -d <distribution>
                  ...  installs the base-packages of the given distribution with
  		     help of 'vyum'
+     urpmi       ... -- -d <distribution> -m <mirror>
 +    poldek      ... -- -d <distribution>
 +                ...  installs the base-packages of the given distribution with
 +		     help of 'vpoldek'
@@ -768,8 +768,8 @@
  
  case x"$method" in
      (xlegacy)	exec $_VSERVER_LEGACY "$VSERVER_NAME" build "$@" ;;
--    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xtemplate|xfai|xrsync|xclone)
-+    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xtemplate|xfai|xrsync|xclone|xpoldek)
+-    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xtemplate|xfai|xrsync|xclone|xurpmi)
++    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xtemplate|xfai|xrsync|xclone|xurpmi|xpoldek)
  		. $__PKGLIBDIR/vserver-build.$method
  		;;
      (x)		panic $"No build-method specified";;

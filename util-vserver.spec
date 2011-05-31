@@ -18,8 +18,8 @@
 %undefine	with_doc
 %endif
 
-%define		snap	pre2955
-%define		rel	3
+%define		snap	pre2967
+%define		rel	1
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -28,7 +28,7 @@ Release:	1.%{snap}.%{rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	13c3846810be19d9d5436a1825d23821
+# Source0-md5:	88a04dd86435bd26da067e7c85f394b8
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -73,7 +73,6 @@ Patch21:	%{name}-bash-wrapper.patch
 Patch22:	%{name}-pivot-root-ugly-hack.patch
 Patch24:	vunify-more-exclude.patch
 Patch25:	stat.patch
-Patch26:	%{name}-git.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -403,7 +402,6 @@ Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
 %patch22 -p1
 %patch24 -p1
 %patch25 -p1
-%patch26 -p1
 
 install %{SOURCE9} package-management.txt
 
@@ -725,6 +723,7 @@ exit 0
 %attr(755,root,root) %{_sbindir}/vtag
 %attr(755,root,root) %{_sbindir}/vtop
 %attr(755,root,root) %{_sbindir}/vuname
+%attr(755,root,root) %{_sbindir}/vurpm
 %attr(755,root,root) %{_sbindir}/vwait
 %attr(755,root,root) %{_sbindir}/vyum
 %dir %{_libdir}/%{name}
@@ -783,6 +782,7 @@ exit 0
 %attr(755,root,root) %{_libdir}/%{name}/vprocunhide
 %attr(755,root,root) %{_libdir}/%{name}/vrpm-*
 %attr(755,root,root) %{_libdir}/%{name}/vserver-build
+%attr(755,root,root) %{_libdir}/%{name}/vurpm-worker
 %{_libdir}/%{name}/vserver-build.*
 %{_libdir}/%{name}/vserver-setup.functions
 %{_libdir}/%{name}/vserver.*
