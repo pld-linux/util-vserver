@@ -132,8 +132,8 @@ set_ipv4root system call.
 
 This package contains utilities which are required to communicate with
 the Linux-Vserver enabled kernel, utilities which assist in building
-Vservers and SysV initscripts which start and stop Vservers and related
-tools.
+Vservers and SysV initscripts which start and stop Vservers and
+related tools.
 
 %description -l pl.UTF-8
 Ten pakiet dostarcza składniki i szkielet do tworzenia wirtualnych
@@ -400,17 +400,23 @@ CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1 -U__STRICT_ANSI__"
 	--enable-apis=NOLEGACY \
 	--with-initscripts=sysv \
 	--%{?with_dietlibc:en}%{!?with_dietlibc:dis}able-dietlibc \
-	MKTEMP=/bin/mktemp \
-	MOUNT=/bin/mount \
-	PS=/bin/ps \
-	UMOUNT=/bin/umount \
+	FSCK=/sbin/fsck \
+	IONICE=%{_usrbin}/ionice \
 	IP=/sbin/ip \
 	IPTABLES=%{_usrsbin}/iptables \
+	MKTEMP=/bin/mktemp \
 	MODPROBE=/sbin/modprobe \
+	MOUNT=/bin/mount \
 	NAMEIF=/sbin/nameif \
+	PS=/bin/ps \
+	RESTORE=/sbin/restore \
 	RMMOD=/sbin/rmmod \
+	RSYNC=%{_usrbin}/rsync \
+	STRACE=%{_usrbin}/strace \
+	UMOUNT=/bin/umount \
 	VCONFIG=/sbin/vconfig \
 	WGET=%{_usrbin}/wget \
+# end
 
 %{__make} all
 %{?with_doc:%{__make} doc}
@@ -431,7 +437,7 @@ install -d $RPM_BUILD_ROOT{/vservers/.pkg,/etc/{sysconfig,rc.d/init.d,cron.d}} \
 chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
 
 for i in $RPM_BUILD_ROOT/etc/rc.d/init.d/v_* ; do
-	s=`basename $i | sed s/v_//`
+	s=$(basename $i | sed s/v_//)
 	cat >$RPM_BUILD_ROOT%{_sysconfdir}/vservices/$s << EOF
 # IP addresses/interfaces to bound $s service to
 #IP=10.0.0.1
