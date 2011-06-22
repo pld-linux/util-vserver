@@ -1,0 +1,173 @@
+diff -ur util-vserver-0.30.209/scripts/vserver-setup.functions util-vserver-0.30.209.cpuset/scripts/vserver-setup.functions
+--- util-vserver-0.30.209/scripts/vserver-setup.functions	2005-02-26 00:32:02.000000000 +0100
++++ util-vserver-0.30.209.cpuset/scripts/vserver-setup.functions	2005-11-25 15:11:30.224131360 +0100
+@@ -24,11 +24,15 @@
+ SETUP_CONFDIR=
+ SETUP_CONTEXT=
+ SETUP_INITSTYLE=
++SETUP_CPUSET=
++SETUP_CPUSETCPUS=
++SETUP_CPUSETMEMS=
++SETUP_CPUSETVIRT=
+ 
+ declare -a SETUP_INTERFACES=()
+ declare -a SETUP_FLAGS=()
+ 
+-declare -r SETUP_OPTIONS="confdir:,lockfile:,hostname:,netdev:,netmask:,netprefix:,netbcast:,interface:,flags:,context:,initstyle:"
++declare -r SETUP_OPTIONS="confdir:,lockfile:,hostname:,netdev:,netmask:,netprefix:,netbcast:,interface:,flags:,context:,initstyle:,cpuset:,cpusetcpus:,cpusetmems:,cpusetvirt"
+ declare -r SETUP_HELPMSG=$"
+     --context   ...  the static context of the vserver [default: none; a dynamic
+                      context will be assumed]
+@@ -55,6 +58,19 @@
+ 			    this becomes a per vserver limit)
+ 		     private: No other process can join this security context.
+ 		            Even root
++    --cpuset <name>
++		...  declares the CPUSET this vserver will run in [default: none]
++    --cpusetcpus <number[-number][:<exclusive>]>
++		...  sets which cpus belong to the CPUSET,
++		     exclusive is a flag (0|1) prohibiting any other cpuset from
++		     using those cpus
++    --cpusetmems <number[-number][:<exclusive>]>
++		...  sets which memory pools belong to the CPUSET,
++		     exclusive is a flag (0|1) prohibiting any other cpuset from
++		     using those memory pools
++    --cpusetvirt
++		...  virtualize cpuset (guest will see only CPUs defined in cpuset)
++		     Requires kernel patch from http://www.bullopensource.org/cpuset/
+     --initstyle <style>
+                 ...  configures the initstyle (e.g. minit,sysv,plain)
+ "
+@@ -72,6 +85,22 @@
+ 	(--netbcast)	SETUP_NETBCAST=$2;;
+ 	(--interface)	SETUP_INTERFACES=( "${SETUP_INTERFACES[@]}" "$2" );;
+ 	(--initstyle)   SETUP_INITSTYLE=$2;;
++	(--cpuset)	SETUP_CPUSET=$2;;
++	(--cpusetcpus)	old_IFS=$IFS
++			IFS=:
++			set -- $2
++			SETUP_CPUSETCPUS=$1
++			SETUP_CPUSETCPUSEXCL=$2
++			IFS=$old_IFS
++			;;
++	(--cpusetmems)	old_IFS=$IFS
++			IFS=:
++			set -- $2
++			SETUP_CPUSETMEMS=$1
++			SETUP_CPUSETMEMSEXCL=$2
++			IFS=$old_IFS
++			;;
++	(--cpusetvirt)  SETUP_CPUSETVIRT=1;;
+ 	(--flags)	old_IFS=$IFS
+ 			IFS=,
+ 			set -- $2
+@@ -140,7 +166,7 @@
+     local cfgdir=${SETUP_CONFDIR:?}
+     local i
+ 
+-    mkdir -p "$cfgdir"/interfaces "$cfgdir"/apps/init "$cfgdir"/uts
++    mkdir -p "$cfgdir"/interfaces "$cfgdir"/apps/init "$cfgdir"/uts "$cfgdir"/cpuset
+ 
+     _setup_writeSingleOption "$name"            "$cfgdir"/name
+     _setup_writeSingleOption "$SETUP_CONTEXT"   "$cfgdir"/context
+@@ -150,6 +176,12 @@
+     _setup_writeSingleOption "$SETUP_NETPREFIX" "$cfgdir"/interfaces/prefix
+     _setup_writeSingleOption "$SETUP_NETBCAST"  "$cfgdir"/interfaces/bcast
+     _setup_writeSingleOption "$SETUP_INITSTYLE" "$cfgdir"/apps/init/style
++    _setup_writeSingleOption "$SETUP_CPUSET"    "$cfgdir"/cpuset/name
++    _setup_writeSingleOption "$SETUP_CPUSETCPUS"     "$cfgdir"/cpuset/cpus
++    _setup_writeSingleOption "$SETUP_CPUSETCPUSEXCL" "$cfgdir"/cpuset/cpus_exclusive
++    _setup_writeSingleOption "$SETUP_CPUSETMEMS"     "$cfgdir"/cpuset/mems
++    _setup_writeSingleOption "$SETUP_CPUSETMEMSEXCL" "$cfgdir"/cpuset/mem_exclusive
++    _setup_writeSingleOption "$SETUP_CPUSETVIRT"     "$cfgdir"/cpuset/virtualize
+ 
+     local idx=0
+     for i in "${SETUP_INTERFACES[@]}"; do
+diff -ur util-vserver-0.30.209/scripts/vserver.functions util-vserver-0.30.209.cpuset/scripts/vserver.functions
+--- util-vserver-0.30.209/scripts/vserver.functions	2005-11-25 14:30:27.665999880 +0100
++++ util-vserver-0.30.209.cpuset/scripts/vserver.functions	2005-11-25 15:11:04.593027880 +0100
+@@ -687,6 +687,54 @@
+     fi
+ }
+ 
++function addtoCPUSET
++{
++    local vdir=$1
++    local cpuset
++    local f="$vdir"/cpuset
++    local i
++    local configured=0
++
++    test -d "$f" || return 0
++    test -e "$f"/name || return 0
++
++    read cpuset < "$f"/name
++    test -e "$f"/nocreate || {
++	test -d /dev/cpuset/"$cpuset" || mkdir /dev/cpuset/"$cpuset" || configured=1
++	for i in cpus mems cpu_exclusive mem_exclusive virtualize; do
++	    if test -e "$f"/"$i"; then
++		cat "$f"/"$i" >/dev/cpuset/"$cpuset"/"$i" 2>/dev/null || {
++		    configured=1
++		    break
++		}
++	    fi
++	done
++    }
++
++    echo $$ >/dev/cpuset/"$cpuset"/tasks || configured=1
++    if [ "$configured" -ne 0 ]; then
++	warning $"\
++WARNING: Failed to create or CPUSET \"$cpuset\" does not exist! Not using it!" >&2
++	rmdir /dev/cpuset/"$cpuset" 2>/dev/null || :
++	return 0
++    fi
++}
++
++function removeCPUSET
++{
++    local vdir=$1
++    local cpuset
++    local f="$vdir"/cpuset
++
++    test -d "$f" || return 0
++    test -e "$f"/name || return 0
++
++    read cpuset < "$f"/name
++    test -e "$f"/nocreate || {
++	rmdir /dev/cpuset/"$cpuset" 2>/dev/null || :
++    }
++}
++
+ function _mountVserverInternal
+ {
+     local fstab="$1"
+diff -ur util-vserver-0.30.209/scripts/vserver.start util-vserver-0.30.209.cpuset/scripts/vserver.start
+--- util-vserver-0.30.209/scripts/vserver.start	2005-10-28 20:41:32.000000000 +0200
++++ util-vserver-0.30.209.cpuset/scripts/vserver.start	2005-11-25 14:30:14.958931648 +0100
+@@ -111,6 +111,7 @@
+ 
+ mountVserver "$VSERVER_DIR"     && is_mounted=1
+ prepareInit  "$VSERVER_DIR"
++addtoCPUSET  "$VSERVER_DIR"
+ 
+ pushd "$VSERVER_DIR"/vdir/ >/dev/null
+ execScriptlets   "$VSERVER_DIR" "$VSERVER_NAME" pre-start
+diff -ur util-vserver-0.30.209/scripts/vserver.stop util-vserver-0.30.209.cpuset/scripts/vserver.stop
+--- util-vserver-0.30.209/scripts/vserver.stop	2005-10-29 17:35:43.000000000 +0200
++++ util-vserver-0.30.209.cpuset/scripts/vserver.stop	2005-11-25 15:12:23.679004984 +0100
+@@ -99,3 +99,4 @@
+ disableInterfaces "$VSERVER_DIR"
+ 
+ execScriptlets    "$VSERVER_DIR" "$VSERVER_NAME" postpost-stop
++removeCPUSET      "$VSERVER_DIR"
+diff -ur util-vserver-0.30.209/scripts/vserver.suexec util-vserver-0.30.209.cpuset/scripts/vserver.suexec
+--- util-vserver-0.30.209/scripts/vserver.suexec	2005-07-15 21:01:06.000000000 +0200
++++ util-vserver-0.30.209.cpuset/scripts/vserver.suexec	2005-11-25 14:30:14.958931648 +0100
+@@ -22,6 +22,7 @@
+     exit 1
+ }
+ generateOptions  "$VSERVER_DIR"
++addtoCPUSET  "$VSERVER_DIR"
+ 
+ user=$1
+ shift
