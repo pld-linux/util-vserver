@@ -18,7 +18,7 @@
 %undefine	with_doc
 %endif
 
-%define		snap	pre2982
+%define		snap	pre2987
 %define		rel	1
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
@@ -28,7 +28,7 @@ Release:	1.%{snap}.%{rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	1c5c18ac05f4881baf9ae35e1cbe2ead
+# Source0-md5:	801ae2eafb4f0b49eaddec3f939fdd98
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -376,6 +376,23 @@ VServer build template for SuSE Linux 9.1.
 
 %description -n vserver-distro-suse -l pl.UTF-8
 Szablon do tworzenia VServerów dla dystrybucji SuSE 9.1.
+
+%package -n vserver-distro-scientificlinux
+Summary:	VServer build template for Scientific Linux
+Summary(pl.UTF-8):	Szablon do tworzenia VServerów dla dystrybucji Scientific Linux
+Group:		Applications/System
+Requires:	%{name} = %{version}-%{release}
+Requires:	binutils
+Requires:	e2fsprogs
+Requires:	rpm
+Requires:	wget
+Requires:	yum
+
+%description -n vserver-distro-scientificlinux
+VServer build template for Scientific Linux.
+
+%description -n vserver-distro-scientificlinux -l pl.UTF-8
+Szablon do tworzenia VServerów dla dystrybucji Scientific Linux.
 
 %prep
 %setup -q -n %{name}-%{version}-%{snap} -a11
@@ -941,3 +958,11 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/suse*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/suse*/apt/sources.list
 %{_libdir}/%{name}/distributions/suse*
+
+%files -n vserver-distro-scientificlinux
+%defattr(644,root,root,755)
+%dir %{_libdir}/%{name}/distributions/sl6
+%attr(755,root,root) %{_libdir}/%{name}/distributions/sl6/initpost
+%attr(755,root,root) %{_libdir}/%{name}/distributions/sl6/initpre
+%{_libdir}/%{name}/distributions/sl6/pkgs
+%{_libdir}/%{name}/distributions/sl6/yum
