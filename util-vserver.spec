@@ -19,7 +19,7 @@
 %endif
 
 %define		snap	pre2987
-%define		rel	1
+%define		rel	2
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -467,10 +467,13 @@ CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1 -U__STRICT_ANSI__"
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{/vservers/.pkg,/etc/{sysconfig,rc.d/init.d,cron.d}} \
 	$RPM_BUILD_ROOT%{_sysconfdir}/vservices \
-	$RPM_BUILD_ROOT%{_sysconfdir}/vservers/.defaults/apps/vdevmap
+	$RPM_BUILD_ROOT%{_sysconfdir}/vservers/.defaults/{apps/vdevmap,cgroup}
 
 %{__make} -j1 install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
+
+# our libcgroup uses per subsystem mount
+touch $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.defaults/cgroup/per-ss
 
 chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
 
@@ -695,6 +698,8 @@ exit 0
 %dir %{_sysconfdir}/vservers/.defaults/apps/vdevmap
 %dir %{_sysconfdir}/vservers/.defaults/apps/vunify
 %dir %{_sysconfdir}/vservers/.defaults/apps/vunify/hash
+%dir %{_sysconfdir}/vservers/.defaults/cgroup
+%{_sysconfdir}/vservers/.defaults/cgroup/per-ss
 %dir %{_sysconfdir}/vservers/.defaults/files
 %{_sysconfdir}/vservers/.defaults/vdirbase
 %{_sysconfdir}/vservers/.defaults/cachebase
