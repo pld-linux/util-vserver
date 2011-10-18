@@ -52,6 +52,7 @@ Source15:	%{name}.init
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
 Patch2:		%{name}-centos.patch
+Patch3:		%{name}-tld.patch
 Patch4:		%{name}-m4-diet.patch
 Patch5:		%{name}-yum-verb-nogpg.patch
 Patch6:		%{name}-build-umask.patch
@@ -394,11 +395,26 @@ VServer build template for Scientific Linux.
 %description -n vserver-distro-scientificlinux -l pl.UTF-8
 Szablon do tworzenia VServerów dla dystrybucji Scientific Linux.
 
+%package -n vserver-distro-tld
+Summary:	VServer build templates for Titanium Linux Distribution
+Summary(pl.UTF-8):	Szablony do tworzenia VServerów dla dystrybucji Titanium Linux
+Group:		Applications/System
+Requires:	%{name} = %{version}-%{release}
+Requires:	/etc/tld-release
+Requires:	poldek >= 0.30
+
+%description -n vserver-distro-tld
+VServer build templates for Titanium Linux Distribution.
+
+%description -n vserver-distro-tld -l pl.UTF-8
+Szablony do tworzenia VServerów dla dystrybucji Titanium Linux.
+
 %prep
 %setup -q -n %{name}-%{version}-%{snap} -a11
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
@@ -507,11 +523,9 @@ install %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/vrootdevices
 install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld
 install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld/initpost
+install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/tld/initpost
 ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/initpost
 ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/initpost
-%ifarch i586 i686 %{x8664} athlon pentium2 pentium3 pentium4
-ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ti/initpost
-%endif
 install vproc-%{vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
 sed -e 's,/usr/lib,%{_libdir},' %{SOURCE12} > $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 chmod +x $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
@@ -562,9 +576,8 @@ cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
 %endif
 %{__sed} -i -e 's|%%ARCH%%|%{ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/pld.conf
 
-%ifarch i586 i686 %{x8664} athlon pentium2 pentium3 pentium4
-# set arch for pld-ti in pld.conf
-%ifarch i586 i686
+# set arch for tld in tld.conf
+%ifarch i586 i686 ppc sparc alpha
 %define		ftp_arch	%{_target_cpu}
 %endif
 %ifarch %{x8664}
@@ -573,8 +586,7 @@ cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
 %ifarch athlon pentium2 pentium3 pentium4
 %define		ftp_arch	i686
 %endif
-%{__sed} -i -e 's|%%ARCH%%|%{ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/pld.conf
-%endif
+%{__sed} -i -e 's|%%ARCH%%|%{ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/tld/poldek/repos.d/tld.conf
 
 # current debootstrap link
 echo "http://ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.10_all.deb" \
@@ -938,12 +950,6 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek
 %dir %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-th/poldek/repos.d/*.conf
-%ifarch i586 i686 %{x8664} athlon pentium2 pentium3 pentium4
-%dir %{_sysconfdir}/vservers/.distributions/pld-ti
-%dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek
-%dir %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/pld-ti/poldek/repos.d/*.conf
-%endif
 
 %files -n vserver-distro-redhat
 %defattr(644,root,root,755)
@@ -971,3 +977,14 @@ exit 0
 %attr(755,root,root) %{_libdir}/%{name}/distributions/sl6/initpre
 %{_libdir}/%{name}/distributions/sl6/pkgs
 %{_libdir}/%{name}/distributions/sl6/yum
+
+%files -n vserver-distro-tld
+%defattr(644,root,root,755)
+%dir %{_libdir}/%{name}/distributions/tld
+%attr(755,root,root) %{_libdir}/%{name}/distributions/tld/initpost
+%{_libdir}/%{name}/distributions/tld/pkgs
+%{_libdir}/%{name}/distributions/tld/rpm
+%dir %{_sysconfdir}/vservers/.distributions/tld
+%dir %{_sysconfdir}/vservers/.distributions/tld/poldek
+%dir %{_sysconfdir}/vservers/.distributions/tld/poldek/repos.d
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/tld/poldek/repos.d/*.conf

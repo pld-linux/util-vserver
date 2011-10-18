@@ -22,27 +22,25 @@
  			   template/initpost template/initpre \
  			   rh9/apt/rpmpriorities    rh9/pkgs/01    rh9/pkgs/02 \
  			   fc1/apt/rpmpriorities    fc1/pkgs/01    fc1/pkgs/02 \
-@@ -85,7 +86,10 @@
+@@ -85,7 +86,9 @@
  			   suse91/apt/rpmpriorities suse91/pkgs/01 suse91/pkgs/02 \
  			   suse91/rpm/macros \
  			   gentoo/init-vserver.sh gentoo/net.vserver \
 -			   gentoo/reboot.sh gentoo/shutdown.sh
 +			   gentoo/reboot.sh gentoo/shutdown.sh\
 +			   pld-ac/pkgs/01 pld-ac/rpm/macros \
-+			   pld-th/pkgs/01 pld-th/rpm/macros \
-+			   pld-ti/pkgs/01 pld-ti/rpm/macros
++			   pld-th/pkgs/01 pld-th/rpm/macros
  
  nobase_confdistrib_DATA	=  rh9/apt/sources.list \
  			   fc1/apt/sources.list \
-@@ -95,7 +99,10 @@
+@@ -95,7 +99,9 @@
  			   fc5/apt/sources.list \
  			   fc6/apt/sources.list \
  			   f7/apt/sources.list \
 -			   suse91/apt/sources.list
 +			   suse91/apt/sources.list \
 +			   pld-ac/poldek/repos.d/pld.conf \
-+			   pld-th/poldek/repos.d/pld.conf \
-+			   pld-ti/poldek/repos.d/pld.conf
++			   pld-th/poldek/repos.d/pld.conf
  
  AM_INSTALLCHECK_STD_OPTIONS_EXEMPT \
  			=  $(nobase_distrib_SCRIPTS)
@@ -216,73 +214,6 @@
 +autoup = no
 --- util-vserver-0.30.216-r2837.orig/distrib/pld-th/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/distrib/pld-th/rpm/macros	2009-06-22 17:48:26.000000000 +0200
-@@ -0,0 +1,6 @@
-+# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
-+# you have to use at least one language beside 'C'
-+%_install_langs		C:en:pl
-+%_netsharedpath		/dev:/proc
-+%_tmppath			/tmp
-+%_host_os			%_os
---- util-vserver-0.30.216-r2837.orig/distrib/pld-ti/pkgs/01	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/distrib/pld-ti/pkgs/01	2009-06-22 17:48:26.000000000 +0200
-@@ -0,0 +1,6 @@
-+basesystem
-+filesystem
-+glibc-misc
-+issue
-+rpm-base
-+vserver-packages
---- util-vserver-0.30.216-r2837.orig/distrib/pld-ti/poldek/repos.d/pld.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/distrib/pld-ti/poldek/repos.d/pld.conf	2009-06-22 17:48:26.000000000 +0200
-@@ -0,0 +1,46 @@
-+# PLD Titanium
-+# Unofficial version of PLD Linux Distribution
-+# http://www.pld-linux.org/Titanium
-+
-+_arch   = %ARCH%
-+_prefix = ftp://ftp.titanium.pld-linux.org/branches/titanium
-+
-+_type = pndir
-+
-+[source]
-+type   = %{_type}
-+name   = titanium
-+path   = %{_prefix}/PLD/%{_arch}/RPMS/
-+
-+[source]
-+type   = %{_type}
-+name   = titanium
-+path   = %{_prefix}/PLD/noarch/RPMS/
-+
-+[source]
-+type   = %{_type}
-+name   = titanium-ready
-+path   = %{_prefix}/ready/%{_arch}/RPMS/
-+auto   = no
-+autoup = no
-+
-+[source]
-+type   = %{_type}
-+name   = titanium-ready
-+path   = %{_prefix}/ready/noarch/RPMS/
-+auto   = no
-+autoup = no
-+
-+[source]
-+type   = %{_type}
-+name   = titanium-test
-+path   = %{_prefix}/test/%{_arch}/RPMS/
-+auto   = no
-+autoup = no
-+
-+[source]
-+type   = %{_type}
-+name   = titanium-test
-+path   = %{_prefix}/test/noarch/RPMS/
-+auto   = no
-+autoup = no
---- util-vserver-0.30.216-r2837.orig/distrib/pld-ti/rpm/macros	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/distrib/pld-ti/rpm/macros	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,6 @@
 +# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
 +# you have to use at least one language beside 'C'
