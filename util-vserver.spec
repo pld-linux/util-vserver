@@ -18,8 +18,8 @@
 %undefine	with_doc
 %endif
 
-%define		snap	pre2987
-%define		rel	2
+%define		snap	pre3000
+%define		rel	1
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -28,7 +28,7 @@ Release:	1.%{snap}.%{rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	801ae2eafb4f0b49eaddec3f939fdd98
+# Source0-md5:	ae2e90be62a84513074a649fe8594036
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -977,6 +977,7 @@ exit 0
 %attr(755,root,root) %{_libdir}/%{name}/distributions/sl6/initpre
 %{_libdir}/%{name}/distributions/sl6/pkgs
 %{_libdir}/%{name}/distributions/sl6/yum
+%{_libdir}/%{name}/distributions/sl6/yum.repos.d
 
 %files -n vserver-distro-tld
 %defattr(644,root,root,755)
