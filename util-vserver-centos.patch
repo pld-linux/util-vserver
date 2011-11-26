@@ -6,7 +6,7 @@ diff -Nur util-vserver-0.30.215/distrib.org/defaults/rpm/macros util-vserver-0.3
  # you have to use at least one language beside 'C'
 -%_install_langs		C:de:en:es:fr
 +%_install_langs		C:en:pl
- %_netsharedpath		/dev:/etc/rc.d/init.d/halt:/sbin/new-kernel-pkg:/usr/bin/rhgb-client:/proc:/lib/udev/devices/:/lib/udev/devices/net/
+ %_netsharedpath		/dev:/etc/rc.d/init.d/halt:/sbin/new-kernel-pkg:/usr/bin/rhgb-client:/proc:/lib/udev/devices/:/lib/udev/devices/net/:/lib/udev/devices/cpu/:/lib/udev/devices/cpu/0/
 +%_check_dirname_deps		0
 diff -Nur util-vserver-0.30.215/distrib.org/redhat/initpre util-vserver-0.30.215/distrib/redhat/initpre
 --- util-vserver-0.30.215/distrib.org/redhat/initpre	2008-03-17 08:59:48.000000000 +0000
