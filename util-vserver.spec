@@ -75,6 +75,7 @@ Patch21:	%{name}-bash-wrapper.patch
 Patch22:	%{name}-pivot-root-ugly-hack.patch
 Patch24:	vunify-more-exclude.patch
 Patch25:	stat.patch
+Patch26:	%{name}-am.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -435,6 +436,7 @@ Szablony do tworzenia VServerów dla dystrybucji Titanium Linux.
 %patch22 -p1
 %patch24 -p1
 %patch25 -p1
+%patch26 -p1
 
 install %{SOURCE9} package-management.txt
 
