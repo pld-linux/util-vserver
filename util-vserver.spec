@@ -81,7 +81,7 @@ BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
 BuildRequires:	beecrypt-devel
 BuildRequires:	ctags
-%{?with_dietlibc:BuildRequires:	dietlibc-static >= 2:0.29}
+%{?with_dietlibc:BuildRequires:	dietlibc-static >= 2:0.32-16}
 BuildRequires:	e2fsprogs-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 1.5.14
