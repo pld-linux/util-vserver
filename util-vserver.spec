@@ -122,6 +122,7 @@ Requires:	make
 Requires:	mktemp >= 1.5-18
 Requires:	rc-scripts >= 0.4.3.4
 Requires:	tar
+Requires:	uname(release) >= 2.6.27
 Requires:	util-linux >= 2.13
 Requires:	vserver-distro-pld = %{version}-%{release}
 Obsoletes:	util-vserver-build
@@ -486,7 +487,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{/vservers/.pkg,/etc/{sysconfig,rc.d/init.d,cron.d}} \
 	$RPM_BUILD_ROOT%{_sysconfdir}/vservices \
 	$RPM_BUILD_ROOT%{_sysconfdir}/vservers/.defaults/{apps/vdevmap,cgroup} \
-	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
+	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
 %{__make} -j1 install install-distribution \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -543,7 +544,7 @@ cp -a %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pubkeys
 install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
 cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys/pld-th.asc
 
-install %{SOURCE16} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
+install %{SOURCE16} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 # set arch for pld-ac in pld.conf
 %ifarch i586 i686 ppc sparc alpha athlon
@@ -843,7 +844,7 @@ exit 0
 %{_mandir}/man8/vtop.8*
 %attr(000,root,root) %dir /vservers
 %dir /vservers/.pkg
-/usr/lib/tmpfiles.d/%{name}.conf
+%{systemdtmpfilesdir}/%{name}.conf
 %dir %{_localstatedir}/run/vservers
 %dir %{_localstatedir}/run/vservers.rev
 %dir %{_localstatedir}/run/vshelper
