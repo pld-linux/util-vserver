@@ -299,15 +299,16 @@
  				scripts/vrpm-preload \
  				scripts/save_s_context \
  				scripts/vservers.grabinfo.sh \
-@@ -48,11 +49,13 @@
+@@ -48,12 +49,14 @@
  				scripts/vserver-build.template \
  				scripts/vserver-build.rsync \
  				scripts/vserver-build.clone \
 +				scripts/vserver-build.poldek \
  				scripts/vserver-build.functions \
  				scripts/vserver-build.functions.apt \
- 				scripts/vserver-build.functions.rpm \
  				scripts/vserver-build.functions.pkgmgmt \
+ 				scripts/vserver-build.functions.rpm \
+ 				scripts/vserver-build.functions.urpmi \
  				scripts/vserver-build.functions.yum \
 +				scripts/vserver-build.functions.poldek \
  				scripts/vserver-setup.functions \
