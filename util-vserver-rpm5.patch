@@ -1,0 +1,27 @@
+--- util-vserver-0.30.216-pre3034/scripts/vrpm.orig	2012-04-24 11:48:10.000000000 +0200
++++ util-vserver-0.30.216-pre3034/scripts/vrpm	2012-10-12 18:44:57.137928223 +0200
+@@ -46,6 +46,9 @@
+     exit 0
+     }
+ 
++rpmversion=$(awk '/^%_rpmversion/ { split($2,ver,/\./); print ver[1] }' /usr/lib/rpm/macros 2>/dev/null)
++[ -z "$rpmversion" ] && rpmversion=5
++
+ tmp=$(getopt -o +q --long help,version,debug,quiet,$VS_ALLVSERVERS_ARGS -n "$0" -- "$@") || exit 1
+ eval set -- "$tmp"
+ 
+@@ -70,4 +73,14 @@
+ export VSOMETHING_TITLE VSOMETHING_WORKER VSOMETHING_PKGMGMT
+ 
+ test ${#vsomething_opts[@]} -eq 0 || vsomething_opts=( "${vsomething_opts[@]}" -- )
++if [ "$rpmversion" -ge 5 ]; then
++    declare -a rpm_opts
++    [ ${#vsomething_opts[@]} -eq 0 ] && rpm_opts=( "$1" "--" )
++    if [[ "$@" = *--initdb* ]]; then
++	exec $_VSOMETHING "${send_through[@]}" rpm "${vsomething_opts[@]}" "${rpm_opts[@]}" -qa
++    fi
++    if [[ "$@" = *--convertdb* ]]; then
++	exec $_VSOMETHING "${send_through[@]}" /usr/lib/rpm/bin/dbconvert "${vsomething_opts[@]}" "${rpm_opts[@]}" --rebuilddb
++    fi
++fi
+ exec $_VSOMETHING "${send_through[@]}" rpm "${vsomething_opts[@]}" "$@"

@@ -19,7 +19,7 @@
 %endif
 
 %define		snap	pre3034
-%define		rel	1
+%define		rel	2
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -76,6 +76,7 @@ Patch22:	%{name}-pivot-root-ugly-hack.patch
 Patch24:	vunify-more-exclude.patch
 Patch25:	stat.patch
 Patch26:	%{name}-am.patch
+Patch27:	%{name}-rpm5.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -438,6 +439,7 @@ Szablony do tworzenia VServerów dla dystrybucji Titanium Linux.
 %patch24 -p1
 %patch25 -p1
 %patch26 -p1
+%patch27 -p1
 
 install %{SOURCE9} package-management.txt
 
@@ -781,10 +783,6 @@ exit 0
 %dir %{_libdir}/%{name}/distributions/template
 %attr(755,root,root) %{_libdir}/%{name}/distributions/template/initpost
 %attr(755,root,root) %{_libdir}/%{name}/distributions/template/initpre
-%dir %{_libdir}/%{name}/distributions/redhat
-%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpost
-%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpre
-%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/rc.sysinit
 %{_libdir}/%{name}/FEATURES.txt
 %{_libdir}/%{name}/util-vserver-vars
 %attr(755,root,root) %{_libdir}/%{name}/bash-wrapper
