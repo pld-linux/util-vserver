@@ -10,7 +10,7 @@
  tmp=$(getopt -o +q --long help,version,debug,quiet,$VS_ALLVSERVERS_ARGS -n "$0" -- "$@") || exit 1
  eval set -- "$tmp"
  
-@@ -70,4 +73,14 @@
+@@ -70,4 +73,15 @@
  export VSOMETHING_TITLE VSOMETHING_WORKER VSOMETHING_PKGMGMT
  
  test ${#vsomething_opts[@]} -eq 0 || vsomething_opts=( "${vsomething_opts[@]}" -- )
@@ -21,7 +21,47 @@
 +	exec $_VSOMETHING "${send_through[@]}" rpm "${vsomething_opts[@]}" "${rpm_opts[@]}" -qa
 +    fi
 +    if [[ "$@" = *--convertdb* ]]; then
++	VSOMETHING_WORKER=$__PKGLIBDIR/vrpm-convertdb-worker
 +	exec $_VSOMETHING "${send_through[@]}" /usr/lib/rpm/bin/dbconvert "${vsomething_opts[@]}" "${rpm_opts[@]}" --rebuilddb
 +    fi
 +fi
  exec $_VSOMETHING "${send_through[@]}" rpm "${vsomething_opts[@]}" "$@"
+--- /dev/null	2012-04-24 11:48:10.000000000 +0200
++++ util-vserver-0.30.216-pre3034/scripts/vrpm-convertdb-worker	2012-10-12 18:44:57.137928223 +0200
+@@ -0,0 +0,18 @@
++#!/bin/bash
++
++set -e
++
++: ${UTIL_VSERVER_VARS:=/usr/lib/util-vserver/util-vserver-vars}
++test -e "$UTIL_VSERVER_VARS" || {
++    echo $"Can not find util-vserver installation (the file '$UTIL_VSERVER_VARS' would be expected); aborting..." >&2
++    exit 1
++}
++. "$UTIL_VSERVER_VARS"
++. "$_LIB_FUNCTIONS"
++
++vserver=$1
++shift
++
++pkgInit "$vserver" rpm
++
++exec /usr/lib/rpm/bin/dbconvert --root="$VDIR" "$@"
+--- util-vserver-0.30.216-pre3034/scripts/Makefile-files.orig	2012-04-24 11:48:10.000000000 +0200
++++ util-vserver-0.30.216-pre3034/scripts/Makefile-files	2012-10-12 18:44:57.137928223 +0200
+@@ -10,6 +10,7 @@
+ AM_INSTALLCHECK_STD_OPTIONS_EXEMPT += \
+ 				scripts/vapt-get-worker \
+ 				scripts/vrpm-worker \
++				scripts/vrpm-convertdb-worker \
+ 				scripts/vyum-worker \
+ 				scripts/vpoldek-worker \
+ 				scripts/vrpm-preload \
+@@ -74,6 +74,7 @@
+ 				scripts/vpkg \
+ 				scripts/vpoldek-worker \
+ 				scripts/vrpm-worker \
++				scripts/vrpm-convertdb-worker \
+ 				scripts/vrpm-preload \
+ 				scripts/start-vservers \
+ 				scripts/vprocunhide \
