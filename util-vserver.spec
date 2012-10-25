@@ -18,6 +18,8 @@
 %undefine	with_doc
 %endif
 
+# reqdb_pkg should match value from current rpm package in distro
+%define		reqdb_pkg	db5.3
 %define		snap	pre3034
 %define		rel	3
 Summary:	Linux virtual server utilities
@@ -126,6 +128,7 @@ Requires:	tar
 Requires:	uname(release) >= 2.6.27
 Requires:	util-linux >= 2.13
 Requires:	vserver-distro-pld = %{version}-%{release}
+Suggests:	%{reqdb_pkg}-utils
 Obsoletes:	util-vserver-build
 Obsoletes:	util-vserver-core
 Obsoletes:	util-vserver-init
