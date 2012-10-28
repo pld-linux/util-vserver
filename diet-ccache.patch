@@ -1,0 +1,13 @@
+diet does not work well with ccache (missing quoting somewhere)
+
+--- util-vserver-0.30.216-pre3034/Makefile.am~	2012-10-28 14:16:40.000000000 +0200
++++ util-vserver-0.30.216-pre3034/Makefile.am	2012-10-28 14:37:18.207577514 +0200
+@@ -91,7 +91,7 @@
+ AM_INSTALLCHECK_STD_OPTIONS_EXEMPT =
+ 
+ if USE_DIETLIBC
+-DIET_CC		       :=  $(DIET) $(DIETFLAGS) $(CC)
++DIET_CC		       :=  $(DIET) $(DIETFLAGS) $(filter-out ccache,$(CC))
+ VSERVER_LDFLGS	       :=  -static
+ else
+ VSERVER_LDFLGS	       :=

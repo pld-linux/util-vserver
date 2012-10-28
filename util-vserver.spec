@@ -10,8 +10,6 @@
 %bcond_with	xalan			# use the xalan xslt processor
 
 %define	vproc_version 0.01
-# diet compile fails with ccache in %{__cc}
-%undefine	with_ccache
 
 %ifarch ppc
 # pdflatex: refman: Invalid argument
@@ -79,6 +77,7 @@ Patch24:	vunify-more-exclude.patch
 Patch25:	stat.patch
 Patch26:	%{name}-am.patch
 Patch27:	%{name}-rpm5.patch
+Patch28:	diet-ccache.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
@@ -443,8 +442,9 @@ Szablony do tworzenia VServerów dla dystrybucji Titanium Linux.
 %patch25 -p1
 %patch26 -p1
 %patch27 -p1
+%patch28 -p1
 
-install %{SOURCE9} package-management.txt
+cp -p %{SOURCE9} package-management.txt
 
 %build
 unset LD_SYMBOLIC_FUNCTIONS || :
