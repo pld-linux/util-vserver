@@ -8,6 +8,7 @@
 %bcond_without	doc			# don't build documentation which needed LaTeX
 %bcond_without	no_dynamic_context	# disable enforcement of disabled dynamic context
 %bcond_with	xalan			# use the xalan xslt processor
+%bcond_with	legacy			# build legacy 1.x utils
 
 %define	vproc_version 0.01
 
@@ -481,6 +482,7 @@ CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1 -U__STRICT_ANSI__"
 # end
 
 %{__make} all
+
 %{?with_doc:%{__make} doc}
 
 %{__make} -C vproc-%{vproc_version} \
@@ -490,17 +492,37 @@ CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1 -U__STRICT_ANSI__"
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{/vservers/.pkg,/etc/{sysconfig,rc.d/init.d,cron.d}} \
-	$RPM_BUILD_ROOT%{_sysconfdir}/vservices \
 	$RPM_BUILD_ROOT%{_sysconfdir}/vservers/.defaults/{apps/vdevmap,cgroup} \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
 %{__make} -j1 install install-distribution \
+%if %{without legacy}
+	scripts_legacy_src_SCRPTS= \
+	scripts_legacy_gen_SCRPTS= \
+	scripts_legacy_src_PRGS= \
+	sysv_gen_SCRPTS= \
+	legacy_PROGRAMS= \
+%endif
 	DESTDIR=$RPM_BUILD_ROOT
 
 # our libcgroup uses per subsystem mount
 touch $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.defaults/cgroup/per-ss
 
 chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
+
+sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE1} > \
+	$RPM_BUILD_ROOT/etc/rc.d/init.d/vprocunhide
+sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE2} > \
+	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers
+sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE15} > \
+	$RPM_BUILD_ROOT/etc/rc.d/init.d/util-vserver
+sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE5} > \
+	$RPM_BUILD_ROOT/etc/sysconfig/vservers
+sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' gentoo/bash-wrapper > \
+	$RPM_BUILD_ROOT%{_libdir}/%{name}/bash-wrapper
+
+%if %{with legacy}
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/vservices
 
 for i in $RPM_BUILD_ROOT/etc/rc.d/init.d/v_* ; do
 	s=$(basename $i | sed s/v_//)
@@ -511,31 +533,27 @@ for i in $RPM_BUILD_ROOT/etc/rc.d/init.d/v_* ; do
 EOF
 done
 
-sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE1} > \
-	$RPM_BUILD_ROOT/etc/rc.d/init.d/vprocunhide
-sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE2} > \
-	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers
 sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE3} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
 sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE4} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/rebootmgr
-sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE15} > \
-	$RPM_BUILD_ROOT/etc/rc.d/init.d/util-vserver
-sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE5} > \
-	$RPM_BUILD_ROOT/etc/sysconfig/vservers
-sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' gentoo/bash-wrapper > \
-	$RPM_BUILD_ROOT%{_libdir}/%{name}/bash-wrapper
+install -p %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
+%else
+rm $RPM_BUILD_ROOT/etc/rc.d/init.d/rebootmgr
+rm $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
+rm $RPM_BUILD_ROOT%{_mandir}/man8/distrib-info.8
+rm $RPM_BUILD_ROOT%{_mandir}/man8/rebootmgr.8
+rm $RPM_BUILD_ROOT%{_mandir}/man8/vserver-copy.8
+%endif
 
-install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
-
-install %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
-install %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/vrootdevices
+install -p %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
+cp -p %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/vrootdevices
 install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld
-install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld/initpost
-install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/tld/initpost
+install -p %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld/initpost
+install -p %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/tld/initpost
 ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/initpost
 ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/initpost
-install vproc-%{vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
+install -p vproc-%{vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
 sed -e 's,/usr/lib,%{_libdir},' %{SOURCE12} > $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 chmod +x $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 
@@ -544,12 +562,12 @@ cat > $RPM_BUILD_ROOT/etc/cron.d/vservers << EOF
 EOF
 
 install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pubkeys
-cp -a %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pubkeys/pld-ac.asc
+cp -p %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pubkeys/pld-ac.asc
 
 install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
-cp -a %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys/pld-th.asc
+cp -p %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys/pld-th.asc
 
-install %{SOURCE16} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
+cp -p %{SOURCE16} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 # set arch for pld-ac in pld.conf
 %ifarch i586 i686 ppc sparc alpha athlon
@@ -606,13 +624,12 @@ echo "http://ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.10_al
 install -d $RPM_BUILD_ROOT/var/cache/vservers/poldek
 
 # cleanups
-rm -rf $RPM_BUILD_ROOT/dev
-rm -rf $RPM_BUILD_ROOT%{py_sitedir}/_libvserver.la
+%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/_libvserver.la
 # we have our own initscript which does the same
-rm -f $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-wrapper
-rm -f $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-init.functions
-rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
-rm -f $RPM_BUILD_ROOT%{_sysconfdir}/vservers.conf
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-wrapper
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-init.functions
+%{__rm} $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
+%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/vservers.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -869,6 +886,7 @@ exit 0
 %defattr(644,root,root,755)
 %{_libdir}/libvserver.a
 
+%if %{with legacy}
 %files legacy
 %defattr(644,root,root,755)
 %dir %{_sysconfdir}/vservices
@@ -883,6 +901,7 @@ exit 0
 %{_mandir}/man8/distrib-info.8*
 %{_mandir}/man8/rebootmgr.8*
 %{_mandir}/man8/vserver-copy.8*
+%endif
 
 %files -n python-util-vserver
 %defattr(644,root,root,755)
