@@ -1,7 +1,5 @@
-# TODO
-# - %install is not re-entrant
-#
-# m68k and mips are the only not supported archs
+# NOTE:
+# - m68k and mips are the only not supported archs
 #
 # Conditional build:
 %bcond_without	dietlibc		# don't use dietlibc (ask for troubles)
