@@ -28,8 +28,8 @@
  			   gentoo/init-vserver.sh gentoo/net.vserver \
 -			   gentoo/reboot.sh gentoo/shutdown.sh
 +			   gentoo/reboot.sh gentoo/shutdown.sh\
-+			   pld-ac/pkgs/01 pld-ac/rpm/macros \
-+			   pld-th/pkgs/01 pld-th/rpm/macros
++			   pld-ac/pkgs/01 pld-ac/rpm/macros pld-ac/rpm/macros.lang \
++			   pld-th/pkgs/01 pld-th/rpm/macros pld-th/rpm/macros.lang
  
  nobase_confdistrib_DATA	=  rh9/apt/sources.list \
  			   fc1/apt/sources.list \
@@ -122,13 +122,16 @@
 +sources = ac-main ac-updates
 --- util-vserver-0.30.216-r2837.orig/distrib/pld-ac/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/distrib/pld-ac/rpm/macros	2009-06-22 17:48:26.000000000 +0200
-@@ -0,0 +1,6 @@
-+# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
-+# you have to use at least one language beside 'C'
-+%_install_langs		C:en:pl
+@@ -0,0 +1,3 @@
 +%_netsharedpath		/dev:/proc
 +%_tmppath			/tmp
 +%_host_os			%_os
+--- util-vserver-0.30.216-r2837.orig/distrib/pld-ac/rpm/macros.lang	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-r2837/distrib/pld-ac/rpm/macros.lang	2009-06-22 17:48:26.000000000 +0200
+@@ -0,0 +1,3 @@
++# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
++# you have to use at least one language beside 'C'
++%_install_langs		C:en:pl
 --- util-vserver-0.30.216-r2837.orig/distrib/pld-th/pkgs/01	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/distrib/pld-th/pkgs/01	2009-06-22 17:48:26.000000000 +0200
 @@ -0,0 +1,6 @@
@@ -214,13 +217,16 @@
 +autoup = no
 --- util-vserver-0.30.216-r2837.orig/distrib/pld-th/rpm/macros	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/distrib/pld-th/rpm/macros	2009-06-22 17:48:26.000000000 +0200
-@@ -0,0 +1,6 @@
-+# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
-+# you have to use at least one language beside 'C'
-+%_install_langs		C:en:pl
+@@ -0,0 +1,3 @@
 +%_netsharedpath		/dev:/proc
 +%_tmppath			/tmp
 +%_host_os			%_os
+--- util-vserver-0.30.216-r2837.orig/distrib/pld-th/rpm/macros.lang	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-r2837/distrib/pld-th/rpm/macros.lang	2009-06-22 17:48:26.000000000 +0200
+@@ -0,0 +1,3 @@
++# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
++# you have to use at least one language beside 'C'
++%_install_langs		C:en:pl
 --- util-vserver-0.30.216-r2837.orig/scripts/functions	2009-06-22 17:36:35.000000000 +0200
 +++ util-vserver-0.30.216-r2837/scripts/functions	2009-06-22 17:48:26.000000000 +0200
 @@ -403,6 +403,20 @@

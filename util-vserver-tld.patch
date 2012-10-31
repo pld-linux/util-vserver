@@ -1,11 +1,11 @@
 --- util-vserver-0.30.216-r2837.orig/distrib/Makefile.am	2009-06-22 17:36:52.000000000 +0200
 +++ util-vserver-0.30.216-r2837/distrib/Makefile.am	2009-06-22 17:49:36.000000000 +0200
-@@ -85,7 +86,8 @@
+@@ -99,7 +99,8 @@
  			   gentoo/init-vserver.sh gentoo/net.vserver \
  			   gentoo/reboot.sh gentoo/shutdown.sh\
- 			   pld-ac/pkgs/01 pld-ac/rpm/macros \
--			   pld-th/pkgs/01 pld-th/rpm/macros
-+			   pld-th/pkgs/01 pld-th/rpm/macros \
+ 			   pld-ac/pkgs/01 pld-ac/rpm/macros pld-ac/rpm/macros.lang \
+-			   pld-th/pkgs/01 pld-th/rpm/macros pld-th/rpm/macros.lang
++			   pld-th/pkgs/01 pld-th/rpm/macros pld-th/rpm/macros.lang \
 +			   tld/pkgs/01 tld/rpm/macros
  
  nobase_confdistrib_DATA	=  rh9/apt/sources.list \
