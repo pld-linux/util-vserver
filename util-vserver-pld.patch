@@ -137,7 +137,7 @@
 @@ -0,0 +1,6 @@
 +basesystem
 +filesystem
-+glibc-misc
++glibc
 +issue
 +rpm-base
 +vserver-packages
