@@ -18,7 +18,7 @@
 # reqdb_pkg should match value from current rpm package in distro
 %define		reqdb_pkg	db5.3
 %define		snap	pre3034
-%define		rel	3
+%define		rel	4
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
