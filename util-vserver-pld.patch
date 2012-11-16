@@ -728,7 +728,7 @@
  	else
 --- util-vserver-0.30.216-r2837.orig/scripts/vserver-build.functions.poldek	1970-01-01 01:00:00.000000000 +0100
 +++ util-vserver-0.30.216-r2837/scripts/vserver-build.functions.poldek	2009-06-22 17:48:26.000000000 +0200
-@@ -0,0 +1,82 @@
+@@ -0,0 +1,83 @@
 +# $Id$	--*- sh -*--
 +
 +# Copyright (C) 2003 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
@@ -809,6 +809,7 @@
 +
 +	if [ "$DISTRIBUTION" = "pld-ac" ]; then
 +		echo 'auto directory dependencies = no' >>  "$PKGCFGDIR"/poldek/etc/poldek.conf
++		echo '%_check_dirname_deps 0' >> "$PKGCFGDIR"/rpm/etc/macros
 +	fi
 +}
 --- util-vserver-0.30.216-r2837.orig/scripts/vserver-build.poldek	1970-01-01 01:00:00.000000000 +0100
