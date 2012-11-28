@@ -22,7 +22,7 @@
 +    fi
 +    if [[ "$@" = *--convertdb* ]]; then
 +	VSOMETHING_WORKER=$__PKGLIBDIR/vrpm-convertdb-worker
-+	exec $_VSOMETHING "${send_through[@]}" /usr/lib/rpm/bin/dbconvert "${vsomething_opts[@]}" "${rpm_opts[@]}" --rebuilddb
++	exec $_VSOMETHING "${send_through[@]}" /usr/lib/rpm/bin/dbupgrade.sh "${vsomething_opts[@]}" "${rpm_opts[@]}"
 +    fi
 +fi
  exec $_VSOMETHING "${send_through[@]}" rpm "${vsomething_opts[@]}" "$@"
@@ -46,7 +46,7 @@
 +
 +pkgInit "$vserver" rpm
 +
-+exec /usr/lib/rpm/bin/dbconvert --root="$VDIR" "$@"
++exec /usr/lib/rpm/bin/dbupgrade.sh -r "$VDIR" "$@"
 --- util-vserver-0.30.216-pre3034/scripts/Makefile-files.orig	2012-04-24 11:48:10.000000000 +0200
 +++ util-vserver-0.30.216-pre3034/scripts/Makefile-files	2012-10-12 18:44:57.137928223 +0200
 @@ -10,6 +10,7 @@
