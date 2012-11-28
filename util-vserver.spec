@@ -18,7 +18,7 @@
 # reqdb_pkg should match value from current rpm package in distro
 %define		reqdb_pkg	db5.3
 %define		snap	pre3034
-%define		rel	5.1
+%define		rel	5.2
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -106,6 +106,7 @@ BuildRequires:	tetex-metafont
 BuildRequires:	texlive-fonts-rsfs
 BuildRequires:	texlive-fonts-type1-urw
 BuildRequires:	texlive-format-pdflatex
+BuildRequires:	texlive-latex-ams
 BuildRequires:	texlive-latex-extend
 BuildRequires:	texlive-latex-ucs
 BuildRequires:	texlive-makeindex
