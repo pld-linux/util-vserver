@@ -16,8 +16,8 @@
 %endif
 
 # reqdb_pkg and reqdb_ver must match value from current rpm package in distro
-%define		reqdb_pkg	db5.2
 %define		reqdb_ver	5.2
+%define		reqdb_pkg	db%{reqdb_ver}
 %define		snap	pre3034
 %define		rel	8
 Summary:	Linux virtual server utilities
