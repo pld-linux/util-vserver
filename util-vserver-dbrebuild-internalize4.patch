@@ -49,7 +49,7 @@
  	    panic "
  Can not continue; use '--force' to override this check"
 +
-+	verifyDBTools "$vdir" 'internal' db_dump db_load || test -n "$IS_FORCE" ||
++	verifyDBTools "$vdir" 'internal' db@RPMDB@_dump db@RPMDB@_load || test -n "$IS_FORCE" ||
 +	    panic "
 +Can not continue; use '--force' to override this check"
      
@@ -61,7 +61,7 @@
  	findDir RPMETCDIR   "$cfgdir"/rpmetc   "$cfgdir"/base/rpm/etc    /etc/rpm /
  	findDir RPMSTATEDIR "$cfgdir"/rpmstate "$cfgdir"/base/rpm/state
      else
-+	verifyDBTools "$vdir" 'external' db_load db_dump || test -n "$IS_FORCE" ||
++	verifyDBTools "$vdir" 'external' db@RPMDB@_load db@RPMDB@_dump || test -n "$IS_FORCE" ||
 +	    panic "
 +Can not continue; use '--force' to override this check"
 +
@@ -78,10 +78,10 @@
 +
 +	    # dump and reload rpmdb to overcome db version mismatch problems
 +	    if [ "$db_load" -a "$db_dump" ]; then
-+		# dump with host db_dump
++		# dump with host db@RPMDB@_dump
 +		$db_dump var/lib/rpm/Packages > var/lib/rpm/.Packages.dump
 +
-+		# load with guest db_load.
++		# load with guest db@RPMDB@_load.
 +		$_RM -f var/lib/rpm/__db.*
 +		mv var/lib/rpm/{Packages,.Packages.ORIG}
 +		chroot . $db_load var/lib/rpm/Packages < var/lib/rpm/.Packages.dump
@@ -96,11 +96,11 @@
 +	    if [ "$db_load" -a "$db_dump" ]; then
 +		# dump and reload rpmdb to overcome db version mismatch problems
 +
-+		# dump with guest db_dump
++		# dump with guest db@RPMDB@_dump
 +		$_RM -f var/lib/rpm/__db.*
 +		chroot . $db_dump var/lib/rpm/Packages > var/lib/rpm/.Packages.dump
 +
-+		# load with host db_load
++		# load with host db@RPMDB@_load
 +		mv var/lib/rpm/{Packages,.Packages.ORIG}
 +		$db_load var/lib/rpm/Packages < var/lib/rpm/.Packages.dump
 +		rm -f var/lib/rpm/.Packages.*

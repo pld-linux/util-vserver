@@ -15,10 +15,11 @@
 %undefine	with_doc
 %endif
 
-# reqdb_pkg should match value from current rpm package in distro
+# reqdb_pkg and reqdb_ver must match value from current rpm package in distro
 %define		reqdb_pkg	db5.2
+%define		reqdb_ver	5.2
 %define		snap	pre3034
-%define		rel	7
+%define		rel	8
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -446,6 +447,8 @@ Szablony do tworzenia VServerów dla dystrybucji Titanium Linux.
 %patch28 -p1
 
 cp -p %{SOURCE9} package-management.txt
+
+%{__sed} -i -e "s/@RPMDB@/%{reqdb_ver}/g" scripts/pkgmgmt
 
 %build
 unset LD_SYMBOLIC_FUNCTIONS || :
