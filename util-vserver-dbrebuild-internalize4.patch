@@ -1,6 +1,6 @@
 --- util-vserver-0.30.215/scripts/pkgmgmt	2008-11-17 22:47:02.486514626 +0200
 +++ util-vserver-0.30.216-r2844/scripts/pkgmgmt	2009-11-05 14:27:48.753407445 +0200
-@@ -185,6 +185,43 @@
+@@ -185,6 +185,47 @@
      test -n "$is_ok"
  }
  
@@ -12,25 +12,29 @@
 +    local host_tool="$3"
 +    local guest_tool="$4"
 +    local res=0
++    local hostbdb
++    local guestbdb
 +
++    hostbdb=$(ldd /bin/rpm | awk '/libdb-[0-9\.]+.so/ { sub(/libdb-/, "", $1); sub(/.so/, "", $1); print $1 }')
++    guestbdb=$(ldd "$vdir"/bin/rpm | awk '/libdb-[0-9\.]+.so/ { sub(/libdb-/, "", $1); sub(/.so/, "", $1); print $1 }')
 +    local i host_path guest_path
 +    for i in /bin /usr/bin /usr/lib/rpm /usr/local/bin; do
-+	test ! -x "$i"/$host_tool || { host_path="$i"/$host_tool; break; }
++	test ! -x "$i"/$host_tool || { host_path="$i"/"db${hostbdb}_${host_tool}"; break; }
 +    done
 +    for i in /bin /usr/bin /usr/lib/rpm /usr/local/bin; do
-+	test ! -x "$vdir$i"/$guest_tool || { guest_path="$i"/$guest_tool; break; }
++	test ! -x "$vdir$i"/$guest_tool || { guest_path="$i"/"db${guestbdb}_${guest_tool}"; break; }
 +    done
 +
 +    test -n "$host_path" || {
 +	warning "
-+* The host does not seem to have the '$host_tool' program which is required
++* The host does not seem to have the 'db${hostbdb}_${host_tool}' program which is required
 +  for $type package management. It is suggested to install it before
 +  continuing."
 +	res=1
 +    }
 +    test -n "$guest_path" || {
 +	warning "
-+* The vserver guest does not seem to have the '$guest_tool' program which is required
++* The vserver guest does not seem to have the '"db${guestbdb}_${guest_tool}"' program which is required
 +  for $type package management. It is suggested to install it before
 +  continuing."
 +	res=1
@@ -49,7 +53,7 @@
  	    panic "
  Can not continue; use '--force' to override this check"
 +
-+	verifyDBTools "$vdir" 'internal' db@RPMDB@_dump db@RPMDB@_load || test -n "$IS_FORCE" ||
++	verifyDBTools "$vdir" 'internal' dump load || test -n "$IS_FORCE" ||
 +	    panic "
 +Can not continue; use '--force' to override this check"
      
@@ -61,7 +65,7 @@
  	findDir RPMETCDIR   "$cfgdir"/rpmetc   "$cfgdir"/base/rpm/etc    /etc/rpm /
  	findDir RPMSTATEDIR "$cfgdir"/rpmstate "$cfgdir"/base/rpm/state
      else
-+	verifyDBTools "$vdir" 'external' db@RPMDB@_load db@RPMDB@_dump || test -n "$IS_FORCE" ||
++	verifyDBTools "$vdir" 'external' load dump || test -n "$IS_FORCE" ||
 +	    panic "
 +Can not continue; use '--force' to override this check"
 +
@@ -78,10 +82,10 @@
 +
 +	    # dump and reload rpmdb to overcome db version mismatch problems
 +	    if [ "$db_load" -a "$db_dump" ]; then
-+		# dump with host db@RPMDB@_dump
++		# dump with host db_dump
 +		$db_dump var/lib/rpm/Packages > var/lib/rpm/.Packages.dump
 +
-+		# load with guest db@RPMDB@_load.
++		# load with guest db_load.
 +		$_RM -f var/lib/rpm/__db.*
 +		mv var/lib/rpm/{Packages,.Packages.ORIG}
 +		chroot . $db_load var/lib/rpm/Packages < var/lib/rpm/.Packages.dump
@@ -96,11 +100,11 @@
 +	    if [ "$db_load" -a "$db_dump" ]; then
 +		# dump and reload rpmdb to overcome db version mismatch problems
 +
-+		# dump with guest db@RPMDB@_dump
++		# dump with guest db_dump
 +		$_RM -f var/lib/rpm/__db.*
 +		chroot . $db_dump var/lib/rpm/Packages > var/lib/rpm/.Packages.dump
 +
-+		# load with host db@RPMDB@_load
++		# load with host db_load
 +		mv var/lib/rpm/{Packages,.Packages.ORIG}
 +		$db_load var/lib/rpm/Packages < var/lib/rpm/.Packages.dump
 +		rm -f var/lib/rpm/.Packages.*
