@@ -18,8 +18,8 @@
 # reqdb_pkg and reqdb_ver must match value from current rpm package in distro
 %define		reqdb_ver	5.2
 %define		reqdb_pkg	db%{reqdb_ver}
-%define		snap	pre3034
-%define		rel	8
+%define		snap	pre3038
+%define		rel	1
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -28,7 +28,7 @@ Release:	1.%{snap}.%{rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	c0f708814ff48532802a5fb04514a86c
+# Source0-md5:	21ae909b16d57fdb169743cde35e896d
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
