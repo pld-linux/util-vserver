@@ -1,5 +1,5 @@
---- util-vserver-0.30.215/scripts/pkgmgmt	2008-11-17 22:47:02.486514626 +0200
-+++ util-vserver-0.30.216-r2844/scripts/pkgmgmt	2009-11-05 14:27:48.753407445 +0200
+--- util-vserver-0.30.216-pre3038/scripts/pkgmgmt~	2013-05-27 17:13:26.567683113 +0300
++++ util-vserver-0.30.216-pre3038/scripts/pkgmgmt	2013-05-27 17:13:05.566763191 +0300
 @@ -185,6 +185,47 @@
      test -n "$is_ok"
  }
@@ -19,10 +19,10 @@
 +    guestbdb=$(ldd "$vdir"/bin/rpm | awk '/libdb-[0-9\.]+.so/ { sub(/libdb-/, "", $1); sub(/.so/, "", $1); print $1 }')
 +    local i host_path guest_path
 +    for i in /bin /usr/bin /usr/lib/rpm /usr/local/bin; do
-+	test ! -x "$i"/$host_tool || { host_path="$i"/"db${hostbdb}_${host_tool}"; break; }
++       test ! -x "$i"/db${hostbdb}_$host_tool || { host_path="$i"/"db${hostbdb}_${host_tool}"; break; }
 +    done
 +    for i in /bin /usr/bin /usr/lib/rpm /usr/local/bin; do
-+	test ! -x "$vdir$i"/$guest_tool || { guest_path="$i"/"db${guestbdb}_${guest_tool}"; break; }
++       test ! -x "$vdir$i"/db${guestbdb}_$guest_tool || { guest_path="$i"/"db${guestbdb}_${guest_tool}"; break; }
 +    done
 +
 +    test -n "$host_path" || {
@@ -40,15 +40,15 @@
 +	res=1
 +    }
 +
-+    eval $host_tool=$host_path
-+    eval $guest_tool=$guest_path
++    eval db_$host_tool=$host_path
++    eval db_$guest_tool=$guest_path
 +    return $res
 +}
 +
  # Usage: verifyInternalPackages <vserver> <style>
  function verifyInternalPackages()
  {
-@@ -392,7 +429,12 @@
+@@ -405,7 +446,12 @@
  	verifyInternalPackages "$vserver" RH || test -n "$IS_FORCE" ||
  	    panic "
  Can not continue; use '--force' to override this check"
@@ -61,7 +61,7 @@
  	pushd "$vdir" >/dev/null
  
  	test ! -L var/lib/rpm || {
-@@ -416,6 +458,10 @@
+@@ -429,6 +475,10 @@
  	findDir RPMETCDIR   "$cfgdir"/rpmetc   "$cfgdir"/base/rpm/etc    /etc/rpm /
  	findDir RPMSTATEDIR "$cfgdir"/rpmstate "$cfgdir"/base/rpm/state
      else
@@ -72,7 +72,7 @@
  	mkdir -m755 -p "$cfgdir"
  	local need_base=
  
-@@ -460,8 +506,41 @@
+@@ -473,8 +523,41 @@
  	pushd "$vdir" >/dev/null
  	    ## remove %_dbpath settings
  	    _substFile /etc/rpm/macros '/^%_dbpath[ \t].*/D'
