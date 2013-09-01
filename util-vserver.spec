@@ -125,7 +125,7 @@ Requires:	pld-release
 Requires:	make
 Requires:	mktemp >= 1.5-18
 Requires:	rc-scripts >= 0.4.3.4
-#Requires:	rpm >= 3.4.10-36
+#Requires:	rpm >= 5.4.10-36
 Requires:	tar
 Requires:	uname(release) >= 2.6.27
 Requires:	util-linux >= 2.13
