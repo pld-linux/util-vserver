@@ -8,7 +8,7 @@ vsysctl: open("/etc/vservers/chef-server/sysctl/CVS/setting"): No such file or d
        while ((de = Ereaddir(dp)) != NULL) {
  	if (*de->d_name == '.')
  	  continue;
-+	if (strcmp(*de->d_name, "CVS") == 0)
++	if (strcmp(de->d_name, "CVS") == 0)
 +	  continue;
  	handle_setting(dir, de->d_name);
        }
