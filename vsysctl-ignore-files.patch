@@ -1,0 +1,15 @@
+Make "CVS" control dir being ignored in /etc/vserver/<name>/sysctl.
+
+or we get vsysctl error and vserver does not startup:
+vsysctl: open("/etc/vservers/chef-server/sysctl/CVS/setting"): No such file or directory
+--- util-vserver-0.30.216-pre3038/src/vsysctl.c~	2012-09-27 15:08:37.000000000 +0300
++++ util-vserver-0.30.216-pre3038/src/vsysctl.c	2013-10-17 17:20:48.366930646 +0300
+@@ -165,6 +165,8 @@
+       while ((de = Ereaddir(dp)) != NULL) {
+ 	if (*de->d_name == '.')
+ 	  continue;
++	if (strcmp(*de->d_name, "CVS") == 0)
++	  continue;
+ 	handle_setting(dir, de->d_name);
+       }
+       Eclosedir(dp);
