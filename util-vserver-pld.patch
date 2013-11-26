@@ -501,20 +501,20 @@
  	    echo $"Vserver style '$style' is not supported for packagemanagment" >&2
 --- util-vserver-0.30.216-r2837.orig/scripts/util-vserver-vars.pathsubst	2009-06-22 17:36:34.000000000 +0200
 +++ util-vserver-0.30.216-r2837/scripts/util-vserver-vars.pathsubst	2009-06-22 17:48:26.000000000 +0200
-@@ -54,6 +54,7 @@
- _LIB_VSERVER_BUILD_FUNCTIONS_RPM="$__PKGLIBDIR/vserver-build.functions.rpm"
- _LIB_VSERVER_BUILD_FUNCTIONS_YUM="$__PKGLIBDIR/vserver-build.functions.yum"
- _LIB_VSERVER_BUILD_FUNCTIONS_PKGMGMT="$__PKGLIBDIR/vserver-build.functions.pkgmgmt"
-+_LIB_VSERVER_BUILD_FUNCTIONS_POLDEK="$__PKGLIBDIR/vserver-build.functions.poldek"
+@@ -58,6 +58,7 @@
+ _LIB_VSERVER_BUILD_FUNCTIONS_YUM="$__PKGDATADIR/vserver-build.functions.yum"
+ _LIB_VSERVER_BUILD_FUNCTIONS_URPMI="$__PKGDATADIR/vserver-build.functions.urpmi"
+ _LIB_VSERVER_BUILD_FUNCTIONS_PKGMGMT="$__PKGDATADIR/vserver-build.functions.pkgmgmt"
++_LIB_VSERVER_BUILD_FUNCTIONS_POLDEK="$__PKGDATADIR/vserver-build.functions.poldek"
  _LISTDEVIP="$__LEGACYDIR/listdevip"
- _LOCKFILE="$__PKGLIBDIR/lockfile"
- _MASK2PREFIX="$__PKGLIBDIR/mask2prefix"
-@@ -109,6 +110,8 @@
- _VUNIFY="$__PKGLIBDIR/vunify"
+ _LOCKFILE="$__PKGLIBEXECDIR/lockfile"
+ _MASK2PREFIX="$__PKGLIBEXECDIR/mask2prefix"
+@@ -116,6 +117,8 @@
+ _VURPM_WORKER="$__PKGLIBEXECDIR/vurpm-worker"
  _VYUM="$__SBINDIR/vyum"
- _VYUM_WORKER="$__PKGLIBDIR/vyum-worker"
+ _VYUM_WORKER="$__PKGLIBEXECDIR/vyum-worker"
 +_VPOLDEK="$__SBINDIR/vpoldek"
-+_VPOLDEK_WORKER="$__PKGLIBDIR/vpoldek-worker"
++_VPOLDEK_WORKER="$__PKGLIBEXECDIR/vpoldek-worker"
  
  _AWK="@AWK@"
  _BZIP2="@BZIP2@"
@@ -702,13 +702,13 @@
      rpm         ... -- [-d <distribution>] --empty|([--force] [--nodeps] <manifest>)+
                  ...  installs lists of rpm-packages
      skeleton    ... -- [<cmd> <args>*]
-@@ -136,7 +139,7 @@
+@@ -145,7 +145,7 @@
  
  case x"$method" in
      (xlegacy)	exec $_VSERVER_LEGACY "$VSERVER_NAME" build "$@" ;;
 -    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xtemplate|xfai|xrsync|xclone|xurpmi)
 +    (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xtemplate|xfai|xrsync|xclone|xurpmi|xpoldek)
- 		. $__PKGLIBDIR/vserver-build.$method
+ 		. $__PKGDATADIR/vserver-build.$method
  		;;
      (x)		panic $"No build-method specified";;
 --- util-vserver-0.30.216-r2837.orig/scripts/vserver-build.functions	2009-06-22 17:36:35.000000000 +0200

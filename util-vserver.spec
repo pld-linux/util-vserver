@@ -18,8 +18,8 @@
 # reqdb_pkg and reqdb_ver must match value from current rpm package in distro
 %define		reqdb_ver	5.2
 %define		reqdb_pkg	db%{reqdb_ver}
-%define		snap	pre3038
-%define		rel	5
+%define		snap	pre3054
+%define		rel	1
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -28,7 +28,7 @@ Release:	1.%{snap}.%{rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	21ae909b16d57fdb169743cde35e896d
+# Source0-md5:	d6fe16a0dbde811ae0672ca69aaf01c5
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -75,7 +75,7 @@ Patch21:	%{name}-bash-wrapper.patch
 Patch22:	%{name}-pivot-root-ugly-hack.patch
 Patch24:	vunify-more-exclude.patch
 Patch25:	stat.patch
-Patch26:	%{name}-am.patch
+
 Patch27:	%{name}-rpm5.patch
 Patch28:	diet-ccache.patch
 Patch29:	%{name}-centos6.patch
@@ -444,7 +444,7 @@ Szablony do tworzenia VServerów dla dystrybucji Titanium Linux.
 %patch22 -p1
 %patch24 -p1
 %patch25 -p1
-%patch26 -p1
+
 %patch27 -p1
 %patch28 -p1
 %patch29 -p1
@@ -515,7 +515,7 @@ install -d $RPM_BUILD_ROOT{/vservers/.pkg,/etc/{sysconfig,rc.d/init.d,cron.d}} \
 # our libcgroup uses per subsystem mount
 touch $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.defaults/cgroup/per-ss
 
-chmod -R +rX $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/*
+chmod -R +rX $RPM_BUILD_ROOT%{_datadir}/%{name}/distributions/*
 
 sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE1} > \
 	$RPM_BUILD_ROOT/etc/rc.d/init.d/vprocunhide
@@ -555,11 +555,11 @@ rm $RPM_BUILD_ROOT%{_mandir}/man8/vserver-copy.8
 
 install -p %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
 cp -p %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/vrootdevices
-install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld
-install -p %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld/initpost
-install -p %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/tld/initpost
-ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/initpost
-ln -s ../pld/initpost $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/initpost
+install -d $RPM_BUILD_ROOT%{_datadir}/%{name}/distributions/pld
+install -p %{SOURCE10} $RPM_BUILD_ROOT%{_datadir}/%{name}/distributions/pld/initpost
+install -p %{SOURCE10} $RPM_BUILD_ROOT%{_datadir}/%{name}/distributions/tld/initpost
+ln -s ../pld/initpost $RPM_BUILD_ROOT%{_datadir}/%{name}/distributions/pld-ac/initpost
+ln -s ../pld/initpost $RPM_BUILD_ROOT%{_datadir}/%{name}/distributions/pld-th/initpost
 install -p vproc-%{vproc_version}/vproc $RPM_BUILD_ROOT%{_sbindir}
 sed -e 's,/usr/lib,%{_libdir},' %{SOURCE12} > $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
 chmod +x $RPM_BUILD_ROOT%{_libdir}/%{name}/vhashify.cron
@@ -568,11 +568,11 @@ cat > $RPM_BUILD_ROOT/etc/cron.d/vservers << EOF
 02 2 * * 0      root    %{_libdir}/%{name}/vhashify.cron
 EOF
 
-install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pubkeys
-cp -p %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-ac/pubkeys/pld-ac.asc
+install -d $RPM_BUILD_ROOT%{_datadir}/%{name}/distributions/pld-ac/pubkeys
+cp -p %{SOURCE13} $RPM_BUILD_ROOT%{_datadir}/%{name}/distributions/pld-ac/pubkeys/pld-ac.asc
 
-install -d $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys
-cp -p %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/%{name}/distributions/pld-th/pubkeys/pld-th.asc
+install -d $RPM_BUILD_ROOT%{_datadir}/%{name}/distributions/pld-th/pubkeys
+cp -p %{SOURCE14} $RPM_BUILD_ROOT%{_datadir}/%{name}/distributions/pld-th/pubkeys/pld-th.asc
 
 cp -p %{SOURCE16} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
@@ -625,8 +625,8 @@ cp -p %{SOURCE16} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 %{__sed} -i -e 's|%%ARCH%%|%{ftp_arch}|' $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.distributions/tld/poldek/repos.d/tld.conf
 
 # current debootstrap link
-echo "http://ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.10_all.deb" \
-	> $RPM_BUILD_ROOT%{_libdir}/%{name}/defaults/debootstrap.uri
+echo "http://ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.55_all.deb" \
+	> $RPM_BUILD_ROOT%{_datadir}/%{name}/defaults/debootstrap.uri
 
 install -d $RPM_BUILD_ROOT/var/cache/vservers/poldek
 
@@ -634,7 +634,7 @@ install -d $RPM_BUILD_ROOT/var/cache/vservers/poldek
 %{__rm} $RPM_BUILD_ROOT%{py_sitedir}/_libvserver.la
 # we have our own initscript which does the same
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-wrapper
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-init.functions
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/util-vserver/vserver-init.functions
 %{__rm} $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
 %{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/vservers.conf
 
@@ -795,23 +795,28 @@ exit 0
 %attr(755,root,root) %{_sbindir}/vurpm
 %attr(755,root,root) %{_sbindir}/vwait
 %attr(755,root,root) %{_sbindir}/vyum
+%dir %{_datadir}/%{name}
+%dir %{_datadir}/%{name}/defaults
+%{_datadir}/%{name}/defaults/fstab
+%{_datadir}/%{name}/defaults/debootstrap.*
+%{_datadir}/%{name}/defaults/vunify-exclude
+%{_datadir}/%{name}/defaults/context.start
+%{_datadir}/%{name}/defaults/environment
+%{_datadir}/%{name}/defaults/h2ext.desc
+%{_datadir}/%{name}/defaults/mtab
+%{_datadir}/%{name}/defaults/vprocunhide-files
+%dir %{_datadir}/%{name}/distributions
+%{_datadir}/%{name}/distributions/defaults
+%dir %{_datadir}/%{name}/distributions/template
+%attr(755,root,root) %{_datadir}/%{name}/distributions/template/initpost
+%attr(755,root,root) %{_datadir}/%{name}/distributions/template/initpre
+%{_datadir}/%{name}/FEATURES.txt
+%{_datadir}/%{name}/util-vserver-vars
+%{_datadir}/%{name}/functions
+%{_datadir}/%{name}/vserver-build.*
+%{_datadir}/%{name}/vserver-setup.functions
+%{_datadir}/%{name}/vserver.*
 %dir %{_libdir}/%{name}
-%dir %{_libdir}/%{name}/defaults
-%{_libdir}/%{name}/defaults/fstab
-%{_libdir}/%{name}/defaults/debootstrap.*
-%{_libdir}/%{name}/defaults/vunify-exclude
-%{_libdir}/%{name}/defaults/context.start
-%{_libdir}/%{name}/defaults/environment
-%{_libdir}/%{name}/defaults/h2ext.desc
-%{_libdir}/%{name}/defaults/mtab
-%{_libdir}/%{name}/defaults/vprocunhide-files
-%dir %{_libdir}/%{name}/distributions
-%{_libdir}/%{name}/distributions/defaults
-%dir %{_libdir}/%{name}/distributions/template
-%attr(755,root,root) %{_libdir}/%{name}/distributions/template/initpost
-%attr(755,root,root) %{_libdir}/%{name}/distributions/template/initpre
-%{_libdir}/%{name}/FEATURES.txt
-%{_libdir}/%{name}/util-vserver-vars
 %attr(755,root,root) %{_libdir}/%{name}/bash-wrapper
 %attr(755,root,root) %{_libdir}/%{name}/capchroot
 %attr(755,root,root) %{_libdir}/%{name}/chain-echo
@@ -823,7 +828,6 @@ exit 0
 %attr(755,root,root) %{_libdir}/%{name}/exec-ulimit
 %attr(755,root,root) %{_libdir}/%{name}/fakerunlevel
 %attr(755,root,root) %{_libdir}/%{name}/filetime
-%{_libdir}/%{name}/functions
 %attr(755,root,root) %{_libdir}/%{name}/h2ext
 %attr(755,root,root) %{_libdir}/%{name}/h2ext-worker
 %attr(755,root,root) %{_libdir}/%{name}/keep-ctx-alive
@@ -848,9 +852,6 @@ exit 0
 %attr(755,root,root) %{_libdir}/%{name}/vrpm-*
 %attr(755,root,root) %{_libdir}/%{name}/vserver-build
 %attr(755,root,root) %{_libdir}/%{name}/vurpm-worker
-%{_libdir}/%{name}/vserver-build.*
-%{_libdir}/%{name}/vserver-setup.functions
-%{_libdir}/%{name}/vserver.*
 %attr(755,root,root) %{_libdir}/%{name}/vservers.grabinfo.sh
 %attr(755,root,root) %{_libdir}/%{name}/vshelper
 %attr(755,root,root) %{_libdir}/%{name}/vshelper-sync
@@ -917,23 +918,23 @@ exit 0
 
 %files -n vserver-distro-alpine
 %defattr(644,root,root,755)
-%dir %{_libdir}/%{name}/distributions/alpine
-%attr(755,root,root) %{_libdir}/%{name}/distributions/alpine/initpost
-%attr(755,root,root) %{_libdir}/%{name}/distributions/alpine/initpre
+%dir %{_datadir}/%{name}/distributions/alpine
+%attr(755,root,root) %{_datadir}/%{name}/distributions/alpine/initpost
+%attr(755,root,root) %{_datadir}/%{name}/distributions/alpine/initpre
 
 %files -n vserver-distro-centos
 %defattr(644,root,root,755)
-%{_libdir}/util-vserver/distributions/centos*
+%{_datadir}/util-vserver/distributions/centos*
 
 %files -n vserver-distro-debian
 %defattr(644,root,root,755)
-%dir %{_libdir}/%{name}/distributions/debian
-%attr(755,root,root) %{_libdir}/%{name}/distributions/debian/initpost
-%{_libdir}/%{name}/distributions/etch
-%{_libdir}/%{name}/distributions/lenny
-%{_libdir}/%{name}/distributions/sid
-%{_libdir}/%{name}/distributions/squeeze
-%{_libdir}/%{name}/distributions/wheezy
+%dir %{_datadir}/%{name}/distributions/debian
+%attr(755,root,root) %{_datadir}/%{name}/distributions/debian/initpost
+%{_datadir}/%{name}/distributions/etch
+%{_datadir}/%{name}/distributions/lenny
+%{_datadir}/%{name}/distributions/sid
+%{_datadir}/%{name}/distributions/squeeze
+%{_datadir}/%{name}/distributions/wheezy
 
 %files -n vserver-distro-fedora
 %defattr(644,root,root,755)
@@ -943,25 +944,25 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/fc*
 %dir %{_sysconfdir}/vservers/.distributions/fc*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/fc*/apt/sources.list
-%{_libdir}/%{name}/distributions/f7
-%{_libdir}/%{name}/distributions/f8
-%{_libdir}/%{name}/distributions/f9
-%{_libdir}/%{name}/distributions/f10
-%{_libdir}/%{name}/distributions/f11
-%{_libdir}/%{name}/distributions/f12
-%{_libdir}/%{name}/distributions/f13
-%{_libdir}/%{name}/distributions/f14
-%{_libdir}/%{name}/distributions/fc1
-%{_libdir}/%{name}/distributions/fc2
-%{_libdir}/%{name}/distributions/fc3
-%{_libdir}/%{name}/distributions/fc4
-%{_libdir}/%{name}/distributions/fc5
-%{_libdir}/%{name}/distributions/fc6
+%{_datadir}/%{name}/distributions/f7
+%{_datadir}/%{name}/distributions/f8
+%{_datadir}/%{name}/distributions/f9
+%{_datadir}/%{name}/distributions/f10
+%{_datadir}/%{name}/distributions/f11
+%{_datadir}/%{name}/distributions/f12
+%{_datadir}/%{name}/distributions/f13
+%{_datadir}/%{name}/distributions/f14
+%{_datadir}/%{name}/distributions/fc1
+%{_datadir}/%{name}/distributions/fc2
+%{_datadir}/%{name}/distributions/fc3
+%{_datadir}/%{name}/distributions/fc4
+%{_datadir}/%{name}/distributions/fc5
+%{_datadir}/%{name}/distributions/fc6
 
 %files -n vserver-distro-gentoo
 %defattr(644,root,root,755)
-%dir %{_libdir}/util-vserver/distributions/gentoo
-%attr(755,root,root) %{_libdir}/util-vserver/distributions/gentoo/*
+%dir %{_datadir}/util-vserver/distributions/gentoo
+%attr(755,root,root) %{_datadir}/util-vserver/distributions/gentoo/*
 %attr(755,root,root) %{_sbindir}/vdispatch-conf
 %attr(755,root,root) %{_sbindir}/vemerge
 %attr(755,root,root) %{_sbindir}/vesync
@@ -969,13 +970,13 @@ exit 0
 
 %files -n vserver-distro-pld
 %defattr(644,root,root,755)
-%dir %{_libdir}/%{name}/distributions/pld
-%attr(755,root,root) %{_libdir}/%{name}/distributions/pld/initpost
-%dir %{_libdir}/%{name}/distributions/pld-*
-%{_libdir}/%{name}/distributions/pld-*/pkgs
-%{_libdir}/%{name}/distributions/pld-*/pubkeys
-%{_libdir}/%{name}/distributions/pld-*/rpm
-%attr(755,root,root) %{_libdir}/%{name}/distributions/pld-*/initpost
+%dir %{_datadir}/%{name}/distributions/pld
+%attr(755,root,root) %{_datadir}/%{name}/distributions/pld/initpost
+%dir %{_datadir}/%{name}/distributions/pld-*
+%{_datadir}/%{name}/distributions/pld-*/pkgs
+%{_datadir}/%{name}/distributions/pld-*/pubkeys
+%{_datadir}/%{name}/distributions/pld-*/rpm
+%attr(755,root,root) %{_datadir}/%{name}/distributions/pld-*/initpost
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek
 %dir %{_sysconfdir}/vservers/.distributions/pld-ac/poldek/repos.d
@@ -990,35 +991,35 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions/rh9
 %dir %{_sysconfdir}/vservers/.distributions/rh9/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/rh*/apt/sources.list
-%{_libdir}/%{name}/distributions/rh9
-%dir %{_libdir}/%{name}/distributions/redhat
-%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initctl
-%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpost
-%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/initpre
-%attr(755,root,root) %{_libdir}/%{name}/distributions/redhat/rc.sysinit
+%{_datadir}/%{name}/distributions/rh9
+%dir %{_datadir}/%{name}/distributions/redhat
+%attr(755,root,root) %{_datadir}/%{name}/distributions/redhat/initctl
+%attr(755,root,root) %{_datadir}/%{name}/distributions/redhat/initpost
+%attr(755,root,root) %{_datadir}/%{name}/distributions/redhat/initpre
+%attr(755,root,root) %{_datadir}/%{name}/distributions/redhat/rc.sysinit
 
 %files -n vserver-distro-suse
 %defattr(644,root,root,755)
 %dir %{_sysconfdir}/vservers/.distributions/suse*
 %dir %{_sysconfdir}/vservers/.distributions/suse*/apt
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vservers/.distributions/suse*/apt/sources.list
-%{_libdir}/%{name}/distributions/suse*
+%{_datadir}/%{name}/distributions/suse*
 
 %files -n vserver-distro-scientificlinux
 %defattr(644,root,root,755)
-%dir %{_libdir}/%{name}/distributions/sl6
-%attr(755,root,root) %{_libdir}/%{name}/distributions/sl6/initpost
-%attr(755,root,root) %{_libdir}/%{name}/distributions/sl6/initpre
-%{_libdir}/%{name}/distributions/sl6/pkgs
-%{_libdir}/%{name}/distributions/sl6/yum
-%{_libdir}/%{name}/distributions/sl6/yum.repos.d
+%dir %{_datadir}/%{name}/distributions/sl6
+%attr(755,root,root) %{_datadir}/%{name}/distributions/sl6/initpost
+%attr(755,root,root) %{_datadir}/%{name}/distributions/sl6/initpre
+%{_datadir}/%{name}/distributions/sl6/pkgs
+%{_datadir}/%{name}/distributions/sl6/yum
+%{_datadir}/%{name}/distributions/sl6/yum.repos.d
 
 %files -n vserver-distro-tld
 %defattr(644,root,root,755)
-%dir %{_libdir}/%{name}/distributions/tld
-%attr(755,root,root) %{_libdir}/%{name}/distributions/tld/initpost
-%{_libdir}/%{name}/distributions/tld/pkgs
-%{_libdir}/%{name}/distributions/tld/rpm
+%dir %{_datadir}/%{name}/distributions/tld
+%attr(755,root,root) %{_datadir}/%{name}/distributions/tld/initpost
+%{_datadir}/%{name}/distributions/tld/pkgs
+%{_datadir}/%{name}/distributions/tld/rpm
 %dir %{_sysconfdir}/vservers/.distributions/tld
 %dir %{_sysconfdir}/vservers/.distributions/tld/poldek
 %dir %{_sysconfdir}/vservers/.distributions/tld/poldek/repos.d
