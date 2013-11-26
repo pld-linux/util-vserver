@@ -19,7 +19,7 @@
 %define		reqdb_ver	5.2
 %define		reqdb_pkg	db%{reqdb_ver}
 %define		snap	pre3054
-%define		rel	1
+%define		rel	2
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -517,15 +517,11 @@ touch $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.defaults/cgroup/per-ss
 
 chmod -R +rX $RPM_BUILD_ROOT%{_datadir}/%{name}/distributions/*
 
-sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE1} > \
-	$RPM_BUILD_ROOT/etc/rc.d/init.d/vprocunhide
-sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE2} > \
-	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers
-sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE15} > \
-	$RPM_BUILD_ROOT/etc/rc.d/init.d/util-vserver
-sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE5} > \
-	$RPM_BUILD_ROOT/etc/sysconfig/vservers
-sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' gentoo/bash-wrapper > \
+cp -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/vprocunhide
+cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers
+cp -p %{SOURCE15} $RPM_BUILD_ROOT/etc/rc.d/init.d/util-vserver
+cp -p %{SOURCE5} $RPM_BUILD_ROOT/etc/sysconfig/vservers
+sed 's|%{_usrlib}/util-vserver|%{_datadir}/%{name}|g' gentoo/bash-wrapper > \
 	$RPM_BUILD_ROOT%{_libdir}/%{name}/bash-wrapper
 
 %if %{with legacy}
@@ -540,10 +536,8 @@ for i in $RPM_BUILD_ROOT/etc/rc.d/init.d/v_* ; do
 EOF
 done
 
-sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE3} > \
-	$RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
-sed 's|%{_usrlib}/util-vserver|%{_libdir}/%{name}|g' %{SOURCE4} > \
-	$RPM_BUILD_ROOT/etc/rc.d/init.d/rebootmgr
+cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
+cp -p %{SOURCE4} $RPM_BUILD_ROOT/etc/rc.d/init.d/rebootmgr
 install -p %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 %else
 rm $RPM_BUILD_ROOT/etc/rc.d/init.d/rebootmgr

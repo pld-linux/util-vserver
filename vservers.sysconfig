@@ -33,4 +33,4 @@ MARKS="default"
 # The location of util-vserver-vars
 # This file contains variables to util-vserver scripts used within the
 # init script. Change at your own risk.
-#UTIL_VSERVER_VARS=/usr/lib/util-vserver/util-vserver-vars
+#UTIL_VSERVER_VARS=/usr/share/util-vserver/util-vserver-vars
