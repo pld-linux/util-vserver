@@ -512,6 +512,12 @@ install -d $RPM_BUILD_ROOT{/vservers/.pkg,/etc/{sysconfig,rc.d/init.d,cron.d}} \
 %endif
 	DESTDIR=$RPM_BUILD_ROOT
 
+%ifarch %{ix86}
+# fix breakage caused by too many substitiutions on x86
+%{__sed} -i -e 's|%{_datadir}/%{name}/sigexec|%{_libdir}/%{name}/sigexec|g' \
+	$RPM_BUILD_ROOT%{_libdir}/%{name}/vshelper
+%endif
+
 # our libcgroup uses per subsystem mount
 touch $RPM_BUILD_ROOT%{_sysconfdir}/vservers/.defaults/cgroup/per-ss
 
