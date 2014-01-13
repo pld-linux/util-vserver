@@ -19,7 +19,7 @@
 %define		reqdb_ver	5.2
 %define		reqdb_pkg	db%{reqdb_ver}
 %define		snap	pre3054
-%define		rel	3
+%define		rel	4
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -57,7 +57,6 @@ Patch3:		%{name}-tld.patch
 Patch4:		%{name}-m4-diet.patch
 Patch5:		%{name}-yum-verb-nogpg.patch
 Patch6:		%{name}-build-umask.patch
-Patch7:		%{name}-utmpx.patch
 Patch8:		%{name}-vprocunhide.patch
 Patch9:		%{name}-dev.patch
 Patch10:	%{name}-no-dynamic-ctx.patch
@@ -427,7 +426,6 @@ Szablony do tworzenia VServerów dla dystrybucji Titanium Linux.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
 %patch8 -p1
 %patch9 -p1
 %{?with_no_dynamic_context:%patch10 -p1}
