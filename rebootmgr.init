@@ -5,8 +5,6 @@
 #              the /sbin/vreboot command to talk with the reboot manager
 # processname: rebootmgr
 # config: /etc/vservers
-#
-# $Id$
 
 . /etc/init.d/functions
 

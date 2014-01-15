@@ -2,8 +2,6 @@
 # chkconfig: 345 98 02
 # description: The vservers service is used to start and stop all
 #              the virtual servers.
-#
-# $Id$
 
 . /etc/init.d/functions
 
