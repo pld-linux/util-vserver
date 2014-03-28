@@ -19,7 +19,7 @@
 %define		reqdb_ver	5.2
 %define		reqdb_pkg	db%{reqdb_ver}
 %define		snap	pre3054
-%define		rel	4
+%define		rel	5
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -121,6 +121,7 @@ Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-lib = %{version}-%{release}
 Requires:	coreutils
 Requires:	diffutils
+Requires:	glibc-misc
 Requires:	pld-release
 Requires:	make
 Requires:	mktemp >= 1.5-18
