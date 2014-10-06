@@ -111,6 +111,7 @@ BuildRequires:	texlive-format-pdflatex
 BuildRequires:	texlive-latex-ams
 BuildRequires:	texlive-latex-extend
 BuildRequires:	texlive-latex-ucs
+BuildRequires:	texlive-latex-wasysym
 BuildRequires:	texlive-makeindex
 BuildRequires:	texlive-pdftex
 BuildRequires:	texlive-xetex
