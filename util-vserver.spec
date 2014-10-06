@@ -18,8 +18,8 @@
 # reqdb_pkg and reqdb_ver must match value from current rpm package in distro
 %define		reqdb_ver	5.2
 %define		reqdb_pkg	db%{reqdb_ver}
-%define		snap	pre3054
-%define		rel	6
+%define		snap	pre3062
+%define		rel	1
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -28,7 +28,7 @@ Release:	1.%{snap}.%{rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	d6fe16a0dbde811ae0672ca69aaf01c5
+# Source0-md5:	c67c795a8f4a217f4d2ddf665ad040f8
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -66,7 +66,7 @@ Patch13:	%{name}-tmpdir.patch
 Patch14:	%{name}-rpmpath.patch
 Patch15:	%{name}-interfaces-ignore-cvs-dir.patch
 Patch16:	%{name}-personalitymachine.patch
-Patch17:	%{name}-backupfiles.patch
+
 Patch18:	%{name}-vprocunhide-net.patch
 # http://glen.alkohol.ee/pld/util-vserver-dbrebuild-internalize4.patch
 Patch19:	%{name}-dbrebuild-internalize4.patch
@@ -437,7 +437,7 @@ Szablony do tworzenia VServerów dla dystrybucji Titanium Linux.
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
-%patch17 -p1
+
 %patch18 -p1
 %patch19 -p1
 %patch21 -p1
