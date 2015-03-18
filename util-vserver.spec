@@ -18,7 +18,7 @@
 # reqdb_pkg and reqdb_ver must match value from current rpm package in distro
 %define		reqdb_ver	5.2
 %define		reqdb_pkg	db%{reqdb_ver}
-%define		snap	pre3062
+%define		snap	pre3117
 %define		rel	1
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
@@ -27,8 +27,8 @@ Version:	0.30.216
 Release:	1.%{snap}.%{rel}
 License:	GPL
 Group:		Applications/System
-Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	c67c795a8f4a217f4d2ddf665ad040f8
+Source0:	http://people.linux-vserver.org/~dhozac/t/uv-testing/%{name}-%{version}-%{snap}.tar.xz
+# Source0-md5:	24eccf79dd1c1793818630fb0ac250a0
 Source1:	vprocunhide.init
 Source2:	vservers.init
 Source3:	vservers-legacy.init
@@ -84,7 +84,7 @@ BuildRequires:	autoconf
 BuildRequires:	automake >= 1.9
 BuildRequires:	beecrypt-devel
 BuildRequires:	ctags
-%{?with_dietlibc:BuildRequires:	dietlibc-static >= 2:0.32-16}
+%{?with_dietlibc:BuildRequires:	dietlibc-static >= 2:0.33-4}
 BuildRequires:	e2fsprogs-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 1.5.14
@@ -811,13 +811,14 @@ exit 0
 %dir %{_datadir}/%{name}/distributions/template
 %attr(755,root,root) %{_datadir}/%{name}/distributions/template/initpost
 %attr(755,root,root) %{_datadir}/%{name}/distributions/template/initpre
-%{_datadir}/%{name}/FEATURES.txt
 %{_datadir}/%{name}/util-vserver-vars
 %{_datadir}/%{name}/functions
 %{_datadir}/%{name}/vserver-build.*
 %{_datadir}/%{name}/vserver-setup.functions
 %{_datadir}/%{name}/vserver.*
 %dir %{_libdir}/%{name}
+%{_libdir}/%{name}/FEATURES.txt
+%{_libdir}/%{name}/util-vserver-vars
 %attr(755,root,root) %{_libdir}/%{name}/bash-wrapper
 %attr(755,root,root) %{_libdir}/%{name}/capchroot
 %attr(755,root,root) %{_libdir}/%{name}/chain-echo
