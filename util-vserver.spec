@@ -1,3 +1,4 @@
+# TODO: verify systemd files
 # NOTE:
 # - m68k and mips are the only not supported archs
 #
@@ -49,7 +50,6 @@ Source13:	ftp://ftp.pld-linux.org/dists/ac/PLD-2.0-Ac-GPG-key.asc
 Source14:	ftp://ftp.pld-linux.org/dists/th/PLD-3.0-Th-GPG-key.asc
 # Source14-md5:	08b29584dd349aac9caa7610131a0a88
 Source15:	%{name}.init
-Source16:	%{name}.tmpfiles
 Patch0:		%{name}-vsysvwrapper.patch
 Patch1:		%{name}-pld.patch
 Patch2:		%{name}-centos.patch
@@ -80,8 +80,8 @@ Patch28:	diet-ccache.patch
 Patch29:	%{name}-centos6.patch
 Patch30:	vsysctl-ignore-files.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
-BuildRequires:	autoconf
-BuildRequires:	automake >= 1.9
+BuildRequires:	autoconf >= 2.57
+BuildRequires:	automake >= 1:1.9
 BuildRequires:	beecrypt-devel
 BuildRequires:	ctags
 %{?with_dietlibc:BuildRequires:	dietlibc-static >= 2:0.33-4}
@@ -89,11 +89,14 @@ BuildRequires:	e2fsprogs-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 1.5.14
 BuildRequires:	pkgconfig
-BuildRequires:	python-devel
-BuildRequires:	python-modules
+BuildRequires:	python-devel >= 1:2.4
+BuildRequires:	python-modules >= 1:2.4
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.647
 BuildRequires:	sed >= 4.0
+BuildRequires:	systemd-devel
+BuildRequires:	tar >= 1:1.22
+BuildRequires:	xz
 %if %{with doc}
 BuildRequires:	doxygen >= 1:1.7.3
 BuildRequires:	graphviz
@@ -547,11 +550,11 @@ cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
 cp -p %{SOURCE4} $RPM_BUILD_ROOT/etc/rc.d/init.d/rebootmgr
 install -p %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/vservers-legacy
 %else
-rm $RPM_BUILD_ROOT/etc/rc.d/init.d/rebootmgr
-rm $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
-rm $RPM_BUILD_ROOT%{_mandir}/man8/distrib-info.8
-rm $RPM_BUILD_ROOT%{_mandir}/man8/rebootmgr.8
-rm $RPM_BUILD_ROOT%{_mandir}/man8/vserver-copy.8
+%{__rm} $RPM_BUILD_ROOT/etc/rc.d/init.d/rebootmgr
+%{__rm} $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-legacy
+%{__rm} $RPM_BUILD_ROOT%{_mandir}/man8/distrib-info.8
+%{__rm} $RPM_BUILD_ROOT%{_mandir}/man8/rebootmgr.8
+%{__rm} $RPM_BUILD_ROOT%{_mandir}/man8/vserver-copy.8
 %endif
 
 install -p %{SOURCE7} $RPM_BUILD_ROOT/etc/rc.d/init.d/vrootdevices
@@ -575,7 +578,7 @@ cp -p %{SOURCE13} $RPM_BUILD_ROOT%{_datadir}/%{name}/distributions/pld-ac/pubkey
 install -d $RPM_BUILD_ROOT%{_datadir}/%{name}/distributions/pld-th/pubkeys
 cp -p %{SOURCE14} $RPM_BUILD_ROOT%{_datadir}/%{name}/distributions/pld-th/pubkeys/pld-th.asc
 
-cp -p %{SOURCE16} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
+%{__mv} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/{90-util-vserver,util-vserver}.conf
 
 # set arch for pld-ac in pld.conf
 %ifarch i586 i686 ppc sparc alpha athlon
@@ -631,8 +634,12 @@ echo "http://ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.55_al
 
 install -d $RPM_BUILD_ROOT/var/cache/vservers/poldek
 
-# cleanups
-%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/_libvserver.la
+# python packaging
+%py_comp $RPM_BUILD_ROOT%{py_sitedir}
+%py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
+%py_postclean
+%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/_libvserver.{la,a}
+
 # we have our own initscript which does the same
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-wrapper
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/util-vserver/vserver-init.functions
@@ -755,7 +762,7 @@ exit 0
 %dir %{_sysconfdir}/vservers/.distributions
 %dir %{_sysconfdir}/vservers/.distributions/.common
 %dir %{_sysconfdir}/vservers/.distributions/.common/pubkeys
-/sbin/vshelper
+%attr(755,root,root) /sbin/vshelper
 %attr(755,root,root) %{_sbindir}/chbind
 %attr(755,root,root) %{_sbindir}/chcontext
 %attr(755,root,root) %{_sbindir}/chxid
@@ -841,6 +848,8 @@ exit 0
 %attr(755,root,root) %{_libdir}/%{name}/save_ctxinfo
 %attr(755,root,root) %{_libdir}/%{name}/secure-mount
 %attr(755,root,root) %{_libdir}/%{name}/sigexec
+%attr(755,root,root) %{_libdir}/%{name}/systemd-start
+%attr(755,root,root) %{_libdir}/%{name}/systemd-stop
 %attr(755,root,root) %{_libdir}/%{name}/start-vservers
 %attr(755,root,root) %{_libdir}/%{name}/tunctl
 %attr(755,root,root) %{_libdir}/%{name}/vapt-get-worker
@@ -870,9 +879,16 @@ exit 0
 %{_mandir}/man8/vserver-stat.8*
 %{_mandir}/man8/vserver.8*
 %{_mandir}/man8/vtop.8*
+%attr(755,root,root) /lib/systemd/system-generators/systemd-vserver-generator
+%{systemdunitdir}/util-vserver.service
+%{systemdunitdir}/vprocunhide.service
+%{systemdunitdir}/vserver.target
+%{systemdunitdir}/vserver-mark@.target
+%{systemdunitdir}/vserver@.service
+%{_prefix}/lib/sysctl.d/90-util-vserver.conf
+%{systemdtmpfilesdir}/%{name}.conf
 %attr(000,root,root) %dir /vservers
 %dir /vservers/.pkg
-%{systemdtmpfilesdir}/%{name}.conf
 %dir %{_localstatedir}/run/vservers
 %dir %{_localstatedir}/run/vservers.rev
 %dir %{_localstatedir}/run/vshelper
@@ -888,9 +904,9 @@ exit 0
 %defattr(644,root,root,755)
 %{?with_doc:%doc lib/apidoc/latex/refman.pdf lib/apidoc/html}
 %attr(755,root,root) %{_libdir}/libvserver.so
-%{_libdir}/lib*.la
-%{_includedir}/vserver*.h
-%{_pkgconfigdir}/*.pc
+%{_libdir}/libvserver.la
+%{_includedir}/vserver.h
+%{_pkgconfigdir}/util-vserver.pc
 
 %files static
 %defattr(644,root,root,755)
@@ -900,12 +916,26 @@ exit 0
 %files legacy
 %defattr(644,root,root,755)
 %dir %{_sysconfdir}/vservices
-%{_sysconfdir}/vservices/*
+%{_sysconfdir}/vservices/gated
+%{_sysconfdir}/vservices/httpd
+%{_sysconfdir}/vservices/named
+%{_sysconfdir}/vservices/portmap
+%{_sysconfdir}/vservices/sendmail
+%{_sysconfdir}/vservices/smb
+%{_sysconfdir}/vservices/sshd
+%{_sysconfdir}/vservices/xinetd
 %dir %{_libdir}/%{name}/legacy
 %attr(755,root,root) %{_libdir}/%{name}/legacy/*
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/vservers-legacy
-%attr(754,root,root) /etc/rc.d/init.d/v_*
 %attr(754,root,root) /etc/rc.d/init.d/rebootmgr
+%attr(754,root,root) /etc/rc.d/init.d/v_gated
+%attr(754,root,root) /etc/rc.d/init.d/v_httpd
+%attr(754,root,root) /etc/rc.d/init.d/v_named
+%attr(754,root,root) /etc/rc.d/init.d/v_portmap
+%attr(754,root,root) /etc/rc.d/init.d/v_sendmail
+%attr(754,root,root) /etc/rc.d/init.d/v_smb
+%attr(754,root,root) /etc/rc.d/init.d/v_sshd
+%attr(754,root,root) /etc/rc.d/init.d/v_xinetd
 %attr(754,root,root) /etc/rc.d/init.d/vservers-legacy
 %attr(755,root,root) %{_sbindir}/vserver-copy
 %{_mandir}/man8/distrib-info.8*
@@ -916,7 +946,7 @@ exit 0
 %files -n python-util-vserver
 %defattr(644,root,root,755)
 %attr(755,root,root) %{py_sitedir}/_libvserver.so
-%{py_sitedir}/libvserver.py
+%{py_sitedir}/libvserver.py[co]
 
 %files -n vserver-distro-alpine
 %defattr(644,root,root,755)
