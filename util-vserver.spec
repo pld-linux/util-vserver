@@ -638,7 +638,7 @@ install -d $RPM_BUILD_ROOT/var/cache/vservers/poldek
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_postclean
-%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/_libvserver.{la,a}
+%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/_libvserver.la
 
 # we have our own initscript which does the same
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-wrapper
