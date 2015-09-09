@@ -128,6 +128,7 @@ Requires:	diffutils
 Requires:	glibc-misc
 Requires:	make
 Requires:	mktemp >= 1.5-18
+Requires:	mount
 Requires:	pld-release
 Requires:	rc-scripts >= 0.4.3.4
 #Requires:	rpm >= 5.4.10-36
