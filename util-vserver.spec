@@ -20,7 +20,7 @@
 %define		reqdb_ver	5.2
 %define		reqdb_pkg	db%{reqdb_ver}
 %define		snap	pre3126
-%define		rel	2
+%define		rel	3
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -519,8 +519,8 @@ install -d $RPM_BUILD_ROOT{/vservers/.pkg,/etc/{sysconfig,rc.d/init.d,cron.d}} \
 
 %ifarch %{ix86}
 # fix breakage caused by too many substitiutions on x86
-%{__sed} -i -e 's|%{_datadir}/%{name}/sigexec|%{_libdir}/%{name}/sigexec|g' \
-	$RPM_BUILD_ROOT%{_libdir}/%{name}/vshelper
+%{__sed} -i -e 's|%{_datadir}/%{name}/sigexec|%{_libexecdir}/%{name}/sigexec|g' \
+	$RPM_BUILD_ROOT%{_libexecdir}/%{name}/vshelper
 %endif
 
 # our libcgroup uses per subsystem mount
