@@ -3,7 +3,7 @@
 # - m68k and mips are the only not supported archs
 #
 # Conditional build:
-%bcond_without	dietlibc		# don't use dietlibc (ask for troubles)
+%bcond_with	dietlibc		# don't use dietlibc (ask for troubles)
 %bcond_without	doc			# don't build documentation which needed LaTeX
 %bcond_without	no_dynamic_context	# disable enforcement of disabled dynamic context
 %bcond_with	xalan			# use the xalan xslt processor
@@ -20,7 +20,7 @@
 %define		reqdb_ver	5.2
 %define		reqdb_pkg	db%{reqdb_ver}
 %define		snap	pre3126
-%define		rel	1
+%define		rel	2
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -642,7 +642,7 @@ install -d $RPM_BUILD_ROOT/var/cache/vservers/poldek
 %{__rm} $RPM_BUILD_ROOT%{py_sitedir}/_libvserver.la
 
 # we have our own initscript which does the same
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/util-vserver/vserver-wrapper
+%{__rm} $RPM_BUILD_ROOT%{_libexecdir}/util-vserver/vserver-wrapper
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/util-vserver/vserver-init.functions
 %{__rm} $RPM_BUILD_ROOT/etc/rc.d/init.d/vservers-default
 %{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/vservers.conf
@@ -828,49 +828,52 @@ exit 0
 %{_libdir}/%{name}/FEATURES.txt
 %{_libdir}/%{name}/util-vserver-vars
 %attr(755,root,root) %{_libdir}/%{name}/bash-wrapper
-%attr(755,root,root) %{_libdir}/%{name}/capchroot
-%attr(755,root,root) %{_libdir}/%{name}/chain-echo
-%attr(755,root,root) %{_libdir}/%{name}/chbind-compat
-%attr(755,root,root) %{_libdir}/%{name}/chcontext-compat
-%attr(755,root,root) %{_libdir}/%{name}/check-unixfile
-%attr(755,root,root) %{_libdir}/%{name}/chroot-sh
-%attr(755,root,root) %{_libdir}/%{name}/exec-remount
-%attr(755,root,root) %{_libdir}/%{name}/exec-ulimit
-%attr(755,root,root) %{_libdir}/%{name}/fakerunlevel
-%attr(755,root,root) %{_libdir}/%{name}/filetime
-%attr(755,root,root) %{_libdir}/%{name}/h2ext
-%attr(755,root,root) %{_libdir}/%{name}/h2ext-worker
-%attr(755,root,root) %{_libdir}/%{name}/keep-ctx-alive
-%attr(755,root,root) %{_libdir}/%{name}/lockfile
-%attr(755,root,root) %{_libdir}/%{name}/mask2prefix
-%attr(755,root,root) %{_libdir}/%{name}/pkgmgmt
-%attr(755,root,root) %{_libdir}/%{name}/readlink
+%dir %{_libexecdir}/%{name}
+%{_libexecdir}/%{name}/util-vserver-vars
 %attr(755,root,root) %{_libdir}/%{name}/rpm-fake*
-%attr(755,root,root) %{_libdir}/%{name}/save_ctxinfo
-%attr(755,root,root) %{_libdir}/%{name}/secure-mount
-%attr(755,root,root) %{_libdir}/%{name}/sigexec
-%attr(755,root,root) %{_libdir}/%{name}/systemd-start
-%attr(755,root,root) %{_libdir}/%{name}/systemd-stop
-%attr(755,root,root) %{_libdir}/%{name}/start-vservers
-%attr(755,root,root) %{_libdir}/%{name}/tunctl
-%attr(755,root,root) %{_libdir}/%{name}/vapt-get-worker
-%attr(755,root,root) %{_libdir}/%{name}/vclone
-%attr(755,root,root) %{_libdir}/%{name}/vcopy
-%attr(755,root,root) %{_libdir}/%{name}/vhashify
 %attr(755,root,root) %{_libdir}/%{name}/vhashify.cron
-%attr(755,root,root) %{_libdir}/%{name}/vpkg
-%attr(755,root,root) %{_libdir}/%{name}/vpoldek-worker
-%attr(755,root,root) %{_libdir}/%{name}/vprocunhide
-%attr(755,root,root) %{_libdir}/%{name}/vrpm-*
-%attr(755,root,root) %{_libdir}/%{name}/vserver-build
-%attr(755,root,root) %{_libdir}/%{name}/vurpm-worker
-%attr(755,root,root) %{_libdir}/%{name}/vservers.grabinfo.sh
-%attr(755,root,root) %{_libdir}/%{name}/vshelper
-%attr(755,root,root) %{_libdir}/%{name}/vshelper-sync
-%attr(755,root,root) %{_libdir}/%{name}/vsysctl
-%attr(755,root,root) %{_libdir}/%{name}/vsysvwrapper
-%attr(755,root,root) %{_libdir}/%{name}/vunify
-%attr(755,root,root) %{_libdir}/%{name}/vyum-worker
+%attr(755,root,root) %{_libexecdir}/%{name}/capchroot
+%attr(755,root,root) %{_libexecdir}/%{name}/chain-echo
+%attr(755,root,root) %{_libexecdir}/%{name}/chbind-compat
+%attr(755,root,root) %{_libexecdir}/%{name}/chcontext-compat
+%attr(755,root,root) %{_libexecdir}/%{name}/check-unixfile
+%attr(755,root,root) %{_libexecdir}/%{name}/chroot-sh
+%attr(755,root,root) %{_libexecdir}/%{name}/exec-remount
+%attr(755,root,root) %{_libexecdir}/%{name}/exec-ulimit
+%attr(755,root,root) %{_libexecdir}/%{name}/fakerunlevel
+%attr(755,root,root) %{_libexecdir}/%{name}/filetime
+%attr(755,root,root) %{_libexecdir}/%{name}/h2ext
+%attr(755,root,root) %{_libexecdir}/%{name}/h2ext-worker
+%attr(755,root,root) %{_libexecdir}/%{name}/keep-ctx-alive
+%attr(755,root,root) %{_libexecdir}/%{name}/lockfile
+%attr(755,root,root) %{_libexecdir}/%{name}/mask2prefix
+%attr(755,root,root) %{_libexecdir}/%{name}/pkgmgmt
+%attr(755,root,root) %{_libexecdir}/%{name}/readlink
+%attr(755,root,root) %{_libexecdir}/%{name}/rpm-fake*
+%attr(755,root,root) %{_libexecdir}/%{name}/save_ctxinfo
+%attr(755,root,root) %{_libexecdir}/%{name}/secure-mount
+%attr(755,root,root) %{_libexecdir}/%{name}/sigexec
+%attr(755,root,root) %{_libexecdir}/%{name}/start-vservers
+%attr(755,root,root) %{_libexecdir}/%{name}/systemd-start
+%attr(755,root,root) %{_libexecdir}/%{name}/systemd-stop
+%attr(755,root,root) %{_libexecdir}/%{name}/tunctl
+%attr(755,root,root) %{_libexecdir}/%{name}/vapt-get-worker
+%attr(755,root,root) %{_libexecdir}/%{name}/vclone
+%attr(755,root,root) %{_libexecdir}/%{name}/vcopy
+%attr(755,root,root) %{_libexecdir}/%{name}/vhashify
+%attr(755,root,root) %{_libexecdir}/%{name}/vpkg
+%attr(755,root,root) %{_libexecdir}/%{name}/vpoldek-worker
+%attr(755,root,root) %{_libexecdir}/%{name}/vprocunhide
+%attr(755,root,root) %{_libexecdir}/%{name}/vrpm-*
+%attr(755,root,root) %{_libexecdir}/%{name}/vserver-build
+%attr(755,root,root) %{_libexecdir}/%{name}/vservers.grabinfo.sh
+%attr(755,root,root) %{_libexecdir}/%{name}/vshelper
+%attr(755,root,root) %{_libexecdir}/%{name}/vshelper-sync
+%attr(755,root,root) %{_libexecdir}/%{name}/vsysctl
+%attr(755,root,root) %{_libexecdir}/%{name}/vsysvwrapper
+%attr(755,root,root) %{_libexecdir}/%{name}/vunify
+%attr(755,root,root) %{_libexecdir}/%{name}/vurpm-worker
+%attr(755,root,root) %{_libexecdir}/%{name}/vyum-worker
 %{_mandir}/man8/chbind.8*
 %{_mandir}/man8/chcontext.8*
 %{_mandir}/man8/reducecap.8*
