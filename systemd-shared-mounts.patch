@@ -1,0 +1,80 @@
+From 1d0fc58bea018b561a9695b9f9f05203a399ca48 Mon Sep 17 00:00:00 2001
+From: Alexander Sulfrian <alexander@sulfrian.net>
+Date: Sat, 23 Jul 2016 04:30:34 +0200
+Subject: [PATCH 2/3] cleanupmount: Setup the new root as slave mount
+
+We want to propagate mounts from the parent namespaces into the vserver
+(something like vmount or mount within vnamespace), but we do not want to
+propagate the changes from the vserver back to the parent namespace.
+---
+ lib_internal/util-cleanupmount.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/lib_internal/util-cleanupmount.c b/lib_internal/util-cleanupmount.c
+index f1984bc2..4b7b4131 100644
+--- a/lib_internal/util-cleanupmount.c
++++ b/lib_internal/util-cleanupmount.c
+@@ -27,8 +27,8 @@
+ #ifndef MS_REC
+ #define MS_REC		0x4000
+ #endif
+-#ifndef MS_PRIVATE
+-#define MS_PRIVATE	(1<<18)
++#ifndef MS_SLAVE
++#define MS_SLAVE	(1<<19)
+ #endif
+ 
+ bool cleanupMount(void)
+@@ -37,9 +37,9 @@ bool cleanupMount(void)
+ 
+   /* systemd mounts everything with MS_SHARED which breaks our
+    * filesystem mounting.  Revert mount status back to pre-systemd */
+-  rc = mount(NULL, "/", NULL, MS_REC|MS_PRIVATE, NULL) >= 0;
++  rc = mount(NULL, "/", NULL, MS_REC|MS_SLAVE, NULL) >= 0;
+   if (!rc)
+-    perror("mount(\"/\", MS_REC|MS_PRIVATE)");
++    perror("mount(\"/\", MS_REC|MS_SLAVE)");
+ 
+   return rc;
+ }
+
+From 56d2df4f2a4d47471bda42c42d11ce4564937d69 Mon Sep 17 00:00:00 2001
+From: Alexander Sulfrian <alexander@sulfrian.net>
+Date: Sat, 23 Jul 2016 04:38:44 +0200
+Subject: [PATCH 3/3] Revert "Revert "call cleanupMount() after CLONE_NEWNS""
+
+This reverts commit 9877e4b94786125cfcdda8471336a6e73000aa17.
+
+After we fixed the cleanupMount using the correct shared subtree semantic,
+we can start using it again.
+---
+ src/vcontext.c | 2 ++
+ src/vspace.c   | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/src/vcontext.c b/src/vcontext.c
+index 85204f63..0e81a05b 100644
+--- a/src/vcontext.c
++++ b/src/vcontext.c
+@@ -313,6 +313,8 @@ doit(struct Arguments const *args, int argc, char *argv[])
+ 	  perror(ENSC_WRAPPERS_PREFIX "unshare(NEWNS)");
+ 	  return wrapper_exit_code;
+ 	}
++	if (!cleanupMount())
++	  return wrapper_exit_code;
+ 	if (mkdir("./.oldroot", 0700) == -1) {
+ 	  if (errno == EEXIST)
+ 	    existed = true;
+diff --git a/src/vspace.c b/src/vspace.c
+index 37ac2c39..a3ec97b5 100644
+--- a/src/vspace.c
++++ b/src/vspace.c
+@@ -137,6 +137,8 @@ newSpaces(uint_least64_t mask)
+       perror(ENSC_WRAPPERS_PREFIX "clone()");
+       exit(wrapper_exit_code);
+     case 0	:
++      if (mask & CLONE_NEWNS)
++	cleanupMount();
+       break;
+     default	:
+       vc_exitLikeProcess(pid, wrapper_exit_code);

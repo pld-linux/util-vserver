@@ -20,7 +20,7 @@
 %define		reqdb_ver	5.2
 %define		reqdb_pkg	db%{reqdb_ver}
 %define		snap	pre3126
-%define		rel	3
+%define		rel	4
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -79,6 +79,7 @@ Patch27:	%{name}-rpm5.patch
 Patch28:	diet-ccache.patch
 Patch29:	%{name}-centos6.patch
 Patch30:	vsysctl-ignore-files.patch
+Patch31:	systemd-shared-mounts.patch
 URL:		http://savannah.nongnu.org/projects/util-vserver/
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	automake >= 1:1.9
@@ -454,6 +455,7 @@ Szablony do tworzenia VServerów dla dystrybucji Titanium Linux.
 %patch28 -p1
 %patch29 -p1
 %patch30 -p1
+%patch31 -p1
 
 cp -p %{SOURCE9} package-management.txt
 
