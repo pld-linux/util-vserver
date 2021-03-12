@@ -478,6 +478,7 @@ CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1 -U__STRICT_ANSI__"
 	--enable-apis=NOLEGACY \
 	--with-initscripts=sysv \
 	--%{?with_dietlibc:en}%{!?with_dietlibc:dis}able-dietlibc \
+	SYSTEMD_SYSCTLDIR=%{_prefix}/lib/sysctl.d \
 	FSCK=/sbin/fsck \
 	IONICE=%{_usrbin}/ionice \
 	IP=/sbin/ip \
@@ -498,7 +499,7 @@ CFLAGS="%{rpmcflags} -D__GLIBC__ -D__KERNEL_STRICT_NAMES=1 -U__STRICT_ANSI__"
 
 %{__make} all
 
-%{?with_doc:%{__make} doc}
+%{?with_doc:%{__make} doc || :}
 
 %{__make} -C vproc-%{vproc_version} \
 	CC="%{__cc}" \
