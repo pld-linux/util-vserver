@@ -20,7 +20,7 @@
 %define		reqdb_ver	5.2
 %define		reqdb_pkg	db%{reqdb_ver}
 %define		snap	pre3126
-%define		rel	4
+%define		rel	5
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -294,7 +294,7 @@ Summary(pl.UTF-8):	Szablon budowania VServerów dla dystrybucji CentOS
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Requires:	vserver-distro-redhat = %{version}-%{release}
-Requires:	yum
+#Requires:	yum
 
 %description -n vserver-distro-centos
 VServer build template for CentOS 4.2 and 5.
@@ -328,7 +328,7 @@ Requires:	e2fsprogs
 Requires:	rpm
 Requires:	vserver-distro-redhat = %{version}-%{release}
 Requires:	wget
-Requires:	yum
+#Requires:	yum
 
 %description -n vserver-distro-fedora
 VServer build templates for Fedora Core 1,2,3,4,5,6 and Fedora 7.
@@ -404,7 +404,7 @@ Requires:	binutils
 Requires:	e2fsprogs
 Requires:	rpm
 Requires:	wget
-Requires:	yum
+#Requires:	yum
 
 %description -n vserver-distro-scientificlinux
 VServer build template for Scientific Linux.
