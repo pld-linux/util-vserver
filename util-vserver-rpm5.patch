@@ -1,8 +1,28 @@
---- util-vserver-0.30.216-pre3034/scripts/vrpm.orig	2012-04-24 11:48:10.000000000 +0200
-+++ util-vserver-0.30.216-pre3034/scripts/vrpm	2012-10-12 18:44:57.137928223 +0200
-@@ -46,6 +46,9 @@
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/Makefile-files util-vserver-0.30.216-pre3126/scripts/Makefile-files
+--- util-vserver-0.30.216-pre3126.org/scripts/Makefile-files	2021-03-12 21:50:31.004440077 +0100
++++ util-vserver-0.30.216-pre3126/scripts/Makefile-files	2021-03-12 21:50:31.127775612 +0100
+@@ -20,6 +20,7 @@
+ AM_INSTALLCHECK_STD_OPTIONS_EXEMPT += \
+ 				scripts/vapt-get-worker \
+ 				scripts/vrpm-worker \
++				scripts/vrpm-convertdb-worker \
+ 				scripts/vyum-worker \
+ 				scripts/vpoldek-worker \
+ 				scripts/vrpm-preload \
+@@ -76,6 +77,7 @@ scripts_pkglib_src_SCRPTS =	scripts/pkgm
+ 				scripts/vpkg \
+ 				scripts/vpoldek-worker \
+ 				scripts/vrpm-worker \
++				scripts/vrpm-convertdb-worker \
+ 				scripts/vrpm-preload \
+ 				scripts/start-vservers \
+ 				scripts/vprocunhide \
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/vrpm util-vserver-0.30.216-pre3126/scripts/vrpm
+--- util-vserver-0.30.216-pre3126.org/scripts/vrpm	2016-02-24 19:09:17.000000000 +0100
++++ util-vserver-0.30.216-pre3126/scripts/vrpm	2021-03-12 21:50:31.127775612 +0100
+@@ -46,6 +46,9 @@ the GNU General Public License.  This pr
      exit 0
-     }
+ }
  
 +rpmversion=$(awk '/^%_rpmversion/ { split($2,ver,/\./); print ver[1] }' /usr/lib/rpm/macros 2>/dev/null)
 +[ -z "$rpmversion" ] && rpmversion=5
@@ -10,7 +30,7 @@
  tmp=$(getopt -o +q --long help,version,debug,quiet,$VS_ALLVSERVERS_ARGS -n "$0" -- "$@") || exit 1
  eval set -- "$tmp"
  
-@@ -70,4 +73,15 @@
+@@ -70,4 +73,15 @@ VSOMETHING_PKGMGMT=1
  export VSOMETHING_TITLE VSOMETHING_WORKER VSOMETHING_PKGMGMT
  
  test ${#vsomething_opts[@]} -eq 0 || vsomething_opts=( "${vsomething_opts[@]}" -- )
@@ -26,9 +46,10 @@
 +    fi
 +fi
  exec $_VSOMETHING "${send_through[@]}" rpm "${vsomething_opts[@]}" "$@"
---- /dev/null	2012-04-24 11:48:10.000000000 +0200
-+++ util-vserver-0.30.216-pre3034/scripts/vrpm-convertdb-worker	2012-10-12 18:44:57.137928223 +0200
-@@ -0,0 +0,18 @@
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/vrpm-convertdb-worker util-vserver-0.30.216-pre3126/scripts/vrpm-convertdb-worker
+--- util-vserver-0.30.216-pre3126.org/scripts/vrpm-convertdb-worker	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-pre3126/scripts/vrpm-convertdb-worker	2021-03-12 21:50:31.127775612 +0100
+@@ -0,0 +1,18 @@
 +#!/bin/bash
 +
 +set -e
@@ -47,21 +68,3 @@
 +pkgInit "$vserver" rpm
 +
 +exec /usr/lib/rpm/bin/dbupgrade.sh -r "$VDIR" "$@"
---- util-vserver-0.30.216-pre3034/scripts/Makefile-files.orig	2012-04-24 11:48:10.000000000 +0200
-+++ util-vserver-0.30.216-pre3034/scripts/Makefile-files	2012-10-12 18:44:57.137928223 +0200
-@@ -10,6 +10,7 @@
- AM_INSTALLCHECK_STD_OPTIONS_EXEMPT += \
- 				scripts/vapt-get-worker \
- 				scripts/vrpm-worker \
-+				scripts/vrpm-convertdb-worker \
- 				scripts/vyum-worker \
- 				scripts/vpoldek-worker \
- 				scripts/vrpm-preload \
-@@ -74,6 +74,7 @@
- 				scripts/vpkg \
- 				scripts/vpoldek-worker \
- 				scripts/vrpm-worker \
-+				scripts/vrpm-convertdb-worker \
- 				scripts/vrpm-preload \
- 				scripts/start-vservers \
- 				scripts/vprocunhide \

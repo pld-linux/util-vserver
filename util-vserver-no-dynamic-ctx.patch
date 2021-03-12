@@ -1,7 +1,7 @@
-diff -ur util-vserver-0.30.210.orig/scripts/vserver-build util-vserver-0.30.210/scripts/vserver-build
---- util-vserver-0.30.210.orig/scripts/vserver-build	2006-04-18 18:10:30.000000000 +0200
-+++ util-vserver-0.30.210/scripts/vserver-build	2006-04-18 18:37:37.000000000 +0200
-@@ -122,6 +122,9 @@
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/vserver-build util-vserver-0.30.216-pre3126/scripts/vserver-build
+--- util-vserver-0.30.216-pre3126.org/scripts/vserver-build	2021-03-12 21:50:27.621046552 +0100
++++ util-vserver-0.30.216-pre3126/scripts/vserver-build	2021-03-12 21:50:27.707714756 +0100
+@@ -138,6 +138,9 @@ while true; do
      shift
  done
  
@@ -11,10 +11,10 @@ diff -ur util-vserver-0.30.210.orig/scripts/vserver-build util-vserver-0.30.210/
  test -n "$VSERVER_NAME" ||
      panic $"Name of vserver not specified"
  
-diff -ur util-vserver-0.30.210.orig/scripts/vserver.functions util-vserver-0.30.210/scripts/vserver.functions
---- util-vserver-0.30.210.orig/scripts/vserver.functions	2006-04-18 18:10:30.000000000 +0200
-+++ util-vserver-0.30.210/scripts/vserver.functions	2006-04-18 19:04:07.000000000 +0200
-@@ -365,6 +365,10 @@
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/vserver.functions util-vserver-0.30.216-pre3126/scripts/vserver.functions
+--- util-vserver-0.30.216-pre3126.org/scripts/vserver.functions	2016-02-24 19:09:17.000000000 +0100
++++ util-vserver-0.30.216-pre3126/scripts/vserver.functions	2021-03-12 21:50:27.707714756 +0100
+@@ -455,6 +455,10 @@ function _generateChcontextOptions
  
      test -z "$S_CONTEXT" || ctx=$S_CONTEXT
  
@@ -24,4 +24,4 @@ diff -ur util-vserver-0.30.210.orig/scripts/vserver.functions util-vserver-0.30.
 +
      _generateCapabilityOptions "$vdir"
      _generateFlagOptions       "$vdir"
- 
+     _generateUMaskOptions      "$vdir"

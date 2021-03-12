@@ -1,7 +1,8 @@
---- util-vserver-0.30.212/scripts/vrpm-preload~	2007-11-07 12:24:38.000000000 +0200
-+++ util-vserver-0.30.212/scripts/vrpm-preload	2007-11-07 12:25:09.260798172 +0200
-@@ -27,7 +27,7 @@
- . $__PKGLIBDIR/vserver.functions
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/vrpm-preload util-vserver-0.30.216-pre3126/scripts/vrpm-preload
+--- util-vserver-0.30.216-pre3126.org/scripts/vrpm-preload	2016-02-24 19:09:17.000000000 +0100
++++ util-vserver-0.30.216-pre3126/scripts/vrpm-preload	2021-03-12 21:50:28.704399123 +0100
+@@ -26,7 +26,7 @@ test -e "$UTIL_VSERVER_VARS" || {
+ . "$UTIL_VSERVER_VARS"
  . "$_LIB_FUNCTIONS"
  
 -for bin in `which rpm` /bin/rpm /usr/lib/rpm/rpm${RPM_FLAVOR:-i} ""; do

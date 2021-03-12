@@ -103,6 +103,7 @@ BuildRequires:	doxygen >= 1:1.7.3
 BuildRequires:	graphviz
 BuildRequires:	libxslt-progs
 BuildRequires:	python-devel
+BuildRequires:	tex-latex-adjustbox
 %if "%{pld_release}" != "th"
 BuildRequires:	tetex-fonts-jknappen
 BuildRequires:	tetex-format-pdflatex

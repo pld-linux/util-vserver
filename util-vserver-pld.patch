@@ -1,5 +1,39 @@
---- util-vserver-0.30.216-r2837.orig/distrib/defaults/poldek/poldek.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/distrib/defaults/poldek/poldek.conf	2009-06-22 17:48:26.000000000 +0200
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/distrib/Makefile.am util-vserver-0.30.216-pre3126/distrib/Makefile.am
+--- util-vserver-0.30.216-pre3126.org/distrib/Makefile.am	2016-02-24 19:09:17.000000000 +0100
++++ util-vserver-0.30.216-pre3126/distrib/Makefile.am	2021-03-12 21:50:25.804347699 +0100
+@@ -45,6 +45,7 @@ nobase_distrib_DATA	=  defaults/devs \
+ 			   defaults/apt.conf \
+ 			   defaults/rpm/macros \
+ 			   defaults/apt/apt.conf \
++			   defaults/poldek/poldek.conf \
+ 			   template/initpost template/initpre \
+ 			   rh9/apt/rpmpriorities    rh9/pkgs/01    rh9/pkgs/02 \
+ 			   fc1/apt/rpmpriorities    fc1/pkgs/01    fc1/pkgs/02 \
+@@ -96,7 +97,9 @@ nobase_distrib_DATA	=  defaults/devs \
+ 			   suse91/apt/rpmpriorities suse91/pkgs/01 suse91/pkgs/02 \
+ 			   suse91/rpm/macros \
+ 			   gentoo/init-vserver.sh gentoo/net.vserver \
+-			   gentoo/reboot.sh gentoo/shutdown.sh
++			   gentoo/reboot.sh gentoo/shutdown.sh\
++			   pld-ac/pkgs/01 pld-ac/rpm/macros pld-ac/rpm/macros.lang \
++			   pld-th/pkgs/01 pld-th/rpm/macros pld-th/rpm/macros.lang
+ 
+ nobase_confdistrib_DATA	=  rh9/apt/sources.list \
+ 			   fc1/apt/sources.list \
+@@ -106,7 +109,9 @@ nobase_confdistrib_DATA	=  rh9/apt/sourc
+ 			   fc5/apt/sources.list \
+ 			   fc6/apt/sources.list \
+ 			   f7/apt/sources.list \
+-			   suse91/apt/sources.list
++			   suse91/apt/sources.list \
++			   pld-ac/poldek/repos.d/pld.conf \
++			   pld-th/poldek/repos.d/pld.conf
+ 
+ AM_INSTALLCHECK_STD_OPTIONS_EXEMPT \
+ 			=  $(nobase_distrib_SCRIPTS)
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/distrib/defaults/poldek/poldek.conf util-vserver-0.30.216-pre3126/distrib/defaults/poldek/poldek.conf
+--- util-vserver-0.30.216-pre3126.org/distrib/defaults/poldek/poldek.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-pre3126/distrib/defaults/poldek/poldek.conf	2021-03-12 21:50:25.804347699 +0100
 @@ -0,0 +1,11 @@
 +# poldek configuration file.
 +
@@ -12,40 +46,9 @@
 +
 +#hold =
 +ignore = kernel* udev devfs
---- util-vserver-0.30.216-r2837.orig/distrib/Makefile.am	2009-06-22 17:36:52.000000000 +0200
-+++ util-vserver-0.30.216-r2837/distrib/Makefile.am	2009-06-22 17:49:36.000000000 +0200
-@@ -45,6 +45,7 @@
- 			   defaults/apt.conf \
- 			   defaults/rpm/macros \
- 			   defaults/apt/apt.conf \
-+			   defaults/poldek/poldek.conf \
- 			   template/initpost template/initpre \
- 			   rh9/apt/rpmpriorities    rh9/pkgs/01    rh9/pkgs/02 \
- 			   fc1/apt/rpmpriorities    fc1/pkgs/01    fc1/pkgs/02 \
-@@ -85,7 +86,9 @@
- 			   suse91/apt/rpmpriorities suse91/pkgs/01 suse91/pkgs/02 \
- 			   suse91/rpm/macros \
- 			   gentoo/init-vserver.sh gentoo/net.vserver \
--			   gentoo/reboot.sh gentoo/shutdown.sh
-+			   gentoo/reboot.sh gentoo/shutdown.sh\
-+			   pld-ac/pkgs/01 pld-ac/rpm/macros pld-ac/rpm/macros.lang \
-+			   pld-th/pkgs/01 pld-th/rpm/macros pld-th/rpm/macros.lang
- 
- nobase_confdistrib_DATA	=  rh9/apt/sources.list \
- 			   fc1/apt/sources.list \
-@@ -95,7 +99,9 @@
- 			   fc5/apt/sources.list \
- 			   fc6/apt/sources.list \
- 			   f7/apt/sources.list \
--			   suse91/apt/sources.list
-+			   suse91/apt/sources.list \
-+			   pld-ac/poldek/repos.d/pld.conf \
-+			   pld-th/poldek/repos.d/pld.conf
- 
- AM_INSTALLCHECK_STD_OPTIONS_EXEMPT \
- 			=  $(nobase_distrib_SCRIPTS)
---- util-vserver-0.30.216-r2837.orig/distrib/pld-ac/pkgs/01	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/distrib/pld-ac/pkgs/01	2009-06-22 17:48:26.000000000 +0200
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/distrib/pld-ac/pkgs/01 util-vserver-0.30.216-pre3126/distrib/pld-ac/pkgs/01
+--- util-vserver-0.30.216-pre3126.org/distrib/pld-ac/pkgs/01	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-pre3126/distrib/pld-ac/pkgs/01	2021-03-12 21:50:25.804347699 +0100
 @@ -0,0 +1,6 @@
 +basesystem
 +filesystem
@@ -53,8 +56,9 @@
 +issue
 +rpm-base
 +vserver-packages
---- util-vserver-0.30.216-r2837.orig/distrib/pld-ac/poldek/repos.d/pld.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/distrib/pld-ac/poldek/repos.d/pld.conf	2009-06-22 17:48:26.000000000 +0200
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/distrib/pld-ac/poldek/repos.d/pld.conf util-vserver-0.30.216-pre3126/distrib/pld-ac/poldek/repos.d/pld.conf
+--- util-vserver-0.30.216-pre3126.org/distrib/pld-ac/poldek/repos.d/pld.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-pre3126/distrib/pld-ac/poldek/repos.d/pld.conf	2021-03-12 21:50:25.804347699 +0100
 @@ -0,0 +1,64 @@
 +# $Id$
 +# PLD Linux Distribution <http://www.pld-linux.org/>.
@@ -120,20 +124,23 @@
 +type   = group
 +name   = ac
 +sources = ac-main ac-updates
---- util-vserver-0.30.216-r2837.orig/distrib/pld-ac/rpm/macros	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/distrib/pld-ac/rpm/macros	2009-06-22 17:48:26.000000000 +0200
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/distrib/pld-ac/rpm/macros util-vserver-0.30.216-pre3126/distrib/pld-ac/rpm/macros
+--- util-vserver-0.30.216-pre3126.org/distrib/pld-ac/rpm/macros	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-pre3126/distrib/pld-ac/rpm/macros	2021-03-12 21:50:25.804347699 +0100
 @@ -0,0 +1,3 @@
 +%_netsharedpath		/dev:/proc
 +%_tmppath			/tmp
 +%_host_os			%_os
---- util-vserver-0.30.216-r2837.orig/distrib/pld-ac/rpm/macros.lang	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/distrib/pld-ac/rpm/macros.lang	2009-06-22 17:48:26.000000000 +0200
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/distrib/pld-ac/rpm/macros.lang util-vserver-0.30.216-pre3126/distrib/pld-ac/rpm/macros.lang
+--- util-vserver-0.30.216-pre3126.org/distrib/pld-ac/rpm/macros.lang	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-pre3126/distrib/pld-ac/rpm/macros.lang	2021-03-12 21:50:25.804347699 +0100
 @@ -0,0 +1,3 @@
 +# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
---- util-vserver-0.30.216-r2837.orig/distrib/pld-th/pkgs/01	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/distrib/pld-th/pkgs/01	2009-06-22 17:48:26.000000000 +0200
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/distrib/pld-th/pkgs/01 util-vserver-0.30.216-pre3126/distrib/pld-th/pkgs/01
+--- util-vserver-0.30.216-pre3126.org/distrib/pld-th/pkgs/01	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-pre3126/distrib/pld-th/pkgs/01	2021-03-12 21:50:25.804347699 +0100
 @@ -0,0 +1,6 @@
 +basesystem
 +filesystem
@@ -141,8 +148,9 @@
 +issue
 +rpm-base
 +vserver-packages
---- util-vserver-0.30.216-r2837.orig/distrib/pld-th/poldek/repos.d/pld.conf	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/distrib/pld-th/poldek/repos.d/pld.conf	2009-06-22 17:48:26.000000000 +0200
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/distrib/pld-th/poldek/repos.d/pld.conf util-vserver-0.30.216-pre3126/distrib/pld-th/poldek/repos.d/pld.conf
+--- util-vserver-0.30.216-pre3126.org/distrib/pld-th/poldek/repos.d/pld.conf	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-pre3126/distrib/pld-th/poldek/repos.d/pld.conf	2021-03-12 21:50:25.804347699 +0100
 @@ -0,0 +1,71 @@
 +# PLD Linux Distribution <http://www.pld-linux.org/>.
 +#
@@ -215,21 +223,66 @@
 +path   = %{_pld_main_prefix}/test/noarch/RPMS/
 +auto   = no
 +autoup = no
---- util-vserver-0.30.216-r2837.orig/distrib/pld-th/rpm/macros	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/distrib/pld-th/rpm/macros	2009-06-22 17:48:26.000000000 +0200
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/distrib/pld-th/rpm/macros util-vserver-0.30.216-pre3126/distrib/pld-th/rpm/macros
+--- util-vserver-0.30.216-pre3126.org/distrib/pld-th/rpm/macros	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-pre3126/distrib/pld-th/rpm/macros	2021-03-12 21:50:25.804347699 +0100
 @@ -0,0 +1,3 @@
 +%_netsharedpath		/dev:/proc
 +%_tmppath			/tmp
 +%_host_os			%_os
---- util-vserver-0.30.216-r2837.orig/distrib/pld-th/rpm/macros.lang	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/distrib/pld-th/rpm/macros.lang	2009-06-22 17:48:26.000000000 +0200
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/distrib/pld-th/rpm/macros.lang util-vserver-0.30.216-pre3126/distrib/pld-th/rpm/macros.lang
+--- util-vserver-0.30.216-pre3126.org/distrib/pld-th/rpm/macros.lang	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-pre3126/distrib/pld-th/rpm/macros.lang	2021-03-12 21:50:25.804347699 +0100
 @@ -0,0 +1,3 @@
 +# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
 +# you have to use at least one language beside 'C'
 +%_install_langs		C:en:pl
---- util-vserver-0.30.216-r2837.orig/scripts/functions	2009-06-22 17:36:35.000000000 +0200
-+++ util-vserver-0.30.216-r2837/scripts/functions	2009-06-22 17:48:26.000000000 +0200
-@@ -403,6 +403,20 @@
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/Makefile-files util-vserver-0.30.216-pre3126/scripts/Makefile-files
+--- util-vserver-0.30.216-pre3126.org/scripts/Makefile-files	2016-02-24 19:09:17.000000000 +0100
++++ util-vserver-0.30.216-pre3126/scripts/Makefile-files	2021-03-12 21:50:25.804347699 +0100
+@@ -21,6 +21,7 @@ AM_INSTALLCHECK_STD_OPTIONS_EXEMPT += \
+ 				scripts/vapt-get-worker \
+ 				scripts/vrpm-worker \
+ 				scripts/vyum-worker \
++				scripts/vpoldek-worker \
+ 				scripts/vrpm-preload \
+ 				scripts/vurpm-worker \
+ 				scripts/save_s_context \
+@@ -50,12 +51,14 @@ scripts_pkglib_src_DTA =	scripts/functio
+ 				scripts/vserver-build.template \
+ 				scripts/vserver-build.rsync \
+ 				scripts/vserver-build.clone \
++				scripts/vserver-build.poldek \
+ 				scripts/vserver-build.functions \
+ 				scripts/vserver-build.functions.apt \
+ 				scripts/vserver-build.functions.pkgmgmt \
+ 				scripts/vserver-build.functions.rpm \
+ 				scripts/vserver-build.functions.urpmi \
+ 				scripts/vserver-build.functions.yum \
++				scripts/vserver-build.functions.poldek \
+ 				scripts/vserver-setup.functions \
+ 				scripts/vserver.functions \
+ 				scripts/vserver.start \
+@@ -71,6 +74,7 @@ scripts_pkglib_gen_SCRPTS =	scripts/vshe
+ scripts_pkglib_src_SCRPTS =	scripts/pkgmgmt \
+ 				scripts/vapt-get-worker \
+ 				scripts/vpkg \
++				scripts/vpoldek-worker \
+ 				scripts/vrpm-worker \
+ 				scripts/vrpm-preload \
+ 				scripts/start-vservers \
+@@ -94,6 +98,7 @@ scripts_legacy_src_PRGS =	scripts/legacy
+ scripts_sbin_src_PRGS =		scripts/chbind \
+ 				scripts/chcontext \
+ 				scripts/vapt-get \
++				scripts/vpoldek \
+ 				scripts/vdispatch-conf \
+ 				scripts/vemerge \
+ 				scripts/vesync \
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/functions util-vserver-0.30.216-pre3126/scripts/functions
+--- util-vserver-0.30.216-pre3126.org/scripts/functions	2016-02-24 19:09:17.000000000 +0100
++++ util-vserver-0.30.216-pre3126/scripts/functions	2021-03-12 21:50:25.804347699 +0100
+@@ -411,6 +411,20 @@ function _pkgSetVarsUrpmi
      fi
  }
  
@@ -250,7 +303,7 @@
  
  function _pkgMountBase
  {
-@@ -476,6 +490,7 @@
+@@ -495,6 +509,7 @@ function pkgInit
  	    apt)	_pkgSetVarsApt;;
  	    yum)	_pkgSetVarsYum;;
  	    urpmi)	_pkgSetVarsUrpmi;;
@@ -258,7 +311,7 @@
  	    *)		echo "Unknown packaging flavor" >&2; exit 1;;
  	esac
      done
-@@ -770,6 +785,8 @@
+@@ -869,6 +884,8 @@ function pkgmgmt.guessStyle()
  	style=redhat
      elif test -e "$_pgs_vdir"/etc/mandrake-release; then
  	style=mandrake
@@ -267,8 +320,8 @@
      elif test -e "$_pgs_vdir"/etc/debian_version; then
  	style=debian
      elif test -e "$_pgs_vdir"/etc/SuSE-release; then
-@@ -837,6 +854,27 @@
-     test -n "$have_yum" && return 0 || return 1
+@@ -957,6 +974,27 @@ function pkgmgmt.isUrpmiAvailable
+     test -n "$have_urpmi" && return 0 || return 1
  }
  
 +## Usage: pkgmgmt.isPoldekAvailable <cfgdir> <vdir> [<is-internal>]
@@ -295,50 +348,10 @@
  
  function vshelper.doSanityCheck
  {
---- util-vserver-0.30.216-r2837.orig/scripts/Makefile-files	2009-06-22 17:36:35.000000000 +0200
-+++ util-vserver-0.30.216-r2837/scripts/Makefile-files	2009-06-22 17:48:26.000000000 +0200
-@@ -21,6 +21,7 @@
- 				scripts/vapt-get-worker \
- 				scripts/vrpm-worker \
- 				scripts/vyum-worker \
-+				scripts/vpoldek-worker \
- 				scripts/vrpm-preload \
- 				scripts/save_s_context \
- 				scripts/vservers.grabinfo.sh \
-@@ -48,12 +49,14 @@
- 				scripts/vserver-build.template \
- 				scripts/vserver-build.rsync \
- 				scripts/vserver-build.clone \
-+				scripts/vserver-build.poldek \
- 				scripts/vserver-build.functions \
- 				scripts/vserver-build.functions.apt \
- 				scripts/vserver-build.functions.pkgmgmt \
- 				scripts/vserver-build.functions.rpm \
- 				scripts/vserver-build.functions.urpmi \
- 				scripts/vserver-build.functions.yum \
-+				scripts/vserver-build.functions.poldek \
- 				scripts/vserver-setup.functions \
- 				scripts/vserver.functions \
- 				scripts/vserver.start \
-@@ -66,6 +69,7 @@
- scripts_pkglib_src_SCRPTS =	scripts/pkgmgmt \
- 				scripts/vapt-get-worker \
- 				scripts/vpkg \
-+				scripts/vpoldek-worker \
- 				scripts/vrpm-worker \
- 				scripts/vrpm-preload \
- 				scripts/start-vservers \
-@@ -89,6 +93,7 @@
- scripts_sbin_src_PRGS =		scripts/chbind \
- 				scripts/chcontext \
- 				scripts/vapt-get \
-+				scripts/vpoldek \
- 				scripts/vdispatch-conf \
- 				scripts/vemerge \
- 				scripts/vesync \
---- util-vserver-0.30.216-r2837.orig/scripts/pkgmgmt	2009-06-22 17:36:34.000000000 +0200
-+++ util-vserver-0.30.216-r2837/scripts/pkgmgmt	2009-06-22 17:48:26.000000000 +0200
-@@ -195,7 +195,7 @@
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/pkgmgmt util-vserver-0.30.216-pre3126/scripts/pkgmgmt
+--- util-vserver-0.30.216-pre3126.org/scripts/pkgmgmt	2016-02-24 19:09:17.000000000 +0100
++++ util-vserver-0.30.216-pre3126/scripts/pkgmgmt	2021-03-12 21:50:25.804347699 +0100
+@@ -195,7 +195,7 @@ packagemanagement:
  "
      
      case $2 in
@@ -347,7 +360,7 @@
  		hasSubstring "$pkgs" ---rpm--- || {
  		    warning "$ERR
  * The vserver does not seem to have the 'rpm' package which is required
-@@ -205,9 +205,9 @@
+@@ -205,9 +205,9 @@ packagemanagement:
  		    ERR=
  		}
  		
@@ -359,7 +372,7 @@
    installed. It is suggested to install such a program before setting
    up internal package management."
  		    res=1
-@@ -368,6 +368,131 @@
+@@ -381,6 +381,131 @@ Can not continue; use '--force' to overr
      fi
  }
  
@@ -491,7 +504,7 @@
  function processVserver_Debian()
  {
      local vserver=$1
-@@ -422,6 +547,7 @@
+@@ -435,6 +560,7 @@ function processVserver()
  
      case "$style" in
  	(redhat|mandrake)	processVserver_RH     "$vserver" "$IS_INTERNALIZE";;
@@ -499,9 +512,10 @@
  	(debian)		processVserver_Debian "$vserver" "$IS_INTERNALIZE";;
  	(*)
  	    echo $"Vserver style '$style' is not supported for packagemanagment" >&2
---- util-vserver-0.30.216-r2837.orig/scripts/util-vserver-vars.pathsubst	2009-06-22 17:36:34.000000000 +0200
-+++ util-vserver-0.30.216-r2837/scripts/util-vserver-vars.pathsubst	2009-06-22 17:48:26.000000000 +0200
-@@ -58,6 +58,7 @@
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/util-vserver-vars.pathsubst util-vserver-0.30.216-pre3126/scripts/util-vserver-vars.pathsubst
+--- util-vserver-0.30.216-pre3126.org/scripts/util-vserver-vars.pathsubst	2016-02-24 19:09:17.000000000 +0100
++++ util-vserver-0.30.216-pre3126/scripts/util-vserver-vars.pathsubst	2021-03-12 21:50:25.807681091 +0100
+@@ -58,6 +58,7 @@ _LIB_VSERVER_BUILD_FUNCTIONS_RPM="$__PKG
  _LIB_VSERVER_BUILD_FUNCTIONS_YUM="$__PKGDATADIR/vserver-build.functions.yum"
  _LIB_VSERVER_BUILD_FUNCTIONS_URPMI="$__PKGDATADIR/vserver-build.functions.urpmi"
  _LIB_VSERVER_BUILD_FUNCTIONS_PKGMGMT="$__PKGDATADIR/vserver-build.functions.pkgmgmt"
@@ -509,7 +523,7 @@
  _LISTDEVIP="$__LEGACYDIR/listdevip"
  _LOCKFILE="$__PKGLIBEXECDIR/lockfile"
  _MASK2PREFIX="$__PKGLIBEXECDIR/mask2prefix"
-@@ -116,6 +117,8 @@
+@@ -116,6 +117,8 @@ _VURPM="$__SBINDIR/vurpm"
  _VURPM_WORKER="$__PKGLIBEXECDIR/vurpm-worker"
  _VYUM="$__SBINDIR/vyum"
  _VYUM_WORKER="$__PKGLIBEXECDIR/vyum-worker"
@@ -518,9 +532,10 @@
  
  _AWK="@AWK@"
  _BZIP2="@BZIP2@"
---- util-vserver-0.30.216-r2837.orig/scripts/vpkg	2009-06-22 17:36:34.000000000 +0200
-+++ util-vserver-0.30.216-r2837/scripts/vpkg	2009-06-22 17:48:26.000000000 +0200
-@@ -115,6 +115,44 @@
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/vpkg util-vserver-0.30.216-pre3126/scripts/vpkg
+--- util-vserver-0.30.216-pre3126.org/scripts/vpkg	2016-02-24 19:09:17.000000000 +0100
++++ util-vserver-0.30.216-pre3126/scripts/vpkg	2021-03-12 21:50:25.807681091 +0100
+@@ -115,6 +115,44 @@ case "$style" in
  	    fi
  	fi
  	;;
@@ -565,8 +580,9 @@
      (debian)
  	case "$tag" in
  	    (get-conffiles)
---- util-vserver-0.30.216-r2837.orig/scripts/vpoldek	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/scripts/vpoldek	2009-06-22 17:48:26.000000000 +0200
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/vpoldek util-vserver-0.30.216-pre3126/scripts/vpoldek
+--- util-vserver-0.30.216-pre3126.org/scripts/vpoldek	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-pre3126/scripts/vpoldek	2021-03-12 21:50:25.807681091 +0100
 @@ -0,0 +1,74 @@
 +#! /bin/bash
 +# $Id$
@@ -642,8 +658,9 @@
 +
 +test ${#poldek_opts[@]} -eq 0 || poldek_opts=( "${poldek_opts[@]}" -- )
 +exec $_VSOMETHING "${send_through[@]}" poldek "${poldek_opts[@]}" "$@"
---- util-vserver-0.30.216-r2837.orig/scripts/vpoldek-worker	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/scripts/vpoldek-worker	2009-06-22 17:48:26.000000000 +0200
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/vpoldek-worker util-vserver-0.30.216-pre3126/scripts/vpoldek-worker
+--- util-vserver-0.30.216-pre3126.org/scripts/vpoldek-worker	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-pre3126/scripts/vpoldek-worker	2021-03-12 21:50:25.807681091 +0100
 @@ -0,0 +1,45 @@
 +#! /bin/bash
 +# $Id$
@@ -690,9 +707,10 @@
 +	--conf=$POLDEK_CONFIG \
 +	--pmcmd=$RPM_BINARY \
 +	"$@"
---- util-vserver-0.30.216-r2837.orig/scripts/vserver-build	2009-06-22 17:36:34.000000000 +0200
-+++ util-vserver-0.30.216-r2837/scripts/vserver-build	2009-06-22 17:48:26.000000000 +0200
-@@ -57,6 +57,9 @@
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/vserver-build util-vserver-0.30.216-pre3126/scripts/vserver-build
+--- util-vserver-0.30.216-pre3126.org/scripts/vserver-build	2016-02-24 19:09:17.000000000 +0100
++++ util-vserver-0.30.216-pre3126/scripts/vserver-build	2021-03-12 21:50:25.807681091 +0100
+@@ -60,6 +60,9 @@ Possible methods are:
                  ...  installs the base-packages of the given distribution with
  		     help of 'vyum'
      urpmi       ... -- -d <distribution> -m <mirror>
@@ -702,7 +720,7 @@
      rpm         ... -- [-d <distribution>] --empty|([--force] [--nodeps] <manifest>)+
                  ...  installs lists of rpm-packages
      skeleton    ... -- [<cmd> <args>*]
-@@ -145,7 +145,7 @@
+@@ -142,7 +145,7 @@ setup_setDefaults "$VSERVER_NAME"
  
  case x"$method" in
      (xlegacy)	exec $_VSERVER_LEGACY "$VSERVER_NAME" build "$@" ;;
@@ -711,9 +729,10 @@
  		. $__PKGDATADIR/vserver-build.$method
  		;;
      (x)		panic $"No build-method specified";;
---- util-vserver-0.30.216-r2837.orig/scripts/vserver-build.functions	2009-06-22 17:36:35.000000000 +0200
-+++ util-vserver-0.30.216-r2837/scripts/vserver-build.functions	2009-06-22 17:48:26.000000000 +0200
-@@ -170,6 +170,12 @@
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/vserver-build.functions util-vserver-0.30.216-pre3126/scripts/vserver-build.functions
+--- util-vserver-0.30.216-pre3126.org/scripts/vserver-build.functions	2016-02-24 19:09:17.000000000 +0100
++++ util-vserver-0.30.216-pre3126/scripts/vserver-build.functions	2021-03-12 21:50:25.807681091 +0100
+@@ -173,6 +173,12 @@ function getDistribution
  	elif test -e /etc/slackware-version; then
  	    set -- $(cat /etc/slackware-version)
  	    DISTRIBUTION=slackware$2
@@ -726,8 +745,9 @@
  	elif test -n "$1"; then
  	    DISTRIBUTION=$1
  	else
---- util-vserver-0.30.216-r2837.orig/scripts/vserver-build.functions.poldek	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/scripts/vserver-build.functions.poldek	2009-06-22 17:48:26.000000000 +0200
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/vserver-build.functions.poldek util-vserver-0.30.216-pre3126/scripts/vserver-build.functions.poldek
+--- util-vserver-0.30.216-pre3126.org/scripts/vserver-build.functions.poldek	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-pre3126/scripts/vserver-build.functions.poldek	2021-03-12 21:50:25.807681091 +0100
 @@ -0,0 +1,83 @@
 +# $Id$	--*- sh -*--
 +
@@ -812,8 +832,9 @@
 +		echo '%_check_dirname_deps 0' >> "$PKGCFGDIR"/rpm/etc/macros
 +	fi
 +}
---- util-vserver-0.30.216-r2837.orig/scripts/vserver-build.poldek	1970-01-01 01:00:00.000000000 +0100
-+++ util-vserver-0.30.216-r2837/scripts/vserver-build.poldek	2009-06-22 17:48:26.000000000 +0200
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/vserver-build.poldek util-vserver-0.30.216-pre3126/scripts/vserver-build.poldek
+--- util-vserver-0.30.216-pre3126.org/scripts/vserver-build.poldek	1970-01-01 01:00:00.000000000 +0100
++++ util-vserver-0.30.216-pre3126/scripts/vserver-build.poldek	2021-03-12 21:50:25.807681091 +0100
 @@ -0,0 +1,65 @@
 +# $Id$	--*- sh -*--
 +

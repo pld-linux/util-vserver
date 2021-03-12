@@ -1,7 +1,8 @@
---- ./distrib/defaults/devs~	2006-03-03 23:33:43.000000000 +0200
-+++ ./distrib/defaults/devs	2006-03-06 13:11:37.374244805 +0200
-@@ -5,3 +5,4 @@
- ptmx    c 5 2 666
- fd      l ../proc/self/fd 777
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/distrib/defaults/devs util-vserver-0.30.216-pre3126/distrib/defaults/devs
+--- util-vserver-0.30.216-pre3126.org/distrib/defaults/devs	2016-02-24 19:09:17.000000000 +0100
++++ util-vserver-0.30.216-pre3126/distrib/defaults/devs	2021-03-12 21:50:27.467710498 +0100
+@@ -10,3 +10,4 @@ stdin   l fd/0 777
+ stdout  l fd/1 777
+ stderr  l fd/2 777
  shm     d 1777
 +tty0	c 4 0 660

@@ -1,6 +1,7 @@
---- util-vserver-0.30.208/scripts/vserver-build~	2005-08-15 21:15:55.737388075 +0200
-+++ util-vserver-0.30.208.umask/scripts/vserver-build	2005-08-15 22:46:47.439347258 +0200
-@@ -127,6 +127,12 @@
+diff -urNp -x '*.orig' util-vserver-0.30.216-pre3126.org/scripts/vserver-build util-vserver-0.30.216-pre3126/scripts/vserver-build
+--- util-vserver-0.30.216-pre3126.org/scripts/vserver-build	2021-03-12 21:50:26.901033782 +0100
++++ util-vserver-0.30.216-pre3126/scripts/vserver-build	2021-03-12 21:50:26.994368768 +0100
+@@ -143,6 +143,12 @@ test -n "$VSERVER_NAME" ||
  
  setup_setDefaults "$VSERVER_NAME"
  
@@ -12,4 +13,4 @@
 +
  case x"$method" in
      (xlegacy)	exec $_VSERVER_LEGACY "$VSERVER_NAME" build "$@" ;;
-     (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xpoldek)
+     (xapt-rpm|xcopy|xskeleton|xdebootstrap|xyum|xrpm|xtemplate|xfai|xrsync|xclone|xurpmi|xpoldek)
