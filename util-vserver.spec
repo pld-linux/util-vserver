@@ -20,7 +20,7 @@
 %define		reqdb_ver	5.2
 %define		reqdb_pkg	db%{reqdb_ver}
 %define		snap	pre3126
-%define		rel	7
+%define		rel	8
 Summary:	Linux virtual server utilities
 Summary(pl.UTF-8):	Narzędzia dla linuksowych serwerów wirtualnych
 Name:		util-vserver
@@ -119,6 +119,7 @@ BuildRequires:	texlive-latex-ucs
 BuildRequires:	texlive-latex-wasysym
 BuildRequires:	texlive-makeindex
 BuildRequires:	texlive-pdftex
+BuildRequires:	texlive-tex-xkeyval
 BuildRequires:	texlive-xetex
 %endif
 %{?with_xalan:BuildRequires:	xalan-j}
