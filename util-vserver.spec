@@ -429,35 +429,35 @@ Szablony do tworzenia VServerów dla dystrybucji Titanium Linux.
 
 %prep
 %setup -q -n %{name}-%{version}-%{snap} -a11
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch8 -p1
-%patch9 -p1
-%{?with_no_dynamic_context:%patch10 -p1}
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
-%patch16 -p1
+%patch -P0 -p1
+%patch -P1 -p1
+%patch -P2 -p1
+%patch -P3 -p1
+%patch -P4 -p1
+%patch -P5 -p1
+%patch -P6 -p1
+%patch -P8 -p1
+%patch -P9 -p1
+%{?with_no_dynamic_context:%patch -P10 -p1}
+%patch -P11 -p1
+%patch -P12 -p1
+%patch -P13 -p1
+%patch -P14 -p1
+%patch -P15 -p1
+%patch -P16 -p1
 
-%patch18 -p1
-%patch19 -p1
-%patch21 -p1
-%patch22 -p1
-%patch24 -p1
-%patch25 -p1
+%patch -P18 -p1
+%patch -P19 -p1
+%patch -P21 -p1
+%patch -P22 -p1
+%patch -P24 -p1
+%patch -P25 -p1
 
-%patch27 -p1
-%patch28 -p1
-%patch29 -p1
-%patch30 -p1
-%patch31 -p1
+%patch -P27 -p1
+%patch -P28 -p1
+%patch -P29 -p1
+%patch -P30 -p1
+%patch -P31 -p1
 
 cp -p %{SOURCE9} package-management.txt
 
